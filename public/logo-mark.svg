@@ -1,0 +1,11 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Lynstad mark">
+  <defs>
+    <linearGradient id="lyn" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#33353A"></stop>
+      <stop offset="1" stop-color="#17181A"></stop>
+    </linearGradient>
+  </defs>
+  <rect width="64" height="64" rx="16" fill="url(#lyn)" stroke="rgba(255,255,255,0.12)"></rect>
+  <path d="M22 17v22a4 4 0 0 0 4 4h16" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"></path>
+  <path d="M37 36l7 7-7 7" transform="translate(0,-7)" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"></path>
+</svg>
