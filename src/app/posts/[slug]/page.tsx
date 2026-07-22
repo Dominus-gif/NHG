@@ -16,8 +16,8 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const post = getPost(slug);
-  if (!post) return { title: "Post not found — The Lynstad Group" };
-  return { title: `${post.title} — The Lynstad Group`, description: post.excerpt };
+  if (!post) return { title: "Post not found — Nord Harton Group" };
+  return { title: `${post.title} — Nord Harton Group`, description: post.excerpt };
 }
 
 export default async function PostPage({

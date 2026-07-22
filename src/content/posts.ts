@@ -18,7 +18,7 @@ export const posts: Post[] = [
     tag: "Strategy",
     date: "Jun 12, 2026",
     readTime: "6 min read",
-    author: "Marcus Lynstad",
+    author: "Marcus Nord Harton",
     body: [
       "Enterprise transformation rarely fails for technical reasons. The frameworks are mature, the cloud is elastic, and the talent exists. Programs fail when the distance between the boardroom's intent and the engineering team's daily reality grows too large to bridge.",
       "The first symptom is a roadmap that reads like a wish list rather than a sequence of decisions. When every initiative is a priority, none of them are. We start every engagement by forcing a ranking: what is the single outcome that, if achieved, makes the rest easier?",

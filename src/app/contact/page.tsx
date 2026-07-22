@@ -3,11 +3,15 @@
 import { useState } from "react";
 import { Check, Mail, MapPin, Clock } from "lucide-react";
 import PageHeader from "@/components/layout/PageHeader";
+import SelectMenu from "@/components/forms/SelectMenu";
 import { services } from "@/content/services";
 import { company } from "@/content/site";
 
+const SERVICE_OPTIONS = [...services.map((s) => s.title), "Something else"];
+
 export default function ContactPage() {
   const [sent, setSent] = useState(false);
+  const [service, setService] = useState("");
   const fieldClass =
     "w-full rounded-lg border border-hairline-strong bg-elevated/60 px-4 py-2.5 text-sm text-fg placeholder:text-fg-subtle outline-none transition-colors focus:border-accent";
 
@@ -62,22 +66,16 @@ export default function ContactPage() {
                   <input id="company" className={fieldClass} placeholder="Acme Inc." />
                 </div>
                 <div>
-                  <label htmlFor="service" className="mb-1.5 block text-xs font-medium text-fg-muted">
+                  <label className="mb-1.5 block text-xs font-medium text-fg-muted">
                     Service interest
                   </label>
-                  <select id="service" defaultValue="" className={fieldClass}>
-                    <option value="" disabled>
-                      Select a service
-                    </option>
-                    {services.map((s) => (
-                      <option key={s.title} value={s.title} className="bg-elevated">
-                        {s.title}
-                      </option>
-                    ))}
-                    <option value="Other" className="bg-elevated">
-                      Something else
-                    </option>
-                  </select>
+                  <SelectMenu
+                    value={service}
+                    onChange={setService}
+                    options={SERVICE_OPTIONS}
+                    placeholder="Select a service"
+                    ariaLabel="Service interest"
+                  />
                 </div>
                 <div>
                   <label htmlFor="message" className="mb-1.5 block text-xs font-medium text-fg-muted">

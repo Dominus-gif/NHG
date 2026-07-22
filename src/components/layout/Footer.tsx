@@ -44,8 +44,8 @@ export default function Footer() {
         <div style={{ maxWidth: 320 }}>
           <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10 }}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo-mark.svg" width={34} height={34} alt="Lynstad" />
-            <span style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 20, color: "#fff" }}>Lynstad</span>
+            <img src="/logo-mark.svg" width={34} height={34} alt="Nord Harton" />
+            <span style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 20, color: "#fff" }}>Nord Harton</span>
           </Link>
           <p style={{ marginTop: 16, fontSize: 14, lineHeight: 1.6, color: "var(--text-on-inverse-muted)" }}>
             A digital solutions enterprise turning complex business requirements into elegant, scalable software.
@@ -62,7 +62,7 @@ export default function Footer() {
               &ldquo;Simplicity is the ultimate sophistication — we engineer it into everything we ship.&rdquo;
             </blockquote>
             <figcaption style={{ marginTop: 8, fontSize: 12.5, color: "var(--text-on-inverse-muted)" }}>
-              — The Lynstad Group
+              — Nord Harton Group
             </figcaption>
           </figure>
         </div>
@@ -105,8 +105,8 @@ export default function Footer() {
           gap: 12,
         }}
       >
-        <span style={{ fontSize: 13, color: "var(--text-on-inverse-muted)" }}>© 2026 The Lynstad Group. All rights reserved.</span>
-        <span style={{ fontSize: 13, color: "var(--text-on-inverse-muted)" }}>hello@lynstadgroup.com</span>
+        <span style={{ fontSize: 13, color: "var(--text-on-inverse-muted)" }}>© 2026 Nord Harton Group. All rights reserved.</span>
+        <span style={{ fontSize: 13, color: "var(--text-on-inverse-muted)" }}>hello@nordhartongroup.com</span>
       </div>
     </footer>
   );

@@ -4,7 +4,7 @@ import { Stagger, StaggerItem } from "@/components/ui/Reveal";
 import CtaBand from "@/components/sections/CtaBand";
 
 export const metadata: Metadata = {
-  title: "Insights — The Lynstad Group",
+  title: "Insights — Nord Harton Group",
   description: "Thought leadership on enterprise digital transformation.",
 };
 

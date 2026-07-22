@@ -22,7 +22,7 @@ export const jobs: Job[] = [
       "Design and ship production features across the stack (TypeScript, React/Next.js, Node, PostgreSQL).",
       "Own architecture decisions for the services you build and defend the assumptions behind them.",
       "Partner directly with clients and strategists to translate business objectives into technical plans.",
-      "Uphold Lynstad quality: rigorous code review, meaningful tests, and clear documentation.",
+      "Uphold Nord Harton quality: rigorous code review, meaningful tests, and clear documentation.",
       "Mentor peers and raise the engineering bar through pairing and thoughtful feedback.",
     ],
     requirements: [

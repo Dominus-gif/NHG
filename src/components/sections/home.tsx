@@ -210,7 +210,7 @@ export function FeatureBlocks() {
                 <div style={{ order: reversed ? 1 : 2, background: "var(--surface-subtle)", display: "flex", flexDirection: "column", padding: 24, gap: 14, minHeight: 360, borderLeft: reversed ? "none" : "1px solid var(--border)", borderRight: reversed ? "1px solid var(--border)" : "none" }}>
                   <div style={{ display: "flex", alignItems: "center", gap: 7 }}>
                     {[0, 1, 2].map((k) => <i key={k} style={{ width: 9, height: 9, borderRadius: "50%", background: "var(--border-strong)", display: "inline-block" }} />)}
-                    <span style={{ marginLeft: 8, fontFamily: "var(--font-mono)", fontSize: 11.5, color: "var(--text-faint)" }}>lynstad.group/console</span>
+                    <span style={{ marginLeft: 8, fontFamily: "var(--font-mono)", fontSize: 11.5, color: "var(--text-faint)" }}>nordharton.group/console</span>
                   </div>
                   <div style={{ flex: 1, background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 16, padding: 22, display: "flex", flexDirection: "column", justifyContent: "center" }}>
                     {b.chart === "line" && (<><div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}><span style={{ fontSize: 12.5, color: "var(--text-muted)" }}>Delivery velocity</span><span style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 24, color: "var(--text-strong)" }}>$15,437</span></div><div style={{ marginTop: 16, height: 130 }}><LineArea points={[26, 42, 34, 58, 50, 76, 66, 90]} /></div></>)}
@@ -256,8 +256,8 @@ export function TwoCol() {
 
 /* ===================== Testimonials carousel ===================== */
 const QUOTES = [
-  { q: "Partnering with Lynstad was the best decision we made this year. They unified twelve legacy systems into one platform — on time, and beyond what we scoped.", name: "Marcus Chen", role: "CEO, Meridian Capital", initials: "MC" },
-  { q: "Lynstad turned a tangle of manual workflows into one clean platform. Sharp, fast, and genuinely invested in our outcomes.", name: "Lucia Romero", role: "COO, Northwind", initials: "LR" },
+  { q: "Partnering with Nord Harton was the best decision we made this year. They unified twelve legacy systems into one platform — on time, and beyond what we scoped.", name: "Marcus Chen", role: "CEO, Meridian Capital", initials: "MC" },
+  { q: "Nord Harton turned a tangle of manual workflows into one clean platform. Sharp, fast, and genuinely invested in our outcomes.", name: "Lucia Romero", role: "COO, Northwind", initials: "LR" },
   { q: "The team shipped faster than our internal roadmap predicted, and the quality was extraordinary. A true partner.", name: "Sara Reyes", role: "CTO, Aurora", initials: "SR" },
   { q: "They understood our business before writing a line of code. That's rare — and it showed in every deliverable.", name: "Liam Nguyen", role: "VP Product, Helix", initials: "LN" },
 ];
@@ -313,10 +313,10 @@ const arrowBtn: CSSProperties = { display: "inline-flex", alignItems: "center", 
 
 /* ===================== FAQ ===================== */
 const FAQ = [
-  { q: "How do engagements with Lynstad start?", a: "Every engagement begins with a discovery session where we map goals, constraints, and users — then shape a clear plan with measurable outcomes before any build begins." },
+  { q: "How do engagements with Nord Harton start?", a: "Every engagement begins with a discovery session where we map goals, constraints, and users — then shape a clear plan with measurable outcomes before any build begins." },
   { q: "What kind of projects do you take on?", a: "Custom web applications, business systems, branding, mobile apps, and cloud infrastructure — from first strategy session through global scale." },
   { q: "How quickly can we get going?", a: "Most projects move from first conversation to kickoff within two weeks. We'll give you a clear timeline during discovery." },
-  { q: "Why should we choose Lynstad?", a: "One accountable partner across strategy, design, and engineering — tied to your KPIs, invested long after launch." },
+  { q: "Why should we choose Nord Harton?", a: "One accountable partner across strategy, design, and engineering — tied to your KPIs, invested long after launch." },
 ];
 export function Faq() {
   const [open, setOpen] = useState(0);
@@ -327,7 +327,7 @@ export function Faq() {
           <div style={{ ...card, borderRadius: 26, height: 300, position: "relative", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
             <div style={{ position: "absolute", width: 300, height: 300, borderRadius: "50%", background: "radial-gradient(circle, var(--accent-glow), transparent 65%)" }} />
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo-mark.svg" width={72} height={72} alt="Lynstad" style={{ position: "relative", borderRadius: 18 }} />
+            <img src="/logo-mark.svg" width={72} height={72} alt="Nord Harton" style={{ position: "relative", borderRadius: 18 }} />
           </div>
         </Reveal>
         <div>
@@ -408,48 +408,7 @@ function CapCard({ c, idx }: { c: (typeof CAPS)[number]; idx: number }) {
           <span style={{ position: "absolute", top: -3, right: -3, width: 8, height: 8, borderRadius: "50%", background: c.dot }} />
         </span>
         <h3 style={{ marginTop: 16, fontFamily: "var(--font-display)", fontSize: 17, fontWeight: 500, color: "var(--text-strong)", letterSpacing: "-.01em" }}>{c.title}</h3>
-        <div
-          style={{
-            display: "grid",
-            gridTemplateRows: hover ? "1fr" : "0fr",
-            transition: "grid-template-rows .55s var(--ease-out)",
-          }}
-        >
-          <div style={{ overflow: "hidden" }}>
-            <p
-              style={{
-                marginTop: 12,
-                fontSize: 14,
-                lineHeight: 1.6,
-                color: "var(--text-muted)",
-                opacity: hover ? 1 : 0,
-                transform: hover ? "translateY(0)" : "translateY(8px)",
-                transition: "opacity .5s var(--ease-out) .08s, transform .5s var(--ease-out) .08s",
-              }}
-            >
-              {c.body}
-            </p>
-            <span
-              style={{
-                marginTop: 14,
-                display: "inline-flex",
-                alignItems: "center",
-                gap: 6,
-                fontSize: 13.5,
-                fontWeight: 500,
-                color: "var(--accent-press)",
-                opacity: hover ? 1 : 0,
-                transform: hover ? "translateY(0)" : "translateY(8px)",
-                transition: "opacity .5s var(--ease-out) .16s, transform .5s var(--ease-out) .16s",
-              }}
-            >
-              Learn more
-              <span style={{ display: "inline-flex", transform: hover ? "translateX(2px)" : "translateX(0)", transition: "transform .5s var(--ease-out) .16s" }}>
-                <ArrowRight size={14} />
-              </span>
-            </span>
-          </div>
-        </div>
+        <p style={{ marginTop: 12, fontSize: 14, lineHeight: 1.6, color: "var(--text-muted)" }}>{c.body}</p>
       </div>
     </motion.div>
   );
@@ -467,7 +426,7 @@ export function Capabilities() {
             margin: "48px auto 0",
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 280px), 1fr))",
-            alignItems: "start",
+            alignItems: "stretch",
             gap: 16,
           }}
         >

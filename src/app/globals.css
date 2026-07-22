@@ -4,7 +4,7 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 /* ============================================================
-   LYNSTAD — Hexon-inspired dark theme
+   NORD HARTON — Hexon-inspired dark theme
    Near-black base, vibrant green accent (#36ec5e), blue secondary.
    ============================================================ */
 :root {

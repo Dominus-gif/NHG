@@ -36,7 +36,7 @@ export default function CtaBand() {
             Start your project in under two weeks
           </h2>
           <p style={{ marginTop: 18, fontSize: 18, color: "var(--text-muted)", maxWidth: "46ch", margin: "18px auto 0" }}>
-            Join the enterprises already transforming how they operate with Lynstad.
+            Join the enterprises already transforming how they operate with Nord Harton.
           </p>
           <div style={{ marginTop: 30 }}>
             <Button size="lg" iconRight={<ArrowRight size={18} />} onClick={open}>

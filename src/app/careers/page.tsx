@@ -6,7 +6,7 @@ import CtaBand from "@/components/sections/CtaBand";
 import { jobs } from "@/content/jobs";
 
 export const metadata: Metadata = {
-  title: "Careers — The Lynstad Group",
+  title: "Careers — Nord Harton Group",
   description:
     "Join a small, senior team building mission-critical enterprise platforms. Open roles across engineering, design, and platform.",
 };

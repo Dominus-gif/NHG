@@ -2,16 +2,16 @@ import type { Metadata } from "next";
 import LegalDoc, { type LegalSection } from "@/components/legal/LegalDoc";
 
 export const metadata: Metadata = {
-  title: "Terms of Service — The Lynstad Group",
+  title: "Terms of Service — Nord Harton Group",
   description:
-    "The terms and conditions governing your use of The Lynstad Group's website and services.",
+    "The terms and conditions governing your use of Nord Harton Group's website and services.",
 };
 
 const sections: LegalSection[] = [
   {
     heading: "Acceptance of Terms",
     body: [
-      "These Terms of Service (\"Terms\") govern your access to and use of the website and services provided by The Lynstad Group (\"Lynstad\", \"we\", \"us\", or \"our\"). By accessing or using our website, you agree to be bound by these Terms. If you do not agree, please do not use our website or services.",
+      "These Terms of Service (\"Terms\") govern your access to and use of the website and services provided by Nord Harton Group (\"Nord Harton\", \"we\", \"us\", or \"our\"). By accessing or using our website, you agree to be bound by these Terms. If you do not agree, please do not use our website or services.",
     ],
   },
   {
@@ -27,13 +27,13 @@ const sections: LegalSection[] = [
   {
     heading: "Services and Engagements",
     body: [
-      "Any professional services we provide are governed by a separate written agreement (such as a statement of work or master services agreement) between you and Lynstad. In the event of a conflict between these Terms and such an agreement, the terms of that agreement will prevail with respect to the services described in it.",
+      "Any professional services we provide are governed by a separate written agreement (such as a statement of work or master services agreement) between you and Nord Harton. In the event of a conflict between these Terms and such an agreement, the terms of that agreement will prevail with respect to the services described in it.",
     ],
   },
   {
     heading: "Intellectual Property",
     body: [
-      "All content on this website — including text, graphics, logos, and software — is the property of Lynstad or its licensors and is protected by intellectual property laws. You may not use our trademarks or content without prior written consent.",
+      "All content on this website — including text, graphics, logos, and software — is the property of Nord Harton or its licensors and is protected by intellectual property laws. You may not use our trademarks or content without prior written consent.",
       "Ownership of deliverables created during a client engagement is defined in the applicable services agreement.",
     ],
   },
@@ -52,7 +52,7 @@ const sections: LegalSection[] = [
   {
     heading: "Limitation of Liability",
     body: [
-      "To the fullest extent permitted by law, Lynstad shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising out of or related to your use of the website. Our total liability for any claim relating to the website is limited to the amount you paid us, if any, for access to it.",
+      "To the fullest extent permitted by law, Nord Harton shall not be liable for any indirect, incidental, special, consequential, or punitive damages arising out of or related to your use of the website. Our total liability for any claim relating to the website is limited to the amount you paid us, if any, for access to it.",
     ],
   },
   {

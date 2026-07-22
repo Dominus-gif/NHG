@@ -6,9 +6,9 @@ import CtaBand from "@/components/sections/CtaBand";
 import { posts } from "@/content/posts";
 
 export const metadata: Metadata = {
-  title: "Posts — The Lynstad Group",
+  title: "Posts — Nord Harton Group",
   description:
-    "Perspectives on enterprise digital transformation, engineering, design, and cloud from the Lynstad team.",
+    "Perspectives on enterprise digital transformation, engineering, design, and cloud from the Nord Harton team.",
 };
 
 const grads = ["30% 30%", "70% 40%", "50% 70%", "40% 50%"];
@@ -18,7 +18,7 @@ export default function PostsPage() {
     <>
       <PageHeader
         eyebrow="Posts"
-        title="Insights from the Lynstad team"
+        title="Insights from the Nord Harton team"
         description="Perspectives on strategy, engineering, and design from the people building mission-critical systems."
       />
 

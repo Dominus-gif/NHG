@@ -5,7 +5,7 @@ import CtaBand from "@/components/sections/CtaBand";
 import { services } from "@/content/services";
 
 export const metadata: Metadata = {
-  title: "Services — The Lynstad Group",
+  title: "Services — Nord Harton Group",
   description:
     "Custom web applications, business systems, branding, mobile, and cloud infrastructure engineered for enterprise scale.",
 };

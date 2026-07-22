@@ -20,7 +20,7 @@ import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
 
 export const metadata: Metadata = {
-  title: "The Lynstad Group — Where strategy meets execution",
+  title: "Nord Harton Group — Where strategy meets execution",
   description:
     "A digital solutions enterprise turning complex business requirements into elegant, scalable software. 15+ years of expertise, 100+ projects delivered worldwide.",
 };

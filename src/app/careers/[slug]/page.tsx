@@ -16,8 +16,8 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const job = getJob(slug);
-  if (!job) return { title: "Role not found — The Lynstad Group" };
-  return { title: `${job.title} — Careers — The Lynstad Group`, description: job.summary };
+  if (!job) return { title: "Role not found — Nord Harton Group" };
+  return { title: `${job.title} — Careers — Nord Harton Group`, description: job.summary };
 }
 
 export default async function JobPage({

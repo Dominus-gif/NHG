@@ -2,16 +2,16 @@ import type { Metadata } from "next";
 import LegalDoc, { type LegalSection } from "@/components/legal/LegalDoc";
 
 export const metadata: Metadata = {
-  title: "Privacy Policy — The Lynstad Group",
+  title: "Privacy Policy — Nord Harton Group",
   description:
-    "How The Lynstad Group collects, uses, protects, and shares your personal information.",
+    "How Nord Harton Group collects, uses, protects, and shares your personal information.",
 };
 
 const sections: LegalSection[] = [
   {
     heading: "Introduction",
     body: [
-      "The Lynstad Group (\"Lynstad\", \"we\", \"us\", or \"our\") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website, engage our services, or otherwise interact with us.",
+      "Nord Harton Group (\"Nord Harton\", \"we\", \"us\", or \"our\") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website, engage our services, or otherwise interact with us.",
       "By using our website or services, you agree to the collection and use of information in accordance with this policy. If you do not agree, please discontinue use of our website and services.",
     ],
   },

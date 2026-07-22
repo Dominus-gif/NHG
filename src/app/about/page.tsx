@@ -5,7 +5,7 @@ import CtaBand from "@/components/sections/CtaBand";
 import { Award, Handshake, Lightbulb, Eye, Target } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "About — The Lynstad Group",
+  title: "About — Nord Harton Group",
   description:
     "Engineering digital transformation at scale. A global digital solutions enterprise built over 15 years to turn complexity into competitive advantage.",
 };
@@ -14,7 +14,7 @@ const values = [
   {
     icon: Award,
     title: "Excellence Without Compromise",
-    body: "For us, excellence is not an aspiration — it is our baseline expectation. Every deliverable undergoes rigorous review, every architecture plan defends its assumptions, and every project team operates under the principle that “good enough” never competes with Lynstad quality.",
+    body: "For us, excellence is not an aspiration — it is our baseline expectation. Every deliverable undergoes rigorous review, every architecture plan defends its assumptions, and every project team operates under the principle that “good enough” never competes with Nord Harton quality.",
   },
   {
     icon: Handshake,
@@ -29,7 +29,7 @@ const values = [
   {
     icon: Eye,
     title: "Transparent Execution Defined by Outcomes",
-    body: "We believe the biggest risk in enterprise IT is opacity. Lynstad operates with radical transparency: clear communication on blockers and risks, honest timelines backed by data, and measurable outcomes instead of vanity metrics. If a project needs course correction, we flag it early — always with a proposed solution.",
+    body: "We believe the biggest risk in enterprise IT is opacity. Nord Harton operates with radical transparency: clear communication on blockers and risks, honest timelines backed by data, and measurable outcomes instead of vanity metrics. If a project needs course correction, we flag it early — always with a proposed solution.",
   },
   {
     icon: Target,
@@ -54,7 +54,7 @@ export default function AboutPage() {
               From vision to reality
             </span>
             <p className="mt-6 text-lg leading-relaxed text-fg-muted">
-              The Lynstad Group was founded 15 years ago on a single conviction:
+              Nord Harton Group was founded 15 years ago on a single conviction:
               technology should simplify business, not complicate it. What began as
               a boutique consultancy has evolved into a global digital solutions
               enterprise, built by teams who have seen the full lifecycle of
@@ -79,7 +79,7 @@ export default function AboutPage() {
             </h2>
             <p className="mt-4 leading-relaxed text-fg-muted">
               In an era of overwhelming technological choice, our role is to distill
-              complexity into clarity. The Lynstad Group empowers organizations with
+              complexity into clarity. Nord Harton Group empowers organizations with
               innovative digital solutions that accelerate growth and create lasting
               value — not through the latest trend, but through strategic technology
               partnerships built for your specific business objectives.

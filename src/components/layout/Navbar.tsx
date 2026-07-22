@@ -63,9 +63,9 @@ export default function Navbar() {
         >
           <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10 }} onClick={() => setActive("Home")}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo-mark.svg" width={32} height={32} alt="Lynstad" />
+            <img src="/logo-mark.svg" width={32} height={32} alt="Nord Harton" />
             <span style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 19, color: scrolled ? "#fff" : "var(--text-strong)", letterSpacing: "-.01em", transition: "color var(--dur-base) var(--ease-out)" }}>
-              Lynstad
+              Nord Harton
             </span>
           </Link>
           <div style={{ display: "flex", gap: 4, marginLeft: 18, flex: 1 }} className="nav-links">
