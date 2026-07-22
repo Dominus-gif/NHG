@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Host_Grotesk, Inter } from "next/font/google";
 import { GeistMono } from "geist/font/mono";
 import "./globals.css";
@@ -18,6 +18,12 @@ import SmoothScroll from "@/components/providers/SmoothScroll";
 import ContactModalProvider from "@/components/providers/ContactModalProvider";
 import Navbar from "@/components/layout/Navbar";
 import Footer from "@/components/layout/Footer";
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+};
 
 export const metadata: Metadata = {
   title: "Nord Harton Group — Where strategy meets execution",
