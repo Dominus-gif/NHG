@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, type ReactNode, type CSSProperties } from "react";
 import { motion, useScroll, useTransform, AnimatePresence, type Variants } from "framer-motion";
 import { Button } from "@/components/site/primitives";
-import { ArrowRight, Check, Workflow, Shield, Code2, Network, Palette, Smartphone, Cloud } from "@/components/site/icons";
+import { ArrowRight, Check, Workflow, Shield, Cloud } from "@/components/site/icons";
 import { useContactModal } from "@/components/providers/ContactModalProvider";
 import { submitEmailLead } from "@/lib/submissions";
 import { AnalyticsChart, DonutChart, Gauge, LineArea, StatCard, StatusPill } from "@/components/site/charts";
@@ -356,12 +356,12 @@ export function Faq() {
 
 /* ===================== Capabilities — collapsible tiles ===================== */
 const CAPS = [
-  { icon: <Code2 size={18} />, dot: "var(--c-blue)", title: "Custom Web Applications", body: "Bespoke platforms engineered for enterprise complexity, data, and scale — advanced interfaces, complex workflows, and seamless integrations." },
-  { icon: <Network size={18} />, dot: "var(--c-green)", title: "Business System Design", body: "ERP, CRM, and workflow automation tailored to how your organization runs, with custom management portals and reporting." },
-  { icon: <Palette size={18} />, dot: "var(--c-lavender)", title: "Website & Branding", body: "Conversion-driven design and digital experiences that elevate brand authority, from corporate sites to full e-commerce." },
-  { icon: <Smartphone size={18} />, dot: "var(--c-pink)", title: "Mobile Applications", body: "Native and cross-platform apps from concept through deployment across iOS and Android, with ongoing support." },
-  { icon: <Cloud size={18} />, dot: "var(--c-orange)", title: "Cloud & Infrastructure", body: "Scalable architecture, APIs, and microservices built for performance — with DevOps pipelines and enterprise integration." },
-  { icon: <Shield size={18} />, dot: "var(--c-cyan)", title: "Security & Compliance", body: "Hardened systems and audit-ready workflows for regulated industries, with end-to-end encryption and monitoring." },
+  { kicker: "Platforms", dot: "var(--c-blue)", title: "Custom Web Applications", body: "Bespoke platforms engineered for enterprise complexity, data, and scale — advanced interfaces, complex workflows, and seamless integrations." },
+  { kicker: "Systems", dot: "var(--c-green)", title: "Business System Design", body: "ERP, CRM, and workflow automation tailored to how your organization runs, with custom management portals and reporting." },
+  { kicker: "Brand", dot: "var(--c-lavender)", title: "Website & Branding", body: "Conversion-driven design and digital experiences that elevate brand authority, from corporate sites to full e-commerce." },
+  { kicker: "Mobile", dot: "var(--c-pink)", title: "Mobile Applications", body: "Native and cross-platform apps from concept through deployment across iOS and Android, with ongoing support." },
+  { kicker: "Cloud", dot: "var(--c-orange)", title: "Cloud & Infrastructure", body: "Scalable architecture, APIs, and microservices built for performance — with DevOps pipelines and enterprise integration." },
+  { kicker: "Security", dot: "var(--c-cyan)", title: "Security & Compliance", body: "Hardened systems and audit-ready workflows for regulated industries, with end-to-end encryption and monitoring." },
 ];
 function CapCard({ c, idx }: { c: (typeof CAPS)[number]; idx: number }) {
   const [hover, setHover] = useState(false);
@@ -389,25 +389,11 @@ function CapCard({ c, idx }: { c: (typeof CAPS)[number]; idx: number }) {
           transition: "transform .55s var(--ease-out), border-color .55s var(--ease-out), box-shadow .55s var(--ease-out), background-color .55s var(--ease-out)",
         }}
       >
-        <span
-          style={{
-            position: "relative",
-            width: 44,
-            height: 44,
-            borderRadius: 12,
-            background: "var(--surface-subtle)",
-            border: "1px solid var(--border)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "var(--text-strong)",
-            transition: "color .55s var(--ease-out)",
-          }}
-        >
-          {c.icon}
-          <span style={{ position: "absolute", top: -3, right: -3, width: 8, height: 8, borderRadius: "50%", background: c.dot }} />
-        </span>
-        <h3 style={{ marginTop: 16, fontFamily: "var(--font-display)", fontSize: 17, fontWeight: 500, color: "var(--text-strong)", letterSpacing: "-.01em" }}>{c.title}</h3>
+        <div style={{ display: "flex", alignItems: "center", gap: 9 }}>
+          <span style={{ width: 7, height: 7, borderRadius: "50%", background: c.dot, flexShrink: 0 }} />
+          <span style={{ fontFamily: "var(--font-mono)", fontSize: 11.5, fontWeight: 500, letterSpacing: ".16em", textTransform: "uppercase", color: "var(--text-subtle)" }}>{c.kicker}</span>
+        </div>
+        <h3 style={{ marginTop: 18, fontFamily: "var(--font-display)", fontSize: 18, fontWeight: 500, color: "var(--text-strong)", letterSpacing: "-.01em" }}>{c.title}</h3>
         <p style={{ marginTop: 12, fontSize: 14, lineHeight: 1.6, color: "var(--text-muted)" }}>{c.body}</p>
       </div>
     </motion.div>

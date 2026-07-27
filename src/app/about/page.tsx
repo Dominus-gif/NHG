@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import PageHeader from "@/components/layout/PageHeader";
 import { Reveal, Stagger, StaggerItem } from "@/components/ui/Reveal";
 import CtaBand from "@/components/sections/CtaBand";
-import { Award, Handshake, Lightbulb, Eye, Target } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "About — Nord Harton Group",
@@ -12,27 +11,22 @@ export const metadata: Metadata = {
 
 const values = [
   {
-    icon: Award,
     title: "Excellence Without Compromise",
     body: "For us, excellence is not an aspiration — it is our baseline expectation. Every deliverable undergoes rigorous review, every architecture plan defends its assumptions, and every project team operates under the principle that “good enough” never competes with Nord Harton quality.",
   },
   {
-    icon: Handshake,
     title: "Strategic Partnership, Not Project Delivery",
     body: "Most IT providers build a feature set and hand over the keys. We build partnerships. Your success is our metric of performance — so we consult before coding, align technical decisions with business objectives at every stage, and stay involved long after launch to ensure outcomes are sustained.",
   },
   {
-    icon: Lightbulb,
     title: "Innovation-Driven Methodology",
     body: "Technology moves faster than most organizations can adapt. We embrace emerging technologies — from AI and distributed cloud architecture to modern DevOps workflows — not as novelties, but as tools to build future-ready solutions your business won't outgrow in 18 months.",
   },
   {
-    icon: Eye,
     title: "Transparent Execution Defined by Outcomes",
     body: "We believe the biggest risk in enterprise IT is opacity. Nord Harton operates with radical transparency: clear communication on blockers and risks, honest timelines backed by data, and measurable outcomes instead of vanity metrics. If a project needs course correction, we flag it early — always with a proposed solution.",
   },
   {
-    icon: Target,
     title: "Client-Centric Technical Governance",
     body: "Your business objectives guide every technical decision. We don't deploy tech for the sake of technology; we architect solutions around your KPIs, user behaviors, and operational realities. Your mission is our blueprint at every project stage.",
   },
@@ -109,22 +103,20 @@ export default function AboutPage() {
             <h2 className="mt-4 text-3xl font-semibold sm:text-4xl">Core values</h2>
           </Reveal>
           <Stagger className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {values.map((value) => {
-              const Icon = value.icon;
-              return (
-                <StaggerItem key={value.title}>
-                  <div className="h-full rounded-2xl border border-hairline bg-elevated/60 p-7">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-hairline bg-base text-accent">
-                      <Icon size={20} strokeWidth={1.75} />
-                    </div>
-                    <h3 className="mt-5 text-base font-semibold">{value.title}</h3>
-                    <p className="mt-2 text-sm leading-relaxed text-fg-muted">
-                      {value.body}
-                    </p>
+            {values.map((value, i) => (
+              <StaggerItem key={value.title}>
+                <div className="group flex h-full flex-col rounded-2xl border border-hairline bg-elevated/60 p-7 transition-all duration-300 hover:-translate-y-1 hover:border-hairline-strong">
+                  <div className="flex items-center gap-4">
+                    <span className="font-heading text-3xl font-semibold tracking-tight text-fg-subtle transition-colors duration-300 group-hover:text-fg">
+                      {String(i + 1).padStart(2, "0")}
+                    </span>
+                    <span className="h-px flex-1 bg-hairline transition-colors duration-300 group-hover:bg-hairline-strong" />
                   </div>
-                </StaggerItem>
-              );
-            })}
+                  <h3 className="mt-6 text-lg font-semibold leading-snug">{value.title}</h3>
+                  <p className="mt-3 text-sm leading-relaxed text-fg-muted">{value.body}</p>
+                </div>
+              </StaggerItem>
+            ))}
           </Stagger>
         </div>
       </section>

@@ -63,8 +63,8 @@ export default function Navbar() {
         >
           <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10 }} onClick={() => setActive("Home")}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo-mark.svg" width={32} height={32} alt="Nord Harton" />
-            <span style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 19, color: scrolled ? "#fff" : "var(--text-strong)", letterSpacing: "-.01em", transition: "color var(--dur-base) var(--ease-out)" }}>
+            <img src="/logo-mark.svg" width={36} height={36} alt="Nord Harton" />
+            <span style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 25, letterSpacing: "-.02em", backgroundImage: "linear-gradient(160deg, #FFFFFF 0%, #C7CAD1 55%, #9A9DA6 100%)", WebkitBackgroundClip: "text", backgroundClip: "text", WebkitTextFillColor: "transparent", color: "transparent" }}>
               Nord Harton
             </span>
           </Link>
