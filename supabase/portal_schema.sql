@@ -43,8 +43,11 @@ create table if not exists public.portal_documents (
   title        text not null,
   kind         text default 'Link',
   service      text,
-  url          text
+  url          text,
+  released     boolean not null default false   -- CRM can release a doc regardless of payment status
 );
+-- If the table already existed, add the column:
+alter table public.portal_documents add column if not exists released boolean not null default false;
 
 create table if not exists public.portal_invoices (
   id           uuid primary key default gen_random_uuid(),
@@ -54,8 +57,11 @@ create table if not exists public.portal_invoices (
   currency     text default 'USD',
   status       text default 'pending',                  -- 'paid' | 'pending' | 'overdue'
   issued       text,
-  due          text
+  due          text,
+  pay_url      text                                      -- hosted payment link (Stripe, etc.) shown as "Pay now"
 );
+-- If the table already existed, add the column:
+alter table public.portal_invoices add column if not exists pay_url text;
 
 create table if not exists public.portal_messages (
   id           uuid primary key default gen_random_uuid(),

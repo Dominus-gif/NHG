@@ -46,6 +46,23 @@ function Card({ title, children, action }: { title: string; children: React.Reac
   );
 }
 
+function TelegramGlyph() {
+  return (
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M21.9 4.6c.3-1.2-.5-1.7-1.3-1.4L2.9 10c-1.2.5-1.2 1.1-.2 1.4l4.5 1.4 10.4-6.6c.5-.3.9-.1.6.2l-8.4 7.6-.3 4.6c.5 0 .7-.2 1-.5l2.3-2.2 4.7 3.5c.9.5 1.5.2 1.7-.8l3-14.6z" />
+    </svg>
+  );
+}
+
+function LockGlyph() {
+  return (
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+      <rect x="4" y="11" width="16" height="10" rx="2" />
+      <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+    </svg>
+  );
+}
+
 export default function PortalDashboard() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
@@ -90,7 +107,7 @@ export default function PortalDashboard() {
       setToken(session.access_token);
       const uid = session.user.id;
       const [prof, svc, tsk, doc, inv, msg] = await Promise.all([
-        sb.from("portal_clients").select("client_id, name, company, crm_name, crm_role, crm_email, crm_phone, crm_telegram").eq("id", uid).single(),
+        sb.from("portal_clients").select("client_id, name, company, crm_name, crm_role, crm_email, crm_phone").eq("id", uid).single(),
         sb.from("portal_services").select("*").eq("client_id", uid),
         sb.from("portal_tasks").select("*").eq("client_id", uid).order("progress", { ascending: false }),
         sb.from("portal_documents").select("*").eq("client_id", uid),
@@ -166,6 +183,7 @@ export default function PortalDashboard() {
   const p = profile as ClientProfile;
   const openInvoices = invoices.filter((i) => i.status !== "paid");
   const outstanding = openInvoices.reduce((sum, i) => sum + i.amount, 0);
+  const paidUp = outstanding <= 0; // documents unlock when nothing is outstanding (or when the CRM releases them)
 
   return (
     <div className="mx-auto max-w-7xl px-6 pb-24 pt-28 lg:px-12">
@@ -193,7 +211,68 @@ export default function PortalDashboard() {
       </div>
 
       <div className="mt-8 grid gap-6 lg:grid-cols-3">
-        {/* Main column */}
+        {/* Left column — relationship manager + payments */}
+        <div className="flex flex-col gap-6 lg:col-span-1">
+          <Card title="Your relationship manager">
+            <div className="flex items-center gap-4">
+              <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-surface-subtle text-lg font-semibold text-fg">
+                {p.crm_name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
+              </span>
+              <div>
+                <p className="font-semibold text-fg">{p.crm_name}</p>
+                <p className="text-xs text-fg-subtle">{p.crm_role}</p>
+              </div>
+            </div>
+            <div className="mt-5 flex flex-col gap-2 text-sm">
+              <a href={`mailto:${p.crm_email}`} className="text-fg-muted transition hover:text-accent">{p.crm_email}</a>
+              <a href={`tel:${p.crm_phone.replace(/\s/g, "")}`} className="text-fg-muted transition hover:text-accent">{p.crm_phone}</a>
+            </div>
+            <button
+              onClick={() => setChatOpen(true)}
+              className="mt-6 w-full rounded-full bg-white py-3 text-sm font-semibold text-[#0E0E0E] transition hover:bg-[#ECECEC]"
+            >
+              Chat with {p.crm_name.split(" ")[0]}
+            </button>
+            <p className="mt-3 flex items-center justify-center gap-1.5 text-center text-xs text-fg-subtle">
+              <TelegramGlyph /> Secure chat, delivered via Telegram
+            </p>
+          </Card>
+
+          <Card
+            title="Invoices & payments"
+            action={<span className="text-xs text-fg-subtle">Outstanding: <span className="font-mono text-fg">{formatMoney(outstanding, invoices[0]?.currency ?? "USD")}</span></span>}
+          >
+            <div className="flex flex-col gap-4">
+              {invoices.map((inv) => (
+                <div key={inv.id} className="rounded-xl border border-hairline bg-surface/50 p-4">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="font-mono text-sm text-fg">{inv.number}</p>
+                      <p className="text-xs text-fg-subtle">Due {inv.due}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="font-mono text-sm text-fg">{formatMoney(inv.amount, inv.currency)}</p>
+                      <div className="mt-1"><Badge status={inv.status} /></div>
+                    </div>
+                  </div>
+                  {inv.status !== "paid" && (
+                    <a
+                      href={inv.pay_url || "#"}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-3 block rounded-full bg-white py-2 text-center text-xs font-semibold text-[#0E0E0E] transition hover:bg-[#ECECEC]"
+                    >
+                      Pay now
+                    </a>
+                  )}
+                </div>
+              ))}
+              {invoices.length === 0 && <p className="text-sm text-fg-muted">No invoices.</p>}
+            </div>
+          </Card>
+        </div>
+
+        {/* Right column — services, progress, documents */}
         <div className="flex flex-col gap-6 lg:col-span-2">
           <Card title="Your services">
             <div className="grid gap-4 sm:grid-cols-2">
@@ -233,70 +312,35 @@ export default function PortalDashboard() {
             </div>
           </Card>
 
-          <Card title="Documents & deliverables">
+          <Card
+            title="Documents & deliverables"
+            action={!paidUp ? <span className="inline-flex items-center gap-1 text-xs text-fg-subtle"><LockGlyph /> Locked until payment</span> : undefined}
+          >
             <div className="divide-y divide-hairline">
-              {docs.map((d) => (
-                <a key={d.id} href={d.url} target="_blank" rel="noopener noreferrer" className="group flex items-center justify-between gap-3 py-3 first:pt-0 last:pb-0">
-                  <div>
-                    <p className="text-sm font-medium text-fg group-hover:text-accent">{d.title}</p>
-                    <p className="text-xs text-fg-subtle">{d.service}</p>
+              {docs.map((d) => {
+                const unlocked = Boolean(d.released) || paidUp;
+                return unlocked ? (
+                  <a key={d.id} href={d.url} target="_blank" rel="noopener noreferrer" className="group flex items-center justify-between gap-3 py-3 first:pt-0 last:pb-0">
+                    <div>
+                      <p className="text-sm font-medium text-fg group-hover:text-accent">{d.title}</p>
+                      <p className="text-xs text-fg-subtle">{d.service}</p>
+                    </div>
+                    <span className="rounded-md border border-hairline px-2 py-0.5 text-[11px] uppercase tracking-wide text-fg-subtle">{d.kind}</span>
+                  </a>
+                ) : (
+                  <div key={d.id} className="flex items-center justify-between gap-3 py-3 first:pt-0 last:pb-0">
+                    <div>
+                      <p className="text-sm font-medium text-fg-muted">{d.title}</p>
+                      <p className="text-xs text-fg-subtle">{d.service} · unlocks when payment completes</p>
+                    </div>
+                    <span className="inline-flex items-center gap-1.5 rounded-md border border-hairline px-2 py-0.5 text-[11px] uppercase tracking-wide text-fg-subtle">
+                      <LockGlyph /> Locked
+                    </span>
                   </div>
-                  <span className="rounded-md border border-hairline px-2 py-0.5 text-[11px] uppercase tracking-wide text-fg-subtle">{d.kind}</span>
-                </a>
-              ))}
+                );
+              })}
               {docs.length === 0 && <p className="text-sm text-fg-muted">No documents shared yet.</p>}
             </div>
-          </Card>
-
-          <Card title="Invoices & payments" action={<span className="text-xs text-fg-subtle">Outstanding: <span className="font-mono text-fg">{formatMoney(outstanding, invoices[0]?.currency ?? "USD")}</span></span>}>
-            <div className="divide-y divide-hairline">
-              {invoices.map((inv) => (
-                <div key={inv.id} className="flex items-center justify-between gap-3 py-3 first:pt-0 last:pb-0">
-                  <div>
-                    <p className="font-mono text-sm text-fg">{inv.number}</p>
-                    <p className="text-xs text-fg-subtle">Due {inv.due}</p>
-                  </div>
-                  <div className="flex items-center gap-4">
-                    <span className="font-mono text-sm text-fg">{formatMoney(inv.amount, inv.currency)}</span>
-                    <Badge status={inv.status} />
-                  </div>
-                </div>
-              ))}
-              {invoices.length === 0 && <p className="text-sm text-fg-muted">No invoices.</p>}
-            </div>
-          </Card>
-        </div>
-
-        {/* Side column — CRM */}
-        <div className="flex flex-col gap-6">
-          <Card title="Your relationship manager">
-            <div className="flex items-center gap-4">
-              <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-full bg-surface-subtle text-lg font-semibold text-fg">
-                {p.crm_name.split(" ").map((n) => n[0]).join("").slice(0, 2)}
-              </span>
-              <div>
-                <p className="font-semibold text-fg">{p.crm_name}</p>
-                <p className="text-xs text-fg-subtle">{p.crm_role}</p>
-              </div>
-            </div>
-            <div className="mt-5 flex flex-col gap-2 text-sm">
-              <a href={`mailto:${p.crm_email}`} className="text-fg-muted transition hover:text-accent">{p.crm_email}</a>
-              <a href={`tel:${p.crm_phone.replace(/\s/g, "")}`} className="text-fg-muted transition hover:text-accent">{p.crm_phone}</a>
-            </div>
-            <button
-              onClick={() => setChatOpen(true)}
-              className="mt-6 w-full rounded-full bg-white py-3 text-sm font-semibold text-[#0E0E0E] transition hover:bg-[#ECECEC]"
-            >
-              Chat with {p.crm_name.split(" ")[0]}
-            </button>
-            <a
-              href={`https://t.me/${p.crm_telegram.replace(/^@/, "")}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-2 block w-full rounded-full border border-hairline-strong py-3 text-center text-sm text-fg transition hover:border-accent"
-            >
-              Open in Telegram
-            </a>
           </Card>
         </div>
       </div>

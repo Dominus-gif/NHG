@@ -34,6 +34,7 @@ export type DocItem = {
   kind: string; // e.g. "PDF", "Figma", "Repo", "Spec"
   service: string;
   url: string;
+  released?: boolean; // CRM can release a doc regardless of payment status
 };
 
 export type Invoice = {
@@ -44,6 +45,7 @@ export type Invoice = {
   status: "paid" | "pending" | "overdue";
   issued: string;
   due: string;
+  pay_url?: string; // hosted payment link (Stripe, etc.)
 };
 
 export type Message = {
@@ -79,17 +81,17 @@ export const DEMO_TASKS: Task[] = [
 ];
 
 export const DEMO_DOCS: DocItem[] = [
-  { id: "d1", title: "Solution Architecture (v3)", kind: "PDF", service: "Custom Web Application", url: "#" },
-  { id: "d2", title: "API Reference & Contracts", kind: "Spec", service: "Custom Web Application", url: "#" },
-  { id: "d3", title: "Staging Environment", kind: "Link", service: "Cloud & Infrastructure", url: "#" },
-  { id: "d4", title: "Infrastructure Diagram", kind: "PDF", service: "Cloud & Infrastructure", url: "#" },
-  { id: "d5", title: "Brand & UI Kit", kind: "Figma", service: "Web Experience & Branding", url: "#" },
+  { id: "d1", title: "Solution Architecture (v3)", kind: "PDF", service: "Custom Web Application", url: "#", released: true },
+  { id: "d2", title: "API Reference & Contracts", kind: "Spec", service: "Custom Web Application", url: "#", released: false },
+  { id: "d3", title: "Staging Environment", kind: "Link", service: "Cloud & Infrastructure", url: "#", released: true },
+  { id: "d4", title: "Infrastructure Diagram", kind: "PDF", service: "Cloud & Infrastructure", url: "#", released: false },
+  { id: "d5", title: "Brand & UI Kit", kind: "Figma", service: "Web Experience & Branding", url: "#", released: false },
 ];
 
 export const DEMO_INVOICES: Invoice[] = [
   { id: "i1", number: "INV-1042", amount: 24000, currency: "USD", status: "paid", issued: "Apr 1, 2026", due: "Apr 15, 2026" },
-  { id: "i2", number: "INV-1067", amount: 18500, currency: "USD", status: "pending", issued: "Jun 1, 2026", due: "Jun 30, 2026" },
-  { id: "i3", number: "INV-1071", amount: 9200, currency: "USD", status: "overdue", issued: "May 5, 2026", due: "May 20, 2026" },
+  { id: "i2", number: "INV-1067", amount: 18500, currency: "USD", status: "pending", issued: "Jun 1, 2026", due: "Jun 30, 2026", pay_url: "#" },
+  { id: "i3", number: "INV-1071", amount: 9200, currency: "USD", status: "overdue", issued: "May 5, 2026", due: "May 20, 2026", pay_url: "#" },
 ];
 
 export const DEMO_MESSAGES: Message[] = [
