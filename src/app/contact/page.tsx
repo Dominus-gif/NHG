@@ -6,12 +6,14 @@ import PageHeader from "@/components/layout/PageHeader";
 import SelectMenu from "@/components/forms/SelectMenu";
 import { services } from "@/content/services";
 import { company } from "@/content/site";
+import { isWorkEmail, WORK_EMAIL_ERROR } from "@/lib/email";
 
 const SERVICE_OPTIONS = [...services.map((s) => s.title), "Something else"];
 
 export default function ContactPage() {
   const [sent, setSent] = useState(false);
   const [service, setService] = useState("");
+  const [error, setError] = useState("");
   const fieldClass =
     "w-full rounded-lg border border-hairline-strong bg-elevated/60 px-4 py-2.5 text-sm text-fg placeholder:text-fg-subtle outline-none transition-colors focus:border-accent";
 
@@ -41,6 +43,12 @@ export default function ContactPage() {
               <form
                 onSubmit={(e) => {
                   e.preventDefault();
+                  const email = String(new FormData(e.currentTarget).get("email") || "");
+                  if (!isWorkEmail(email)) {
+                    setError(WORK_EMAIL_ERROR);
+                    return;
+                  }
+                  setError("");
                   setSent(true);
                 }}
                 className="space-y-5"
@@ -56,7 +64,7 @@ export default function ContactPage() {
                     <label htmlFor="email" className="mb-1.5 block text-xs font-medium text-fg-muted">
                       Work email
                     </label>
-                    <input id="email" type="email" required className={fieldClass} placeholder="jane@company.com" />
+                    <input id="email" name="email" type="email" required className={fieldClass} placeholder="jane@company.com" />
                   </div>
                 </div>
                 <div>
@@ -89,6 +97,7 @@ export default function ContactPage() {
                     placeholder="A few lines about your goals."
                   />
                 </div>
+                {error && <p className="text-sm text-danger">{error}</p>}
                 <button
                   type="submit"
                   className="cursor-pointer rounded-xl bg-accent px-7 py-3 text-sm font-medium text-on-accent transition-all duration-200 hover:bg-accent-hover active:scale-[0.99]"

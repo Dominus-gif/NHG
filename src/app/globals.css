@@ -73,14 +73,14 @@
   --surface-inverse:   #0E0F11;   /* recessed contrast bands */
   --surface-inverse-2: #202124;
 
-  /* Text */
+  /* Text — brightened for readability/contrast on the dark theme */
   --text-strong: #FFFFFF;        /* headings — white */
-  --text-body:   #A6A9AE;        /* paragraph — cool grey */
-  --text-muted:  #82858B;        /* secondary */
-  --text-subtle: #5A5D63;        /* captions / meta */
-  --text-faint:  #44474C;        /* disabled */
+  --text-body:   #C9CCD2;        /* paragraph — brighter cool grey */
+  --text-muted:  #ABAEB6;        /* secondary */
+  --text-subtle: #8B8E96;        /* captions / meta */
+  --text-faint:  #6C6F76;        /* disabled */
   --text-on-inverse: #FFFFFF;
-  --text-on-inverse-muted: rgba(255,255,255,0.60);
+  --text-on-inverse-muted: rgba(255,255,255,0.74);
 
   /* Lines */
   --border:        rgba(255,255,255,0.08);

@@ -40,12 +40,14 @@ export type DocItem = {
 export type Invoice = {
   id: string;
   number: string;
+  service?: string; // what the invoice is for
   amount: number;
   currency: string; // e.g. "USD"
   status: "paid" | "pending" | "overdue";
   issued: string;
   due: string;
-  pay_url?: string; // hosted payment link (Stripe, etc.)
+  paid_on?: string; // ISO date the invoice was paid (for paid invoices)
+  pay_url?: string; // Dodo Payments hosted checkout link
 };
 
 export type Message = {
@@ -89,9 +91,15 @@ export const DEMO_DOCS: DocItem[] = [
 ];
 
 export const DEMO_INVOICES: Invoice[] = [
-  { id: "i1", number: "INV-1042", amount: 24000, currency: "USD", status: "paid", issued: "Apr 1, 2026", due: "Apr 15, 2026" },
-  { id: "i2", number: "INV-1067", amount: 18500, currency: "USD", status: "pending", issued: "Jun 1, 2026", due: "Jun 30, 2026", pay_url: "#" },
-  { id: "i3", number: "INV-1071", amount: 9200, currency: "USD", status: "overdue", issued: "May 5, 2026", due: "May 20, 2026", pay_url: "#" },
+  // Paid history (used by the detailed payments page analysis)
+  { id: "i1", number: "INV-1001", service: "Custom Web Application", amount: 15000, currency: "USD", status: "paid", issued: "Jul 28, 2025", due: "Aug 11, 2025", paid_on: "2025-08-08" },
+  { id: "i2", number: "INV-1012", service: "Cloud & Infrastructure", amount: 12000, currency: "USD", status: "paid", issued: "Sep 20, 2025", due: "Oct 4, 2025", paid_on: "2025-10-02" },
+  { id: "i3", number: "INV-1025", service: "Custom Web Application", amount: 20000, currency: "USD", status: "paid", issued: "Nov 30, 2025", due: "Dec 14, 2025", paid_on: "2025-12-11" },
+  { id: "i4", number: "INV-1041", service: "Web Experience & Branding", amount: 8000, currency: "USD", status: "paid", issued: "Jan 20, 2026", due: "Feb 3, 2026", paid_on: "2026-02-02" },
+  { id: "i5", number: "INV-1042", service: "Custom Web Application", amount: 24000, currency: "USD", status: "paid", issued: "Apr 1, 2026", due: "Apr 15, 2026", paid_on: "2026-04-12" },
+  // Outstanding
+  { id: "i6", number: "INV-1067", service: "Cloud & Infrastructure", amount: 18500, currency: "USD", status: "pending", issued: "Jun 1, 2026", due: "Jun 30, 2026", pay_url: "#" },
+  { id: "i7", number: "INV-1071", service: "Custom Web Application", amount: 9200, currency: "USD", status: "overdue", issued: "May 5, 2026", due: "May 20, 2026", pay_url: "#" },
 ];
 
 export const DEMO_MESSAGES: Message[] = [
@@ -106,4 +114,13 @@ export function formatMoney(amount: number, currency: string): string {
   } catch {
     return `${currency} ${amount.toLocaleString()}`;
   }
+}
+
+export const MONTH_LABELS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+
+export function formatDate(iso?: string): string {
+  if (!iso) return "—";
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return iso;
+  return d.toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
 }

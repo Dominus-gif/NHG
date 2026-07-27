@@ -53,14 +53,18 @@ create table if not exists public.portal_invoices (
   id           uuid primary key default gen_random_uuid(),
   client_id    uuid not null references public.portal_clients(id) on delete cascade,
   number       text not null,
+  service      text,                                     -- what the invoice is for
   amount       numeric not null default 0,
   currency     text default 'USD',
   status       text default 'pending',                  -- 'paid' | 'pending' | 'overdue'
   issued       text,
   due          text,
-  pay_url      text                                      -- hosted payment link (Stripe, etc.) shown as "Pay now"
+  paid_on      text,                                     -- date the invoice was paid (ISO or readable)
+  pay_url      text                                      -- Dodo Payments checkout link, shown as "Pay now"
 );
--- If the table already existed, add the column:
+-- If the table already existed, add the new columns:
+alter table public.portal_invoices add column if not exists service text;
+alter table public.portal_invoices add column if not exists paid_on text;
 alter table public.portal_invoices add column if not exists pay_url text;
 
 create table if not exists public.portal_messages (

@@ -6,6 +6,7 @@ import { Button } from "@/components/site/primitives";
 import { ArrowRight, Check, Workflow, Shield, Cloud } from "@/components/site/icons";
 import { useContactModal } from "@/components/providers/ContactModalProvider";
 import { submitEmailLead } from "@/lib/submissions";
+import { isWorkEmail, WORK_EMAIL_ERROR } from "@/lib/email";
 import { AnalyticsChart, DonutChart, Gauge, LineArea, StatCard, StatusPill } from "@/components/site/charts";
 import CountUpInline from "@/components/site/CountUpInline";
 
@@ -80,6 +81,10 @@ function HeroEmailForm() {
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isWorkEmail(email)) {
+      setError(WORK_EMAIL_ERROR);
+      return;
+    }
     setSubmitting(true);
     setError("");
     try {

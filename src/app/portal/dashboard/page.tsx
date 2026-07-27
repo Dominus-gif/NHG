@@ -2,6 +2,7 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { getSupabaseBrowser } from "@/lib/supabaseBrowser";
 import {
   DEMO_PROFILE, DEMO_SERVICES, DEMO_TASKS, DEMO_DOCS, DEMO_INVOICES, DEMO_MESSAGES,
@@ -43,14 +44,6 @@ function Card({ title, children, action }: { title: string; children: React.Reac
       </div>
       {children}
     </section>
-  );
-}
-
-function TelegramGlyph() {
-  return (
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-      <path d="M21.9 4.6c.3-1.2-.5-1.7-1.3-1.4L2.9 10c-1.2.5-1.2 1.1-.2 1.4l4.5 1.4 10.4-6.6c.5-.3.9-.1.6.2l-8.4 7.6-.3 4.6c.5 0 .7-.2 1-.5l2.3-2.2 4.7 3.5c.9.5 1.5.2 1.7-.8l3-14.6z" />
-    </svg>
   );
 }
 
@@ -124,7 +117,7 @@ export default function PortalDashboard() {
     })();
   }, [loadDemo, router]);
 
-  // Poll for new CRM (Telegram) replies while the chat is open, in live mode.
+  // Poll for new CRM replies while the chat is open, in live mode.
   useEffect(() => {
     if (demo || !chatOpen) return;
     const sb = getSupabaseBrowser();
@@ -233,8 +226,8 @@ export default function PortalDashboard() {
             >
               Chat with {p.crm_name.split(" ")[0]}
             </button>
-            <p className="mt-3 flex items-center justify-center gap-1.5 text-center text-xs text-fg-subtle">
-              <TelegramGlyph /> Secure chat, delivered via Telegram
+            <p className="mt-3 text-center text-xs text-fg-subtle">
+              Secure direct messaging — typically replies within a few hours.
             </p>
           </Card>
 
@@ -243,7 +236,7 @@ export default function PortalDashboard() {
             action={<span className="text-xs text-fg-subtle">Outstanding: <span className="font-mono text-fg">{formatMoney(outstanding, invoices[0]?.currency ?? "USD")}</span></span>}
           >
             <div className="flex flex-col gap-4">
-              {invoices.map((inv) => (
+              {openInvoices.map((inv) => (
                 <div key={inv.id} className="rounded-xl border border-hairline bg-surface/50 p-4">
                   <div className="flex items-start justify-between gap-3">
                     <div>
@@ -255,19 +248,20 @@ export default function PortalDashboard() {
                       <div className="mt-1"><Badge status={inv.status} /></div>
                     </div>
                   </div>
-                  {inv.status !== "paid" && (
-                    <a
-                      href={inv.pay_url || "#"}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mt-3 block rounded-full bg-white py-2 text-center text-xs font-semibold text-[#0E0E0E] transition hover:bg-[#ECECEC]"
-                    >
-                      Pay now
-                    </a>
-                  )}
+                  <a
+                    href={inv.pay_url || "#"}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="mt-3 block rounded-full bg-white py-2 text-center text-xs font-semibold text-[#0E0E0E] transition hover:bg-[#ECECEC]"
+                  >
+                    Pay now
+                  </a>
                 </div>
               ))}
-              {invoices.length === 0 && <p className="text-sm text-fg-muted">No invoices.</p>}
+              {openInvoices.length === 0 && <p className="text-sm text-fg-muted">You&apos;re all paid up — no outstanding invoices.</p>}
+              <Link href="/portal/payments" className="mt-1 text-center text-sm font-medium text-accent transition hover:underline">
+                View payment history &amp; analysis →
+              </Link>
             </div>
           </Card>
         </div>
@@ -386,7 +380,7 @@ function ChatPanel({
         <div className="flex items-center justify-between border-b border-hairline px-5 py-4">
           <div>
             <p className="text-sm font-semibold text-fg">{crmName}</p>
-            <p className="text-xs text-fg-subtle">Connected via Telegram</p>
+            <p className="text-xs text-fg-subtle">Secure direct line</p>
           </div>
           <button onClick={onClose} aria-label="Close chat" className="rounded-lg border border-hairline p-2 text-fg-muted transition hover:text-fg">✕</button>
         </div>
@@ -404,7 +398,7 @@ function ChatPanel({
             </div>
           ))}
           {messages.length === 0 && (
-            <p className="pt-10 text-center text-sm text-fg-muted">Start the conversation — your message goes straight to {crmName.split(" ")[0]} on Telegram.</p>
+            <p className="pt-10 text-center text-sm text-fg-muted">Start the conversation — your message goes straight to {crmName.split(" ")[0]}.</p>
           )}
           <div ref={endRef} />
         </div>

@@ -5,6 +5,7 @@ import { Button, Eyebrow } from "@/components/site/primitives";
 import { ArrowRight, Check, Mail, X } from "@/components/site/icons";
 import SelectMenu from "@/components/forms/SelectMenu";
 import { submitConsultation, type ConsultationInput } from "@/lib/submissions";
+import { isWorkEmail, WORK_EMAIL_ERROR } from "@/lib/email";
 
 const DOMAINS = [
   "Custom Web Applications",
@@ -93,6 +94,10 @@ export default function ContactModal({
 
   const submit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isWorkEmail(form.work_email)) {
+      setError(WORK_EMAIL_ERROR);
+      return;
+    }
     setSubmitting(true);
     setError("");
     try {
