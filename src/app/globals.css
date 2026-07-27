@@ -122,6 +122,11 @@
   --color-base: var(--bg);
   --color-deep: var(--surface-inverse);
   --color-elevated: var(--surface);
+  --color-surface: var(--surface);
+  --color-surface-subtle: var(--surface-subtle);
+  --color-success: var(--success);
+  --color-warning: var(--warning);
+  --color-danger: var(--danger);
   --color-fg: var(--text-strong);
   --color-fg-muted: var(--text-muted);
   --color-fg-subtle: var(--text-subtle);
@@ -224,6 +229,7 @@ select.lyn-field option {
 @keyframes fade { from { opacity: 0 } to { opacity: 1 } }
 @keyframes pop { from { opacity: 0; transform: translateY(12px) scale(.98) } to { opacity: 1; transform: none } }
 @keyframes menuIn { from { opacity: 0; transform: translateY(-6px) scale(.98) } to { opacity: 1; transform: none } }
+@keyframes slideIn { from { transform: translateX(100%) } to { transform: translateX(0) } }
 @keyframes pulseRing { 0% { transform: scale(1); opacity: .55 } 100% { transform: scale(2.4); opacity: 0 } }
 .pulse-ring { animation: pulseRing 2s ease-out infinite; }
 

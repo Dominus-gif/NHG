@@ -12,6 +12,7 @@ const NAV = [
   { label: "About", href: "/about" },
   { label: "Services", href: "/services" },
   { label: "Posts", href: "/posts" },
+  { label: "Client Portal", href: "/portal" },
 ];
 
 const easeExpo = [0.16, 1, 0.3, 1] as const;
