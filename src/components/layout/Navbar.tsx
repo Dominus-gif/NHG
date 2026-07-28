@@ -21,6 +21,7 @@ export default function Navbar() {
   const { open } = useContactModal();
   const [scrolled, setScrolled] = useState(false);
   const [active, setActive] = useState("Home");
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24);
@@ -93,10 +94,54 @@ export default function Navbar() {
               );
             })}
           </div>
-          <Button size="sm" iconRight={<ArrowRight size={16} />} onClick={open} style={{ height: 42 }}>
-            Get Started
-          </Button>
+          <div style={{ display: "flex", alignItems: "center", gap: 10, marginLeft: "auto" }} className="nav-cta">
+            <Button size="sm" iconRight={<ArrowRight size={16} />} onClick={open} style={{ height: 42 }}>
+              Get Started
+            </Button>
+          </div>
+          <button
+            className="nav-burger"
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={menuOpen}
+            onClick={() => setMenuOpen((v) => !v)}
+            style={{ width: 42, height: 42, marginLeft: "auto", borderRadius: 10, border: "1px solid var(--border-strong)", background: "transparent", color: "#fff", cursor: "pointer", alignItems: "center", justifyContent: "center" }}
+          >
+            {menuOpen ? (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M18 6 6 18M6 6l12 12" /></svg>
+            ) : (
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M3 6h18M3 12h18M3 18h18" /></svg>
+            )}
+          </button>
         </nav>
+
+        {menuOpen && (
+          <div
+            className="nav-mobile"
+            style={{
+              flexDirection: "column",
+              gap: 4,
+              padding: "12px 18px 20px",
+              borderTop: "1px solid rgba(255,255,255,0.08)",
+              background: "rgba(12,12,14,0.98)",
+              backdropFilter: "blur(16px)",
+              WebkitBackdropFilter: "blur(16px)",
+            }}
+          >
+            {NAV.map((n) => (
+              <Link
+                key={n.label}
+                href={n.href}
+                onClick={() => { setActive(n.label); setMenuOpen(false); }}
+                style={{ padding: "13px 12px", borderRadius: 10, fontSize: 16, fontWeight: 500, color: "#fff", background: active === n.label ? "rgba(255,255,255,0.08)" : "transparent" }}
+              >
+                {n.label}
+              </Link>
+            ))}
+            <Button size="md" full iconRight={<ArrowRight size={16} />} onClick={() => { setMenuOpen(false); open(); }} style={{ marginTop: 8 }}>
+              Get Started
+            </Button>
+          </div>
+        )}
       </div>
     </motion.header>
   );

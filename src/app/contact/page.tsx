@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Check, Mail, MapPin, Clock } from "lucide-react";
+import { Check, Mail, Clock } from "lucide-react";
 import PageHeader from "@/components/layout/PageHeader";
 import SelectMenu from "@/components/forms/SelectMenu";
 import { services } from "@/content/services";
@@ -112,7 +112,6 @@ export default function ContactPage() {
             <div className="space-y-7 rounded-2xl border border-hairline bg-elevated/60 p-8">
               {[
                 { icon: Mail, label: "Email", value: company.email },
-                { icon: MapPin, label: "Offices", value: "London · New York · Singapore" },
                 { icon: Clock, label: "Response time", value: "Within one business day" },
               ].map((item) => {
                 const Icon = item.icon;

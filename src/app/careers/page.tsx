@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import PageHeader from "@/components/layout/PageHeader";
-import { Stagger, StaggerItem } from "@/components/ui/Reveal";
+import { Reveal, Stagger, StaggerItem } from "@/components/ui/Reveal";
 import CtaBand from "@/components/sections/CtaBand";
 import { jobs } from "@/content/jobs";
 
@@ -16,17 +16,30 @@ export default function CareersPage() {
     <>
       <PageHeader
         eyebrow="Careers"
-        title="Build systems that matter"
-        description="We're a small, senior, high-trust team. We hire people who care deeply about their craft and want to see their work run in production for organizations that depend on it."
+        title="Build things that matter, with people who care"
+        description="We're a small, senior, fully-remote team. We hire people who take real ownership, communicate honestly, and would rather solve the right problem than the easy one. No take-home gauntlets, no 8-round loops — just a few honest conversations and some real work."
       />
 
       <section className="py-20 lg:py-24">
         <div className="mx-auto max-w-4xl px-6 lg:px-8">
-          <div className="mb-8 flex items-baseline justify-between">
-            <h2 className="text-sm font-semibold uppercase tracking-wider text-fg-subtle">
-              Open positions
-            </h2>
-            <span className="text-sm text-fg-subtle">{jobs.length} roles</span>
+          <Reveal>
+            <div className="mb-10 grid gap-4 sm:grid-cols-3">
+              {[
+                { k: "How we work", v: "Remote-first, async-friendly, low process." },
+                { k: "How we hire", v: "Intro chat → a paid, real-world exercise → a team conversation." },
+                { k: "What we value", v: "Ownership, candor, and craft over credentials." },
+              ].map((c) => (
+                <div key={c.k} className="rounded-xl border border-hairline bg-elevated/60 p-5">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-accent">{c.k}</p>
+                  <p className="mt-2 text-sm leading-relaxed text-fg-muted">{c.v}</p>
+                </div>
+              ))}
+            </div>
+          </Reveal>
+
+          <div className="mb-6 flex items-baseline justify-between">
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-fg-subtle">Open positions</h2>
+            <span className="text-sm text-fg-subtle">{jobs.length} open roles</span>
           </div>
 
           <Stagger className="flex flex-col gap-4">
@@ -34,19 +47,21 @@ export default function CareersPage() {
               <StaggerItem key={job.slug}>
                 <Link
                   href={`/careers/${job.slug}`}
-                  className="group flex flex-col gap-4 rounded-2xl border border-hairline bg-elevated/60 p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-accent/40 sm:flex-row sm:items-center sm:justify-between"
+                  className="group block rounded-2xl border border-hairline bg-elevated/60 p-6 transition-all duration-300 hover:-translate-y-0.5 hover:border-accent/40"
                 >
-                  <div>
+                  <div className="flex items-center justify-between gap-3">
                     <span className="font-mono text-xs text-accent">{job.department}</span>
-                    <h3 className="mt-2 text-lg font-semibold text-fg">{job.title}</h3>
-                    <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-sm text-fg-muted">
-                      <span>{job.location}</span>
-                      <span>·</span>
-                      <span>{job.type}</span>
-                    </div>
+                    <span className="text-xs text-fg-subtle">{job.posted}</span>
                   </div>
-                  <span className="inline-flex shrink-0 items-center gap-2 text-sm font-medium text-accent transition-transform group-hover:translate-x-1">
-                    View role →
+                  <h3 className="mt-2 text-xl font-semibold text-fg">{job.title}</h3>
+                  <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-fg-muted">{job.summary}</p>
+                  <div className="mt-4 flex flex-wrap items-center gap-2">
+                    {[job.location, job.type, job.level, job.salary].map((m) => (
+                      <span key={m} className="rounded-full border border-hairline px-3 py-1 text-xs text-fg-subtle">{m}</span>
+                    ))}
+                  </div>
+                  <span className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-accent transition-transform group-hover:translate-x-1">
+                    View role &amp; apply →
                   </span>
                 </Link>
               </StaggerItem>

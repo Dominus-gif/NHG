@@ -168,15 +168,13 @@ function HeroCards() {
 }
 
 /* ===================== Logos ===================== */
-const LOGOS = ["Adobe", "NordVPN", "Trello", "Notion", "XMCG"];
 export function Logos() {
   return (
-    <section style={{ padding: "48px 24px 24px" }}>
+    <section style={{ padding: "40px 24px 20px" }}>
       <Reveal>
-        <p style={{ textAlign: "center", fontSize: 13, color: "var(--text-faint)", marginBottom: 26 }}>Trusted by enterprises and teams across the world</p>
-        <Stagger style={{ display: "flex", flexWrap: "wrap", gap: "18px 56px", justifyContent: "center", alignItems: "center" }}>
-          {LOGOS.map((l) => <Item key={l}><span style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 21, color: "#FFFFFF", opacity: 0.85 }}>{l}</span></Item>)}
-        </Stagger>
+        <p style={{ textAlign: "center", fontSize: 13.5, letterSpacing: ".08em", textTransform: "uppercase", color: "var(--text-muted)" }}>
+          Trusted by enterprises and teams across the world
+        </p>
       </Reveal>
     </section>
   );

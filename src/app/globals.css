@@ -211,11 +211,22 @@ select.lyn-field option {
 .card-hover:hover { border-color: var(--border-strong); transform: translateY(-3px); box-shadow: var(--shadow-lg); }
 .card-hover-accent:hover { border-color: var(--accent); transform: translateY(-3px); box-shadow: var(--shadow-lg); }
 
+/* mobile nav menu toggles (hidden on desktop) */
+.nav-burger, .nav-mobile { display: none; }
+
 @media (max-width: 760px) {
   .nav-links { display: none !important; }
+  .nav-burger { display: inline-flex !important; }
+  .nav-cta { display: none !important; }
+  .nav-mobile { display: flex !important; }
   .footer-grid { grid-template-columns: 1fr 1fr !important; }
   .contact-row { grid-template-columns: 1fr !important; }
   .stats-grid { grid-template-columns: 1fr 1fr !important; }
+
+  /* stack the hero email field so it fits and stays usable on phones */
+  .hero-email { flex-direction: column !important; border-radius: 18px !important; gap: 10px !important; padding: 12px !important; }
+  .hero-email input { flex: none !important; width: 100% !important; padding: 12px 14px !important; }
+  .hero-email > button { width: 100% !important; }
 }
 
 @media (max-width: 900px) {

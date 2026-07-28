@@ -39,6 +39,16 @@ const BUDGETS = [
   "$1M+",
 ];
 
+const RELATIONSHIPS = [
+  "Founder / Owner",
+  "C-level / Executive",
+  "Decision maker",
+  "Department / Team lead",
+  "Project manager",
+  "Consultant / Advisor",
+  "Other",
+];
+
 const EMPTY: ConsultationInput = {
   full_name: "",
   work_email: "",
@@ -205,7 +215,7 @@ export default function ContactModal({
             </Row>
             <Row>
               <Field label="Company" placeholder="Acme Inc." value={form.company} onChange={set("company")} />
-              <Field label="Job title" placeholder="VP of Engineering" required={false} value={form.job_title} onChange={set("job_title")} />
+              <Select label="Your role at the company" options={RELATIONSHIPS} value={form.job_title} onChange={set("job_title")} />
             </Row>
             <Select label="Project domain" options={DOMAINS} value={form.project_domain} onChange={set("project_domain")} />
             <Row>

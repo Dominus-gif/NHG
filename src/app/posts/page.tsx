@@ -3,6 +3,7 @@ import Link from "next/link";
 import PageHeader from "@/components/layout/PageHeader";
 import { Stagger, StaggerItem } from "@/components/ui/Reveal";
 import CtaBand from "@/components/sections/CtaBand";
+import PostThumb from "@/components/site/PostThumb";
 import { posts } from "@/content/posts";
 
 export const metadata: Metadata = {
@@ -10,8 +11,6 @@ export const metadata: Metadata = {
   description:
     "Perspectives on enterprise digital transformation, engineering, design, and cloud from the Nord Harton team.",
 };
-
-const grads = ["30% 30%", "70% 40%", "50% 70%", "40% 50%"];
 
 export default function PostsPage() {
   return (
@@ -31,13 +30,8 @@ export default function PostsPage() {
                   href={`/posts/${post.slug}`}
                   className="group flex h-full flex-col overflow-hidden rounded-2xl border border-hairline bg-elevated/60 transition-all duration-300 hover:-translate-y-1 hover:border-accent/40"
                 >
-                  <div className="relative h-44 overflow-hidden bg-base">
-                    <div
-                      className="absolute inset-0"
-                      style={{
-                        background: `radial-gradient(circle at ${grads[i % grads.length]}, var(--accent-soft-2), transparent 60%)`,
-                      }}
-                    />
+                  <div className="relative h-44 overflow-hidden border-b border-hairline bg-base">
+                    <PostThumb tag={post.tag} index={i} />
                   </div>
                   <div className="flex flex-1 flex-col p-6">
                     <span className="font-mono text-xs text-accent">{post.tag}</span>
