@@ -85,3 +85,15 @@ create policy "anon can upload resumes"
   on storage.objects
   for insert to anon
   with check (bucket_id = 'resumes');
+
+-- ----------------------------------------------------------------------------
+-- Table privileges (GRANTs). RLS controls which rows; GRANTs control whether a
+-- role can touch the table at all. Without these you get "permission denied".
+-- ----------------------------------------------------------------------------
+grant usage on schema public to anon, authenticated, service_role;
+grant select, insert, update, delete on public.consultation_requests to service_role;
+grant select, insert, update, delete on public.job_applications      to service_role;
+grant select, insert, update, delete on public.email_leads           to service_role;
+grant insert on public.consultation_requests to anon, authenticated;
+grant insert on public.job_applications      to anon, authenticated;
+grant insert on public.email_leads           to anon, authenticated;

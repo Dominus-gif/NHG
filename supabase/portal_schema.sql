@@ -129,3 +129,16 @@ create policy "client reads own messages" on public.portal_messages
 --     ('<AUTH-USER-UID>', 'Custom Web Application', 'Commerce platform + admin console', 'In progress');
 --   -- ...and rows in portal_tasks / portal_documents / portal_invoices as needed.
 -- ============================================================================
+
+-- ----------------------------------------------------------------------------
+-- Table privileges (GRANTs) — required in addition to the RLS policies above.
+-- ----------------------------------------------------------------------------
+grant usage on schema public to anon, authenticated, service_role;
+grant select, insert, update, delete on
+  public.portal_clients, public.portal_services, public.portal_tasks,
+  public.portal_documents, public.portal_invoices, public.portal_messages
+  to service_role;
+grant select on
+  public.portal_clients, public.portal_services, public.portal_tasks,
+  public.portal_documents, public.portal_invoices, public.portal_messages
+  to authenticated;

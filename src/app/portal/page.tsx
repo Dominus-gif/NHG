@@ -35,7 +35,12 @@ export default function PortalLoginPage() {
     });
     setLoading(false);
     if (error) {
-      setError("Incorrect Client ID or password. Please try again.");
+      // Surface the real reason (e.g. "Email not confirmed") so issues are diagnosable.
+      setError(
+        /invalid login credentials/i.test(error.message)
+          ? "Incorrect Client ID or password."
+          : error.message,
+      );
       return;
     }
     router.replace("/portal/dashboard");
