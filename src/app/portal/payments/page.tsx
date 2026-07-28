@@ -1,10 +1,10 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { getSupabaseBrowser } from "@/lib/supabaseBrowser";
-import { DEMO_INVOICES, formatMoney, formatDate, MONTH_LABELS, type Invoice } from "@/lib/portal";
+import { formatMoney, formatDate, MONTH_LABELS, type Invoice } from "@/lib/portal";
 
 type Tone = "green" | "amber" | "red" | "muted";
 function toneFor(status: string): Tone {
@@ -30,16 +30,10 @@ export default function PortalPayments() {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [selYear, setSelYear] = useState<number | null>(null);
 
-  const loadDemo = useCallback(() => {
-    setInvoices(DEMO_INVOICES);
-    setLoading(false);
-  }, []);
-
   useEffect(() => {
-    const forceDemo = typeof window !== "undefined" && new URLSearchParams(window.location.search).get("demo") === "1";
     const sb = getSupabaseBrowser();
-    if (!sb || forceDemo) {
-      loadDemo();
+    if (!sb) {
+      router.replace("/portal");
       return;
     }
     (async () => {
@@ -52,7 +46,7 @@ export default function PortalPayments() {
       setInvoices((data as Invoice[]) ?? []);
       setLoading(false);
     })();
-  }, [loadDemo, router]);
+  }, [router]);
 
   const currency = invoices[0]?.currency ?? "USD";
   const paid = useMemo(() => invoices.filter((i) => i.status === "paid" && i.paid_on), [invoices]);

@@ -82,27 +82,39 @@ code change needed.
 
 ---
 
-## 6. Client Portal (auth + dashboard + Telegram chat)
+## 6. Client Portal (Supabase-backed — no demo mode)
 
-The portal lives at **`/portal`** (sign in) → **`/portal/dashboard`**. Until you
-connect Supabase it runs in **demo mode** (sample data, viewable at
-`/portal/dashboard?demo=1`).
+The portal lives at **`/portal`** (sign in) → **`/portal/dashboard`** and
+`/portal/payments`. It reads entirely from Supabase — every client only sees
+their own data. There is no demo mode: without Supabase configured, the login
+page simply says the portal is being set up.
 
 ### One-time setup
-1. **Run the SQL** — Supabase → SQL Editor → paste `supabase/portal_schema.sql`
+1. **Run the schema** — Supabase → SQL Editor → paste `supabase/portal_schema.sql`
    and Run. Creates `portal_clients`, `portal_services`, `portal_tasks`,
-   `portal_documents`, `portal_invoices`, `portal_messages` with RLS (each client
-   can read only their own rows; all writes are server-side).
-2. **Add the public env vars** (browser auth): `NEXT_PUBLIC_SUPABASE_URL` and
-   `NEXT_PUBLIC_SUPABASE_ANON_KEY` (Supabase → Settings → API). The server vars
-   (`SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`) are also required.
+   `portal_documents`, `portal_invoices`, `portal_messages` with RLS.
+2. **Set the four env vars** (Vercel → Settings → Environment Variables), then
+   **redeploy**:
+   - `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY` (server — forms + chat)
+   - `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` (browser — portal login + data)
 
-### Onboard a client
-- Supabase → **Authentication → Users → Add user**. Set the email to
-  `<client-id>@clients.nordhartongroup.com` (e.g. `nhg-2048@clients.nordhartongroup.com`)
-  and a password. The client signs in with the **Client ID** (`NHG-2048`) + that password.
-- Copy the new user's **UID**, then insert their profile + data rows using that UID
-  as `portal_clients.id` (example inserts are at the bottom of `portal_schema.sql`).
+### Test account (ready to use)
+1. Supabase → **Authentication → Users → Add user** →
+   email `nhg-1001@clients.nordhartongroup.com`, password `NordHarton#Test1`
+   (tick *Auto Confirm User*).
+2. Supabase → **SQL Editor** → paste `supabase/seed_test_client.sql` → Run.
+   It links a full sample workspace (services, tasks, documents, and 7 invoices)
+   to that user by email — no UID copying.
+3. Sign in at **`/portal`** with **Client ID `NHG-1001`** and password
+   **`NordHarton#Test1`**.
+
+### Onboard a real client (repeat per client you engage)
+1. **Authentication → Add user**: email `<client-id>@clients.nordhartongroup.com`
+   (e.g. `nhg-2048@clients...`) + a password. The client logs in with the
+   **Client ID** (`NHG-2048`) + that password.
+2. Insert their profile + data by email (copy the pattern in
+   `supabase/seed_test_client.sql` — no UID needed). Put real **Dodo Payments**
+   links in each unpaid invoice's `pay_url`.
 
 ### Telegram CRM chat
 1. Create a bot with **@BotFather**, set `TELEGRAM_BOT_TOKEN`.

@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
 import { getSupabaseBrowser, isPortalConfigured, clientIdToEmail } from "@/lib/supabaseBrowser";
 
 export default function PortalLoginPage() {
@@ -26,7 +25,7 @@ export default function PortalLoginPage() {
     setError("");
     const sb = getSupabaseBrowser();
     if (!sb) {
-      setError("The portal isn't connected yet. You can preview the demo dashboard below.");
+      setError("The portal is being set up. Please try again shortly or contact your relationship manager.");
       return;
     }
     setLoading(true);
@@ -101,12 +100,9 @@ export default function PortalLoginPage() {
         </form>
 
         {!isPortalConfigured && (
-          <div className="mt-4 rounded-xl border border-hairline bg-surface/60 p-4 text-center text-xs text-fg-muted">
-            Portal backend not connected yet.{" "}
-            <Link href="/portal/dashboard?demo=1" className="font-medium text-accent hover:underline">
-              Preview the demo dashboard →
-            </Link>
-          </div>
+          <p className="mt-4 text-center text-xs text-fg-subtle">
+            The portal is being set up. Please check back shortly.
+          </p>
         )}
       </div>
     </section>

@@ -1,11 +1,10 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { getSupabaseBrowser } from "@/lib/supabaseBrowser";
 import {
-  DEMO_PROFILE, DEMO_SERVICES, DEMO_TASKS, DEMO_DOCS, DEMO_INVOICES, DEMO_MESSAGES,
   formatMoney,
   type ClientProfile, type Service, type Task, type DocItem, type Invoice, type Message,
 } from "@/lib/portal";
@@ -59,7 +58,6 @@ function LockGlyph() {
 export default function PortalDashboard() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-  const [demo, setDemo] = useState(false);
   const [token, setToken] = useState<string | null>(null);
 
   const [profile, setProfile] = useState<ClientProfile | null>(null);
@@ -73,22 +71,10 @@ export default function PortalDashboard() {
   const [chatInput, setChatInput] = useState("");
   const [sending, setSending] = useState(false);
 
-  const loadDemo = useCallback(() => {
-    setDemo(true);
-    setProfile(DEMO_PROFILE);
-    setServices(DEMO_SERVICES);
-    setTasks(DEMO_TASKS);
-    setDocs(DEMO_DOCS);
-    setInvoices(DEMO_INVOICES);
-    setMessages(DEMO_MESSAGES);
-    setLoading(false);
-  }, []);
-
   useEffect(() => {
-    const forceDemo = typeof window !== "undefined" && new URLSearchParams(window.location.search).get("demo") === "1";
     const sb = getSupabaseBrowser();
-    if (!sb || forceDemo) {
-      loadDemo();
+    if (!sb) {
+      router.replace("/portal");
       return;
     }
     (async () => {
@@ -107,7 +93,7 @@ export default function PortalDashboard() {
         sb.from("portal_invoices").select("*").eq("client_id", uid),
         sb.from("portal_messages").select("*").eq("client_id", uid).order("created_at", { ascending: true }),
       ]);
-      setProfile((prof.data as ClientProfile) ?? DEMO_PROFILE);
+      setProfile((prof.data as ClientProfile) ?? null);
       setServices((svc.data as Service[]) ?? []);
       setTasks((tsk.data as Task[]) ?? []);
       setDocs((doc.data as DocItem[]) ?? []);
@@ -115,11 +101,11 @@ export default function PortalDashboard() {
       setMessages((msg.data as Message[]) ?? []);
       setLoading(false);
     })();
-  }, [loadDemo, router]);
+  }, [router]);
 
-  // Poll for new CRM replies while the chat is open, in live mode.
+  // Poll for new CRM replies while the chat is open.
   useEffect(() => {
-    if (demo || !chatOpen) return;
+    if (!chatOpen) return;
     const sb = getSupabaseBrowser();
     if (!sb) return;
     const id = setInterval(async () => {
@@ -133,7 +119,7 @@ export default function PortalDashboard() {
       if (data) setMessages(data as Message[]);
     }, 8000);
     return () => clearInterval(id);
-  }, [chatOpen, demo]);
+  }, [chatOpen]);
 
   const signOut = async () => {
     const sb = getSupabaseBrowser();
@@ -152,7 +138,6 @@ export default function PortalDashboard() {
     };
     setMessages((m) => [...m, optimistic]);
     setChatInput("");
-    if (demo) return;
     setSending(true);
     try {
       await fetch("/api/portal/chat", {
@@ -173,19 +158,27 @@ export default function PortalDashboard() {
     );
   }
 
-  const p = profile as ClientProfile;
+  if (!profile) {
+    return (
+      <div className="mx-auto flex min-h-[70vh] max-w-md flex-col items-center justify-center gap-4 px-6 text-center">
+        <h1 className="text-xl font-semibold">No workspace found</h1>
+        <p className="text-sm text-fg-muted">
+          Your account is signed in, but no client record is linked to it yet. Please contact your relationship manager.
+        </p>
+        <button onClick={signOut} className="rounded-full border border-hairline-strong px-4 py-2 text-sm text-fg transition hover:border-accent">
+          Sign out
+        </button>
+      </div>
+    );
+  }
+
+  const p = profile;
   const openInvoices = invoices.filter((i) => i.status !== "paid");
   const outstanding = openInvoices.reduce((sum, i) => sum + i.amount, 0);
   const paidUp = outstanding <= 0; // documents unlock when nothing is outstanding (or when the CRM releases them)
 
   return (
     <div className="mx-auto max-w-7xl px-6 pb-24 pt-28 lg:px-12">
-      {demo && (
-        <div className="mb-6 rounded-xl border border-hairline bg-surface/60 px-4 py-2.5 text-center text-xs text-fg-muted">
-          Demo mode — sample data. Connect Supabase Auth to show each client&apos;s real workspace.
-        </div>
-      )}
-
       {/* Header */}
       <div className="flex flex-col gap-4 border-b border-hairline pb-8 sm:flex-row sm:items-end sm:justify-between">
         <div>

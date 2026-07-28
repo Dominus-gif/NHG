@@ -216,7 +216,7 @@ export function FeatureBlocks() {
                     <span style={{ marginLeft: 8, fontFamily: "var(--font-mono)", fontSize: 11.5, color: "var(--text-faint)" }}>nordharton.group/console</span>
                   </div>
                   <div style={{ flex: 1, background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 16, padding: 22, display: "flex", flexDirection: "column", justifyContent: "center" }}>
-                    {b.chart === "line" && (<><div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline" }}><span style={{ fontSize: 12.5, color: "var(--text-muted)" }}>Delivery velocity</span><span style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 24, color: "var(--text-strong)" }}>$15,437</span></div><div style={{ marginTop: 16, height: 130 }}><LineArea points={[26, 42, 34, 58, 50, 76, 66, 90]} /></div></>)}
+                    {b.chart === "line" && (<><div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}><div><span style={{ fontSize: 12.5, color: "var(--text-muted)" }}>Delivery velocity</span><div style={{ display: "flex", alignItems: "baseline", gap: 6, marginTop: 4 }}><span style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 26, color: "var(--text-strong)" }}>48</span><span style={{ fontSize: 13, color: "var(--text-muted)" }}>tasks / week</span></div></div><span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 12, fontWeight: 600, color: "var(--success)", background: "var(--success-soft)", padding: "3px 8px", borderRadius: 999 }}>▲ 18%</span></div><div style={{ marginTop: 16, height: 130 }}><LineArea points={[26, 42, 34, 58, 50, 76, 66, 90]} grid dot /></div></>)}
                     {b.chart === "donut" && (<><div style={{ fontSize: 12.5, color: "var(--text-muted)", marginBottom: 14 }}>Projects by status</div><DonutChart centerValue={30} centerLabel="Active" /></>)}
                     {b.chart === "gauge" && (<div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}><Gauge value={91} label="On-time delivery" /></div>)}
                   </div>
@@ -323,14 +323,21 @@ const FAQ = [
 ];
 export function Faq() {
   const [open, setOpen] = useState(0);
+  const { open: openContact } = useContactModal();
   return (
     <section style={{ padding: "88px 24px", borderTop: "1px solid var(--border)" }}>
       <div style={{ ...wrap, display: "grid", gridTemplateColumns: "0.9fr 1.1fr", gap: 60, alignItems: "start" }} className="split">
         <Reveal>
-          <div style={{ ...card, borderRadius: 26, height: 300, position: "relative", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <div style={{ position: "absolute", width: 300, height: 300, borderRadius: "50%", background: "radial-gradient(circle, var(--accent-glow), transparent 65%)" }} />
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo-mark.svg" width={72} height={72} alt="Nord Harton" style={{ position: "relative", borderRadius: 18 }} />
+          <div style={{ ...card, borderRadius: 26, padding: 36, minHeight: 300, display: "flex", flexDirection: "column", justifyContent: "center" }}>
+            <span style={{ fontSize: 12.5, fontWeight: 500, letterSpacing: ".14em", textTransform: "uppercase", color: "var(--text-muted)" }}>Answers, not sales</span>
+            <h3 style={{ marginTop: 14, fontFamily: "var(--font-display)", fontSize: 25, fontWeight: 500, color: "var(--text-strong)", letterSpacing: "-.01em", lineHeight: 1.2 }}>Still have a question?</h3>
+            <p style={{ marginTop: 12, fontSize: 15, lineHeight: 1.65, color: "var(--text-muted)" }}>
+              Talk to a strategist directly — you&apos;ll get a straight answer, a realistic timeline, and an honest view of whether we&apos;re the right fit. No scripts, no pressure.
+            </p>
+            <div style={{ marginTop: 24 }}>
+              <Button onClick={openContact} iconRight={<ArrowRight size={15} />}>Talk to us</Button>
+            </div>
+            <p style={{ marginTop: 18, fontSize: 13, color: "var(--text-subtle)" }}>Typical reply time: within one business day.</p>
           </div>
         </Reveal>
         <div>

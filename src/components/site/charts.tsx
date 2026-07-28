@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState, type ReactNode, type CSSProperties } from "react";
+import { useId, useRef, useState, type ReactNode, type CSSProperties } from "react";
 import { motion, useInView } from "framer-motion";
 import CountUpInline from "@/components/site/CountUpInline";
 
@@ -223,18 +223,62 @@ export function RadarChart({
 }
 
 /* ============ Line / area — path draws ============ */
-export function LineArea({ points = [30, 45, 38, 60, 52, 74, 68, 88], color = "rgba(255,255,255,0.6)" }: { points?: number[]; color?: string }) {
+export function LineArea({
+  points = [30, 45, 38, 60, 52, 74, 68, 88],
+  color = "rgba(255,255,255,0.6)",
+  grid = false,
+  dot = false,
+}: {
+  points?: number[];
+  color?: string;
+  grid?: boolean;
+  dot?: boolean;
+}) {
   const ref = useRef<HTMLDivElement>(null);
   const inView = useInView(ref, { once: true, margin: "-50px" });
+  const gid = useId().replace(/[:]/g, "");
   const path = points.map((p, i) => `${i === 0 ? "M" : "L"} ${(i / (points.length - 1)) * 100} ${100 - p}`).join(" ");
   const area = `${path} L 100 100 L 0 100 Z`;
+  const lastP = points[points.length - 1];
   return (
-    <div ref={ref} style={{ width: "100%", height: "100%" }}>
-      <svg viewBox="0 0 100 100" preserveAspectRatio="none" style={{ width: "100%", height: "100%" }}>
-        <motion.path d={area} fill={color} opacity={0.12} initial={{ opacity: 0 }} animate={inView ? { opacity: 0.12 } : { opacity: 0 }} transition={{ duration: 0.8, delay: 0.5 }} />
-        <motion.path d={path} fill="none" stroke={color} strokeWidth={1.6} strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke"
+    <div ref={ref} style={{ position: "relative", width: "100%", height: "100%" }}>
+      <svg viewBox="0 0 100 100" preserveAspectRatio="none" style={{ width: "100%", height: "100%", display: "block" }}>
+        <defs>
+          <linearGradient id={`grad-${gid}`} x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={color} stopOpacity="0.22" />
+            <stop offset="100%" stopColor={color} stopOpacity="0" />
+          </linearGradient>
+        </defs>
+        {grid && (
+          <g stroke="rgba(255,255,255,0.06)" strokeWidth="1" vectorEffect="non-scaling-stroke">
+            {[20, 40, 60, 80].map((y) => (
+              <line key={y} x1="0" y1={y} x2="100" y2={y} />
+            ))}
+          </g>
+        )}
+        <motion.path d={area} fill={`url(#grad-${gid})`} initial={{ opacity: 0 }} animate={inView ? { opacity: 1 } : { opacity: 0 }} transition={{ duration: 0.8, delay: 0.5 }} />
+        <motion.path d={path} fill="none" stroke={color} strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke"
           initial={{ pathLength: 0 }} animate={inView ? { pathLength: 1 } : { pathLength: 0 }} transition={{ duration: 1.3, ease }} />
       </svg>
+      {dot && (
+        <motion.span
+          initial={{ scale: 0, opacity: 0 }}
+          animate={inView ? { scale: 1, opacity: 1 } : { scale: 0, opacity: 0 }}
+          transition={{ duration: 0.4, delay: 1.3 }}
+          style={{
+            position: "absolute",
+            right: 0,
+            top: `${100 - lastP}%`,
+            width: 9,
+            height: 9,
+            marginTop: -4.5,
+            marginRight: -1,
+            borderRadius: "50%",
+            background: "#fff",
+            boxShadow: "0 0 0 4px rgba(255,255,255,0.12)",
+          }}
+        />
+      )}
     </div>
   );
 }

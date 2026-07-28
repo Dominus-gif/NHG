@@ -3,7 +3,6 @@ import Link from "next/link";
 import PageHeader from "@/components/layout/PageHeader";
 import { Stagger, StaggerItem } from "@/components/ui/Reveal";
 import CtaBand from "@/components/sections/CtaBand";
-import PostThumb from "@/components/site/PostThumb";
 import { posts } from "@/content/posts";
 
 export const metadata: Metadata = {
@@ -23,27 +22,25 @@ export default function PostsPage() {
 
       <section className="py-20 lg:py-24">
         <div className="mx-auto max-w-7xl px-6 lg:px-12">
-          <Stagger className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {posts.map((post, i) => (
+          <Stagger className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {posts.map((post) => (
               <StaggerItem key={post.slug}>
                 <Link
                   href={`/posts/${post.slug}`}
-                  className="group flex h-full flex-col overflow-hidden rounded-2xl border border-hairline bg-elevated/60 transition-all duration-300 hover:-translate-y-1 hover:border-accent/40"
+                  className="group flex h-full flex-col rounded-2xl border border-hairline bg-elevated/60 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-accent/40"
                 >
-                  <div className="relative h-44 overflow-hidden border-b border-hairline bg-base">
-                    <PostThumb tag={post.tag} index={i} />
+                  <div className="flex items-center justify-between">
+                    <span className="font-mono text-xs uppercase tracking-wider text-accent">{post.tag}</span>
+                    <span className="text-xs text-fg-subtle">{post.readTime}</span>
                   </div>
-                  <div className="flex flex-1 flex-col p-6">
-                    <span className="font-mono text-xs text-accent">{post.tag}</span>
-                    <h2 className="mt-3 flex-1 text-lg font-semibold leading-snug text-fg">
-                      {post.title}
-                    </h2>
-                    <p className="mt-3 text-sm leading-relaxed text-fg-muted">{post.excerpt}</p>
-                    <div className="mt-5 flex items-center gap-3 text-xs text-fg-subtle">
-                      <span>{post.date}</span>
-                      <span>·</span>
-                      <span>{post.readTime}</span>
-                    </div>
+                  <h2 className="mt-4 text-lg font-semibold leading-snug text-fg transition-colors group-hover:text-accent">
+                    {post.title}
+                  </h2>
+                  <p className="mt-3 flex-1 text-sm leading-relaxed text-fg-muted">{post.excerpt}</p>
+                  <div className="mt-6 flex items-center gap-2 border-t border-hairline pt-4 text-xs text-fg-subtle">
+                    <span>{post.author}</span>
+                    <span>·</span>
+                    <span>{post.date}</span>
                   </div>
                 </Link>
               </StaggerItem>
