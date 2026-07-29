@@ -437,22 +437,22 @@ export function Capabilities() {
 
 /* ===================== Stats band ===================== */
 const STATS = [
-  { value: 15, suffix: "+", label: "Years of expertise", color: "var(--c-blue)" },
-  { value: 100, suffix: "+", label: "Projects delivered", color: "var(--c-green)" },
-  { value: 50, suffix: "+", label: "Countries reached", color: "var(--c-lavender)" },
-  { value: 98, suffix: "%", label: "Client retention", color: "var(--c-orange)" },
+  { value: 15, suffix: "+", label: "Years of expertise", dot: "#E0736B" }, // red
+  { value: 100, suffix: "+", label: "Projects delivered", dot: "#68CC58" }, // green
+  { value: 50, suffix: "+", label: "Countries reached", dot: "#6E97F0" }, // blue
+  { value: 98, suffix: "%", label: "Client retention", dot: "#E0B84D" }, // yellow
 ];
 export function Stats() {
   return (
     <section style={{ padding: "88px 24px", borderTop: "1px solid var(--border)" }}>
       <div style={wrap}>
-        <div style={{ ...card, borderRadius: 26, padding: "48px 40px", background: "var(--surface-inverse)", position: "relative", overflow: "hidden" }}>
+        <div className="stats-card" style={{ ...card, borderRadius: 26, padding: "48px 40px", background: "var(--surface-inverse)", position: "relative", overflow: "hidden" }}>
           <motion.div className="blob" style={{ width: 420, height: 420, top: -180, right: -80, background: "radial-gradient(circle, var(--accent-glow), transparent 65%)" }} animate={{ opacity: [0.4, 0.7, 0.4] }} transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }} />
           <Stagger className="stats-grid" style={{ position: "relative", display: "grid", gridTemplateColumns: "repeat(4, 1fr)", gap: 32 }}>
             {STATS.map((s) => (
               <Item key={s.label}>
-                <div style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 52, letterSpacing: "-.03em", color: "var(--text-strong)", lineHeight: 1 }}>
-                  <CountUpInline to={s.value} suffix={s.suffix} /><span style={{ color: "var(--text-faint)" }}>.</span>
+                <div style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: "clamp(34px, 8vw, 52px)", letterSpacing: "-.03em", color: "var(--text-strong)", lineHeight: 1, whiteSpace: "nowrap" }}>
+                  <CountUpInline to={s.value} suffix={s.suffix} /><span style={{ color: s.dot }}>.</span>
                 </div>
                 <div style={{ marginTop: 8, fontSize: 14.5, color: "var(--text-muted)" }}>{s.label}</div>
               </Item>

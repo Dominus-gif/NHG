@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getSupabaseBrowser, isPortalConfigured, clientIdToEmail } from "@/lib/supabaseBrowser";
+import { AnimatedButton } from "@/components/ui/AnimatedButton";
 
 export default function PortalLoginPage() {
   const router = useRouter();
@@ -88,13 +89,9 @@ export default function PortalLoginPage() {
 
           {error && <p className="text-sm text-danger">{error}</p>}
 
-          <button
-            type="submit"
-            disabled={loading}
-            className="mt-1 h-11 rounded-full bg-white text-sm font-semibold text-[#0E0E0E] transition hover:bg-[#ECECEC] disabled:opacity-70"
-          >
+          <AnimatedButton type="submit" disabled={loading} className="mt-1 h-11 w-full text-sm">
             {loading ? "Signing in…" : "Sign in"}
-          </button>
+          </AnimatedButton>
 
           <p className="text-center text-xs text-fg-subtle">
             Trouble signing in? Email{" "}

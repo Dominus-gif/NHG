@@ -221,7 +221,8 @@ select.lyn-field option {
   .nav-mobile { display: flex !important; }
   .footer-grid { grid-template-columns: 1fr 1fr !important; }
   .contact-row { grid-template-columns: 1fr !important; }
-  .stats-grid { grid-template-columns: 1fr 1fr !important; }
+  .stats-grid { grid-template-columns: 1fr 1fr !important; gap: 22px 18px !important; }
+  .stats-card { padding: 28px 22px !important; }
 
   /* stack the hero email field so it fits and stays usable on phones */
   .hero-email { flex-direction: column !important; border-radius: 18px !important; gap: 10px !important; padding: 12px !important; }
