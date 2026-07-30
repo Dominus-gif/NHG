@@ -17,7 +17,21 @@ export async function generateMetadata({
   const { slug } = await params;
   const post = getPost(slug);
   if (!post) return { title: "Post not found — Nord Harton Group" };
-  return { title: `${post.title} — Nord Harton Group`, description: post.excerpt };
+  return {
+    title: `${post.title} — Nord Harton Group`,
+    description: post.excerpt,
+    alternates: { canonical: `/posts/${slug}` },
+    openGraph: {
+      type: "article",
+      title: post.title,
+      description: post.excerpt,
+      url: `/posts/${slug}`,
+      publishedTime: post.date,
+      authors: [post.author],
+      tags: [post.tag],
+    },
+    authors: [{ name: post.author }],
+  };
 }
 
 export default async function PostPage({

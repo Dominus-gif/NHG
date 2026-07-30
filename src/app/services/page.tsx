@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   title: "Services — Nord Harton Group",
   description:
     "Custom web applications, business systems, branding, mobile, and cloud infrastructure engineered for enterprise scale.",
+  alternates: { canonical: "/services" },
 };
 
 export default function ServicesPage() {

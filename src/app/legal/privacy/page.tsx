@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: "Privacy Policy — Nord Harton Group",
   description:
     "How Nord Harton Group collects, uses, protects, and shares your personal information.",
+  alternates: { canonical: "/legal/privacy" },
 };
 
 const sections: LegalSection[] = [

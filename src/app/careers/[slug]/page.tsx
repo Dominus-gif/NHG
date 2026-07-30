@@ -17,7 +17,17 @@ export async function generateMetadata({
   const { slug } = await params;
   const job = getJob(slug);
   if (!job) return { title: "Role not found — Nord Harton Group" };
-  return { title: `${job.title} — Careers — Nord Harton Group`, description: job.summary };
+  return {
+    title: `${job.title} — Careers — Nord Harton Group`,
+    description: job.summary,
+    alternates: { canonical: `/careers/${slug}` },
+    openGraph: {
+      type: "article",
+      title: `${job.title} — Careers`,
+      description: job.summary,
+      url: `/careers/${slug}`,
+    },
+  };
 }
 
 function BulletList({ heading, items, delay = 0 }: { heading: string; items: string[]; delay?: number }) {

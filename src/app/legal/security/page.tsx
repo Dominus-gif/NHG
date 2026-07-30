@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: "Security — Nord Harton Group",
   description:
     "How Nord Harton Group protects data and builds security into everything we ship.",
+  alternates: { canonical: "/legal/security" },
 };
 
 const sections: LegalSection[] = [

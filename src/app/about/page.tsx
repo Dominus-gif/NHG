@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: "About — Nord Harton Group",
   description:
     "Engineering digital transformation at scale. A global digital solutions enterprise built over 15 years to turn complexity into competitive advantage.",
+  alternates: { canonical: "/about" },
 };
 
 const values = [

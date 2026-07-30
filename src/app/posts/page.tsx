@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   title: "Posts — Nord Harton Group",
   description:
     "Perspectives on enterprise digital transformation, engineering, design, and cloud from the Nord Harton team.",
+  alternates: { canonical: "/posts" },
 };
 
 export default function PostsPage() {

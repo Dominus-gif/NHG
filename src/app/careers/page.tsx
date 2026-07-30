@@ -10,6 +10,7 @@ export const metadata: Metadata = {
   title: "Careers — Nord Harton Group",
   description:
     "Join a small, senior team building mission-critical enterprise platforms. Open roles across engineering, design, and platform.",
+  alternates: { canonical: "/careers" },
 };
 
 export default function CareersPage() {

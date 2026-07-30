@@ -5,6 +5,7 @@ export const metadata: Metadata = {
   title: "Terms of Service — Nord Harton Group",
   description:
     "The terms and conditions governing your use of Nord Harton Group's website and services.",
+  alternates: { canonical: "/legal/terms" },
 };
 
 const sections: LegalSection[] = [
