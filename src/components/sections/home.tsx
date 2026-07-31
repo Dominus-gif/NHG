@@ -258,11 +258,27 @@ export function TwoCol() {
 
 /* ===================== Testimonials carousel ===================== */
 const QUOTES = [
-  { q: "Partnering with Nord Harton was the best decision we made this year. They unified twelve legacy systems into one platform — on time, and beyond what we scoped.", name: "Marcus Chen", role: "CEO, Meridian Capital", initials: "MC" },
-  { q: "Nord Harton turned a tangle of manual workflows into one clean platform. Sharp, fast, and genuinely invested in our outcomes.", name: "Lucia Romero", role: "COO, Northwind", initials: "LR" },
-  { q: "The team shipped faster than our internal roadmap predicted, and the quality was extraordinary. A true partner.", name: "Sara Reyes", role: "CTO, Aurora", initials: "SR" },
-  { q: "They understood our business before writing a line of code. That's rare — and it showed in every deliverable.", name: "Liam Nguyen", role: "VP Product, Helix", initials: "LN" },
+  { q: "Partnering with Nord Harton was the best decision we made this year. They unified twelve legacy systems into one platform — on time, and beyond what we scoped.", name: "Marcus Chen", role: "CEO, Meridian Capital", initials: "MC", image: "/reviews/marcus.jpg" },
+  { q: "Nord Harton turned a tangle of manual workflows into one clean platform. Sharp, fast, and genuinely invested in our outcomes.", name: "Lucia Romero", role: "COO, NorthRidge Services", initials: "LR", image: "/reviews/lucia.jpg" },
+  { q: "The team shipped faster than our internal roadmap predicted, and the quality was extraordinary. A true partner.", name: "Sara Reyes", role: "CTO, Auriel Consultants", initials: "SR", image: "/reviews/sara.jpg" },
+  { q: "They understood our business before writing a line of code. That's rare — and it showed in every deliverable.", name: "Liam Nguyen", role: "VP Product, Helix Technologies", initials: "LN", image: "/reviews/liam.jpg" },
 ];
+
+function ReviewAvatar({ src, initials, name }: { src?: string; initials: string; name: string }) {
+  const [failed, setFailed] = useState(false);
+  const base: CSSProperties = { width: 46, height: 46, borderRadius: "50%", border: "1px solid var(--border)", flexShrink: 0, background: "var(--surface-subtle)" };
+  if (!src || failed) {
+    return (
+      <span style={{ ...base, color: "var(--text-strong)", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "var(--font-display)", fontWeight: 600 }}>
+        {initials}
+      </span>
+    );
+  }
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img src={src} alt={name} onError={() => setFailed(true)} style={{ ...base, objectFit: "cover" }} />
+  );
+}
 export function Testimonials() {
   const [i, setI] = useState(0);
   const [dir, setDir] = useState(1);
@@ -294,7 +310,7 @@ export function Testimonials() {
             <motion.div key={i} custom={dir} initial={{ opacity: 0, x: dir * 64 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: dir * -64 }} transition={{ duration: 0.55, ease }}>
               <p style={{ fontFamily: "var(--font-display)", fontWeight: 500, fontSize: "clamp(19px,2.2vw,26px)", lineHeight: 1.4, color: "var(--text-strong)", letterSpacing: "-.01em" }}>&ldquo;{t.q}&rdquo;</p>
               <div style={{ marginTop: 28, display: "flex", alignItems: "center", gap: 12 }}>
-                <span style={{ width: 44, height: 44, borderRadius: "50%", background: "var(--surface-subtle)", border: "1px solid var(--border)", color: "var(--text-strong)", display: "flex", alignItems: "center", justifyContent: "center", fontFamily: "var(--font-display)", fontWeight: 600 }}>{t.initials}</span>
+                <ReviewAvatar src={t.image} initials={t.initials} name={t.name} />
                 <div><div style={{ fontWeight: 500, color: "var(--text-strong)" }}>{t.name}</div><div style={{ fontSize: 13.5, color: "var(--text-muted)" }}>{t.role}</div></div>
               </div>
             </motion.div>
