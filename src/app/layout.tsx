@@ -65,11 +65,6 @@ export const metadata: Metadata = {
       "max-video-preview": -1,
     },
   },
-  icons: {
-    icon: [{ url: "/logo-mark.svg", type: "image/svg+xml" }],
-    shortcut: "/logo-mark.svg",
-    apple: "/logo-mark.svg",
-  },
 };
 
 const jsonLd = {
@@ -80,7 +75,7 @@ const jsonLd = {
       "@id": `${siteUrl}/#organization`,
       name: siteName,
       url: siteUrl,
-      logo: absoluteUrl("/logo-mark.svg"),
+      logo: absoluteUrl("/icon"),
       description: siteDescription,
       email: "hello@nordhartongroup.com",
       sameAs: [] as string[],

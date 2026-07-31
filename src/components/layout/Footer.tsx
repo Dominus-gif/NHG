@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Wordmark } from "@/components/layout/Wordmark";
 
 const cols: { title: string; links: [string, string][] }[] = [
   {
@@ -42,10 +43,8 @@ export default function Footer() {
         className="footer-grid"
       >
         <div style={{ maxWidth: 320 }}>
-          <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10 }}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo-mark.svg" width={40} height={40} alt="Nord Harton" />
-            <span style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 27, letterSpacing: "-.02em", backgroundImage: "linear-gradient(160deg, #FFFFFF 0%, #C7CAD1 55%, #9A9DA6 100%)", WebkitBackgroundClip: "text", backgroundClip: "text", WebkitTextFillColor: "transparent", color: "transparent" }}>Nord Harton</span>
+          <Link href="/" style={{ display: "inline-flex", alignItems: "center" }}>
+            <Wordmark size={30} />
           </Link>
           <p style={{ marginTop: 16, fontSize: 14, lineHeight: 1.6, color: "var(--text-on-inverse-muted)" }}>
             A digital solutions enterprise turning complex business requirements into elegant, scalable software.

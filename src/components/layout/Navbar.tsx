@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import { Button } from "@/components/site/primitives";
 import { ArrowRight } from "@/components/site/icons";
 import { useContactModal } from "@/components/providers/ContactModalProvider";
+import { Wordmark } from "@/components/layout/Wordmark";
 
 const NAV = [
   { label: "Home", href: "/" },
@@ -63,12 +64,8 @@ export default function Navbar() {
             transition: "height var(--dur-slow) var(--ease-out)",
           }}
         >
-          <Link href="/" style={{ display: "flex", alignItems: "center", gap: 10 }} onClick={() => setActive("Home")}>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo-mark.svg" width={36} height={36} alt="Nord Harton" />
-            <span style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 25, letterSpacing: "-.02em", backgroundImage: "linear-gradient(160deg, #FFFFFF 0%, #C7CAD1 55%, #9A9DA6 100%)", WebkitBackgroundClip: "text", backgroundClip: "text", WebkitTextFillColor: "transparent", color: "transparent" }}>
-              Nord Harton
-            </span>
+          <Link href="/" style={{ display: "flex", alignItems: "center" }} onClick={() => setActive("Home")}>
+            <Wordmark size={26} />
           </Link>
           <div style={{ display: "flex", gap: 4, marginLeft: 18, flex: 1 }} className="nav-links">
             {NAV.map((n) => {

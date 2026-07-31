@@ -21,9 +21,9 @@ export default function OpengraphImage() {
           fontFamily: "sans-serif",
         }}
       >
-        <div style={{ display: "flex", alignItems: "center", gap: 20 }}>
-          <div style={{ width: 54, height: 54, borderRadius: 14, background: "#1B1D20", border: "1px solid #2A2A2D" }} />
-          <div style={{ display: "flex", fontSize: 32, color: "#ffffff", fontWeight: 600 }}>Nord Harton Group</div>
+        <div style={{ display: "flex", alignItems: "flex-end" }}>
+          <div style={{ display: "flex", fontSize: 40, color: "#ffffff", fontWeight: 700, letterSpacing: -1, lineHeight: 1 }}>NordHarton</div>
+          <div style={{ width: 14, height: 14, background: "#F0121F", borderRadius: 2, marginLeft: 4, marginBottom: 4 }} />
         </div>
 
         <div style={{ display: "flex", flexDirection: "column", gap: 22 }}>
