@@ -258,10 +258,10 @@ export function TwoCol() {
 
 /* ===================== Testimonials carousel ===================== */
 const QUOTES = [
-  { q: "Partnering with Nord Harton was the best decision we made this year. They unified twelve legacy systems into one platform — on time, and beyond what we scoped.", name: "Marcus Chen", role: "CEO, Meridian Capital", initials: "MC", image: "/reviews/marcus.jpg" },
-  { q: "Nord Harton turned a tangle of manual workflows into one clean platform. Sharp, fast, and genuinely invested in our outcomes.", name: "Lucia Romero", role: "COO, NorthRidge Services", initials: "LR", image: "/reviews/lucia.jpg" },
-  { q: "The team shipped faster than our internal roadmap predicted, and the quality was extraordinary. A true partner.", name: "Sara Reyes", role: "CTO, Auriel Consultants", initials: "SR", image: "/reviews/sara.jpg" },
-  { q: "They understood our business before writing a line of code. That's rare — and it showed in every deliverable.", name: "Liam Nguyen", role: "VP Product, Helix Technologies", initials: "LN", image: "/reviews/liam.jpg" },
+  { q: "Partnering with Nord Harton was the best decision we made this year. They unified twelve legacy systems into one platform — on time, and beyond what we scoped.", name: "Marcus Chen", role: "CEO, Meridian Capital", initials: "MC", image: "/reviews/marcus.png" },
+  { q: "Nord Harton turned a tangle of manual workflows into one clean platform. Sharp, fast, and genuinely invested in our outcomes.", name: "Lucia Romero", role: "COO, NorthRidge Services", initials: "LR", image: "/reviews/lucia.png" },
+  { q: "The team shipped faster than our internal roadmap predicted, and the quality was extraordinary. A true partner.", name: "Sara Reyes", role: "CTO, Auriel Consultants", initials: "SR", image: "/reviews/sara.png" },
+  { q: "They understood our business before writing a line of code. That's rare — and it showed in every deliverable.", name: "Liam Nguyen", role: "VP Product, Helix Technologies", initials: "LN", image: "/reviews/liam.png" },
 ];
 
 function ReviewAvatar({ src, initials, name }: { src?: string; initials: string; name: string }) {
