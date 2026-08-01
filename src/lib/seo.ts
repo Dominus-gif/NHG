@@ -1,7 +1,7 @@
 // Central SEO config. Set NEXT_PUBLIC_SITE_URL to your production domain in
 // Vercel (e.g. https://nordhartongroup.com); it falls back to that domain.
 
-export const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://nordhartongroup.com").replace(/\/+$/, "");
+export const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://nordharton.com").replace(/\/+$/, "");
 
 export const siteName = "Nord Harton Group";
 export const siteTagline = "Where strategy meets execution";

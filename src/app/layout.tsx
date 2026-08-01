@@ -67,6 +67,17 @@ export const metadata: Metadata = {
   },
 };
 
+// Main navigation, exposed to search engines as SiteNavigationElement — the
+// signal Google uses when it builds sitelinks under the main result.
+const NAV_LINKS = [
+  { name: "About", url: "/about", description: "How Nord Harton Group engineers digital transformation at enterprise scale." },
+  { name: "Services", url: "/services", description: "Custom web applications, business systems, mobile, cloud, and branding." },
+  { name: "Posts", url: "/posts", description: "Insights on strategy, engineering, design, and cloud from the Nord Harton team." },
+  { name: "Careers", url: "/careers", description: "Open roles across engineering, design, and platform." },
+  { name: "Client Portal", url: "/portal", description: "Secure sign-in for Nord Harton clients." },
+  { name: "Contact", url: "/contact", description: "Tell us about your project — we reply within one business day." },
+];
+
 const jsonLd = {
   "@context": "https://schema.org",
   "@graph": [
@@ -74,9 +85,16 @@ const jsonLd = {
       "@type": "Organization",
       "@id": `${siteUrl}/#organization`,
       name: siteName,
+      alternateName: ["NordHarton", "Nord Harton", "Nord Harton Group"],
       url: siteUrl,
-      logo: absoluteUrl("/icon"),
+      logo: {
+        "@type": "ImageObject",
+        url: absoluteUrl("/icon"),
+        width: 64,
+        height: 64,
+      },
       description: siteDescription,
+      slogan: siteTagline,
       email: "hello@nordhartongroup.com",
       sameAs: [] as string[],
     },
@@ -85,10 +103,17 @@ const jsonLd = {
       "@id": `${siteUrl}/#website`,
       url: siteUrl,
       name: siteName,
+      alternateName: "NordHarton",
       description: siteDescription,
       publisher: { "@id": `${siteUrl}/#organization` },
       inLanguage: "en",
     },
+    ...NAV_LINKS.map((n) => ({
+      "@type": "SiteNavigationElement",
+      name: n.name,
+      description: n.description,
+      url: absoluteUrl(n.url),
+    })),
   ],
 };
 
