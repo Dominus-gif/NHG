@@ -47,7 +47,7 @@ export default function Footer() {
             <Wordmark size={20} />
           </Link>
           <p style={{ marginTop: 16, fontSize: 14, lineHeight: 1.6, color: "var(--text-on-inverse-muted)" }}>
-            A digital solutions enterprise turning complex business requirements into elegant, scalable software.
+            Where complex business needs meet elegant engineering. We build systems designed for scale.
           </p>
 
           <figure
@@ -58,7 +58,7 @@ export default function Footer() {
             }}
           >
             <blockquote style={{ margin: 0, fontSize: 14.5, lineHeight: 1.6, color: "#fff", fontStyle: "italic" }}>
-              &ldquo;Simplicity is the ultimate sophistication — we engineer it into everything we ship.&rdquo;
+              &ldquo;Complexity is inevitable. Elegance is the engineering challenge. We deliver both.&rdquo;
             </blockquote>
             <figcaption style={{ marginTop: 8, fontSize: 12.5, color: "var(--text-on-inverse-muted)" }}>
               — Nord Harton Group
@@ -105,7 +105,7 @@ export default function Footer() {
         }}
       >
         <span style={{ fontSize: 13, color: "var(--text-on-inverse-muted)" }}>© 2026 Nord Harton Group. All rights reserved.</span>
-        <span style={{ fontSize: 13, color: "var(--text-on-inverse-muted)" }}>hello@nordhartongroup.com</span>
+        <span style={{ fontSize: 13, color: "var(--text-on-inverse-muted)" }}>projects@nordharton.com</span>
       </div>
     </footer>
   );

@@ -65,7 +65,7 @@ export function Hero() {
           ))}
         </h1>
         <motion.p initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, ease, delay: 0.5 }} style={{ maxWidth: "52ch", margin: "22px auto 0", color: "var(--text-muted)", fontSize: 18, lineHeight: 1.6 }}>
-          Say goodbye to complexity. We transform how your business operates — turning complex requirements into elegant systems that scale.
+          We turn complex business challenges into elegant, scalable digital solutions built for growth.
         </motion.p>
         <HeroEmailForm />
       </div>
@@ -259,11 +259,36 @@ export function TwoCol() {
 
 /* ===================== Testimonials carousel ===================== */
 const QUOTES = [
-  { q: "Partnering with Nord Harton was the best decision we made this year. They unified twelve legacy systems into one platform — on time, and beyond what we scoped.", name: "Marcus Chen", role: "CEO, Meridian Capital", initials: "MC", image: "/reviews/marcus.png" },
-  { q: "Nord Harton turned a tangle of manual workflows into one clean platform. Sharp, fast, and genuinely invested in our outcomes.", name: "Lucia Romero", role: "COO, NorthRidge Services", initials: "LR", image: "/reviews/lucia.png" },
-  { q: "The team shipped faster than our internal roadmap predicted, and the quality was extraordinary. A true partner.", name: "Sara Reyes", role: "CTO, Auriel Consultants", initials: "SR", image: "/reviews/sara.png" },
-  { q: "They understood our business before writing a line of code. That's rare — and it showed in every deliverable.", name: "Liam Nguyen", role: "VP Product, Helix Technologies", initials: "LN", image: "/reviews/liam.png" },
+  {
+    q: "Nord Harton transformed a complex technology landscape into a scalable, future-ready platform. Their strategic clarity and execution discipline helped us modernize without disrupting operations.",
+    name: "Marcus Chen",
+    role: "CEO, Meridian Capital",
+    initials: "MC",
+    image: "/reviews/marcus.png"
+  },
+  {
+    q: "Their team brought exceptional structure to our digital transformation journey. They combined deep technical expertise with a genuine understanding of our business goals.",
+    name: "Lucia Romero",
+    role: "COO, NorthRidge Services",
+    initials: "LR",
+    image: "/reviews/lucia.png"
+  },
+  {
+    q: "From strategy to delivery, Nord Harton demonstrated remarkable attention to detail and ownership. The final solution exceeded expectations in both performance and usability.",
+    name: "Sara Reyes",
+    role: "CTO, Auriel Consultants",
+    initials: "SR",
+    image: "/reviews/sara.png"
+  },
+  {
+    q: "Nord Harton became an extension of our product team. Their ability to simplify complexity and deliver meaningful outcomes made a significant impact on our organization.",
+    name: "Liam Nguyen",
+    role: "VP Product, Helix Technologies",
+    initials: "LN",
+    image: "/reviews/liam.png"
+  },
 ];
+
 
 function ReviewAvatar({ src, initials, name }: { src?: string; initials: string; name: string }) {
   const [failed, setFailed] = useState(false);
