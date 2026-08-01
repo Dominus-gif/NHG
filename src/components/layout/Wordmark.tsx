@@ -3,9 +3,9 @@
 import { useState } from "react";
 
 /**
- * Brand logo. Uses the uploaded image at /public/logo.png (rendered with a
- * `lighten` blend so its black background disappears on the dark UI). If the
- * file isn't present it falls back to a crisp CSS wordmark so nothing breaks.
+ * Brand logo. Uses the uploaded image at /public/logo.png (padding trimmed and
+ * background made transparent at build-time). If the file isn't present it falls
+ * back to a crisp CSS wordmark so nothing breaks.
  */
 export function Wordmark({ size = 24, className }: { size?: number; className?: string }) {
   const [useFallback, setUseFallback] = useState(false);
@@ -19,11 +19,9 @@ export function Wordmark({ size = 24, className }: { size?: number; className?: 
         onError={() => setUseFallback(true)}
         className={className}
         style={{
-          height: Math.round(size * 1.7),
+          height: Math.round(size * 1.08),
           width: "auto",
           maxWidth: "100%",
-          objectFit: "contain",
-          mixBlendMode: "lighten",
           display: "block",
           userSelect: "none",
         }}
