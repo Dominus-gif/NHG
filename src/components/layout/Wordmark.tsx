@@ -1,8 +1,36 @@
+"use client";
+
+import { useState } from "react";
+
 /**
- * Brand wordmark — "NordHarton" in a white→silver vertical gradient followed by
- * a red square period. Scales crisply at any size (no raster image).
+ * Brand logo. Uses the uploaded image at /public/logo.png (rendered with a
+ * `lighten` blend so its black background disappears on the dark UI). If the
+ * file isn't present it falls back to a crisp CSS wordmark so nothing breaks.
  */
 export function Wordmark({ size = 24, className }: { size?: number; className?: string }) {
+  const [useFallback, setUseFallback] = useState(false);
+
+  if (!useFallback) {
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src="/logo.png"
+        alt="NordHarton"
+        onError={() => setUseFallback(true)}
+        className={className}
+        style={{
+          height: Math.round(size * 1.7),
+          width: "auto",
+          maxWidth: "100%",
+          objectFit: "contain",
+          mixBlendMode: "lighten",
+          display: "block",
+          userSelect: "none",
+        }}
+      />
+    );
+  }
+
   const dot = Math.round(size * 0.17);
   return (
     <span
