@@ -364,7 +364,7 @@ function ChatPanel({
   }, [messages]);
 
   return (
-    <div onClick={onClose} className="fixed inset-0 z-[120] flex justify-end bg-black/50 backdrop-blur-sm">
+    <div onClick={onClose} data-lenis-prevent className="fixed inset-0 z-[120] flex justify-end bg-black/50 backdrop-blur-sm">
       <div
         onClick={(e) => e.stopPropagation()}
         className="flex h-full w-full max-w-md flex-col border-l border-hairline bg-surface"

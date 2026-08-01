@@ -32,11 +32,11 @@ export default function CtaBand() {
           transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
         />
         <div style={{ position: "relative" }}>
-          <h2 style={{ fontSize: "clamp(32px,4.5vw,56px)", fontWeight: 500, letterSpacing: "-.03em", color: "var(--text-strong)", maxWidth: "18ch", margin: "0 auto", lineHeight: 1.08 }}>
-            Start your project in under two weeks
+          <h2 style={{ fontSize: "clamp(32px,4.5vw,56px)", fontWeight: 500, letterSpacing: "-.03em", color: "var(--text-strong)", maxWidth: "16ch", margin: "0 auto", lineHeight: 1.08 }}>
+            Turn complexity into your advantage
           </h2>
-          <p style={{ marginTop: 18, fontSize: 18, color: "var(--text-muted)", maxWidth: "46ch", margin: "18px auto 0" }}>
-            Join the enterprises already transforming how they operate with Nord Harton.
+          <p style={{ marginTop: 18, fontSize: 18, color: "var(--text-muted)", maxWidth: "48ch", margin: "18px auto 0" }}>
+            Tell us where you&apos;re headed. We&apos;ll help you get there faster — with fewer surprises and outcomes you can measure.
           </p>
           <div style={{ marginTop: 30 }}>
             <Button size="lg" iconRight={<ArrowRight size={18} />} onClick={open}>

@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useEffect, useRef, useState, type ReactNode, type CSSProperties } from "react";
 import { motion, useScroll, useTransform, AnimatePresence, type Variants } from "framer-motion";
 import { Button } from "@/components/site/primitives";
@@ -7,7 +8,7 @@ import { ArrowRight, Check, Workflow, Shield, Cloud } from "@/components/site/ic
 import { useContactModal } from "@/components/providers/ContactModalProvider";
 import { submitEmailLead } from "@/lib/submissions";
 import { isWorkEmail, WORK_EMAIL_ERROR } from "@/lib/email";
-import { AnalyticsChart, DonutChart, Gauge, LineArea, StatCard, StatusPill } from "@/components/site/charts";
+import { AnalyticsChart, DonutChart, Gauge, MiniBarChart, StatCard, StatusPill } from "@/components/site/charts";
 import CountUpInline from "@/components/site/CountUpInline";
 
 const ease = [0.16, 1, 0.3, 1] as const;
@@ -172,7 +173,7 @@ export function Logos() {
   return (
     <section style={{ padding: "40px 24px 20px" }}>
       <Reveal>
-        <p style={{ textAlign: "center", fontSize: 13.5, letterSpacing: ".08em", textTransform: "uppercase", color: "var(--text-muted)" }}>
+        <p style={{ textAlign: "center", fontSize: 15.5, fontWeight: 500, letterSpacing: ".08em", textTransform: "uppercase", color: "var(--text-body)" }}>
           Trusted by enterprises and teams across the world
         </p>
       </Reveal>
@@ -215,7 +216,7 @@ export function FeatureBlocks() {
                     {[0, 1, 2].map((k) => <i key={k} style={{ width: 9, height: 9, borderRadius: "50%", background: "var(--border-strong)", display: "inline-block" }} />)}
                   </div>
                   <div style={{ flex: 1, background: "var(--surface)", border: "1px solid var(--border)", borderRadius: 16, padding: 22, display: "flex", flexDirection: "column", justifyContent: "center" }}>
-                    {b.chart === "line" && (<><div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}><div><span style={{ fontSize: 12.5, color: "var(--text-muted)" }}>Delivery velocity</span><div style={{ display: "flex", alignItems: "baseline", gap: 6, marginTop: 4 }}><span style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 26, color: "var(--text-strong)" }}>48</span><span style={{ fontSize: 13, color: "var(--text-muted)" }}>tasks / week</span></div></div><span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 12, fontWeight: 600, color: "var(--success)", background: "var(--success-soft)", padding: "3px 8px", borderRadius: 999 }}>▲ 18%</span></div><div style={{ marginTop: 16, height: 130 }}><LineArea points={[26, 42, 34, 58, 50, 76, 66, 90]} grid dot /></div></>)}
+                    {b.chart === "line" && (<><div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start" }}><div><span style={{ fontSize: 12.5, color: "var(--text-muted)" }}>Delivery velocity</span><div style={{ display: "flex", alignItems: "baseline", gap: 6, marginTop: 4 }}><span style={{ fontFamily: "var(--font-display)", fontWeight: 600, fontSize: 26, color: "var(--text-strong)" }}>48</span><span style={{ fontSize: 13, color: "var(--text-muted)" }}>tasks / week</span></div></div><span style={{ display: "inline-flex", alignItems: "center", gap: 4, fontSize: 12, fontWeight: 600, color: "var(--success)", background: "var(--success-soft)", padding: "3px 8px", borderRadius: 999 }}>▲ 18%</span></div><div style={{ marginTop: 18 }}><MiniBarChart data={[26, 42, 34, 58, 50, 76, 66, 90]} height={140} /></div></>)}
                     {b.chart === "donut" && (<><div style={{ fontSize: 12.5, color: "var(--text-muted)", marginBottom: 14 }}>Projects by status</div><DonutChart centerValue={30} centerLabel="Active" /></>)}
                     {b.chart === "gauge" && (<div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}><Gauge value={91} label="On-time delivery" /></div>)}
                   </div>
@@ -275,8 +276,14 @@ function ReviewAvatar({ src, initials, name }: { src?: string; initials: string;
     );
   }
   return (
-    // eslint-disable-next-line @next/next/no-img-element
-    <img src={src} alt={name} onError={() => setFailed(true)} style={{ ...base, objectFit: "cover" }} />
+    <Image
+      src={src}
+      alt={name}
+      width={46}
+      height={46}
+      onError={() => setFailed(true)}
+      style={{ ...base, objectFit: "cover" }}
+    />
   );
 }
 export function Testimonials() {

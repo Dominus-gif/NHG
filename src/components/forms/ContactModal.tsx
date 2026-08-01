@@ -123,6 +123,7 @@ export default function ContactModal({
   return (
     <div
       onClick={onClose}
+      data-lenis-prevent
       style={{
         position: "fixed",
         inset: 0,

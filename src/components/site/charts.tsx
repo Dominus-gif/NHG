@@ -283,6 +283,58 @@ export function LineArea({
   );
 }
 
+/* ============ Mini bar chart with trend line — robust, doesn't distort ============ */
+export function MiniBarChart({ data = [26, 42, 34, 58, 50, 76, 66, 90], height = 140 }: { data?: number[]; height?: number }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const inView = useInView(ref, { once: true, margin: "-50px" });
+  const max = Math.max(...data, 1);
+  const norm = data.map((d) => (d / max) * 100);
+  const pts = norm.map((v, i) => `${(i / (data.length - 1)) * 100},${100 - v}`).join(" ");
+  const last = data.length - 1;
+  return (
+    <div ref={ref} style={{ position: "relative", height, borderBottom: "1px solid var(--border)" }}>
+      <div style={{ position: "absolute", inset: 0, pointerEvents: "none" }}>
+        {[0, 33, 66].map((t) => (
+          <div key={t} style={{ position: "absolute", left: 0, right: 0, top: `${t}%`, borderTop: "1px dashed var(--border)", opacity: 0.5 }} />
+        ))}
+      </div>
+      <div style={{ position: "absolute", inset: 0, display: "flex", alignItems: "flex-end", gap: "3%" }}>
+        {norm.map((v, i) => (
+          <motion.div
+            key={i}
+            initial={{ scaleY: 0 }}
+            animate={inView ? { scaleY: Math.max(v / 100, 0.02) } : { scaleY: 0 }}
+            transition={{ duration: 0.7, ease, delay: i * 0.05 }}
+            style={{
+              flex: 1,
+              height: "100%",
+              transformOrigin: "bottom",
+              borderRadius: "4px 4px 0 0",
+              background: i === last
+                ? "linear-gradient(180deg, rgba(255,255,255,.92), rgba(255,255,255,.30))"
+                : "linear-gradient(180deg, rgba(255,255,255,.28), rgba(255,255,255,.05))",
+            }}
+          />
+        ))}
+      </div>
+      <svg viewBox="0 0 100 100" preserveAspectRatio="none" style={{ position: "absolute", inset: 0, width: "100%", height: "100%", pointerEvents: "none" }}>
+        <motion.polyline
+          points={pts}
+          fill="none"
+          stroke="rgba(255,255,255,.85)"
+          strokeWidth={1.6}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          vectorEffect="non-scaling-stroke"
+          initial={{ pathLength: 0, opacity: 0 }}
+          animate={inView ? { pathLength: 1, opacity: 1 } : { pathLength: 0, opacity: 0 }}
+          transition={{ duration: 1.3, ease, delay: 0.3 }}
+        />
+      </svg>
+    </div>
+  );
+}
+
 /* ============ Gauge — arc sweeps ============ */
 export function Gauge({ value = 92, label = "Delivery health" }: { value?: number; label?: string }) {
   const ref = useRef<HTMLDivElement>(null);

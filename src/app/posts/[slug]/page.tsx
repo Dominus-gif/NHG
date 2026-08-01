@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Reveal } from "@/components/ui/Reveal";
-import CtaBand from "@/components/sections/CtaBand";
 import { posts, getPost } from "@/content/posts";
 
 export function generateStaticParams() {
@@ -82,8 +81,6 @@ export default async function PostPage({
           ))}
         </div>
       </section>
-
-      <CtaBand />
     </>
   );
 }

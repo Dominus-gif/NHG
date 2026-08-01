@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import PageHeader from "@/components/layout/PageHeader";
 import { Stagger, StaggerItem } from "@/components/ui/Reveal";
-import CtaBand from "@/components/sections/CtaBand";
 import { posts } from "@/content/posts";
 
 export const metadata: Metadata = {
@@ -49,8 +48,6 @@ export default function PostsPage() {
           </Stagger>
         </div>
       </section>
-
-      <CtaBand />
     </>
   );
 }

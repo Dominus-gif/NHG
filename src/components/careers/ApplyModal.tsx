@@ -100,6 +100,7 @@ export default function ApplyModal({
   return (
     <div
       onClick={onClose}
+      data-lenis-prevent
       style={{
         position: "fixed",
         inset: 0,
