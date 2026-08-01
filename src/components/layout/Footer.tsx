@@ -44,7 +44,7 @@ export default function Footer() {
       >
         <div style={{ maxWidth: 320 }}>
           <Link href="/" style={{ display: "inline-flex", alignItems: "center", width: "fit-content" }}>
-            <Wordmark size={24} />
+            <Wordmark size={20} />
           </Link>
           <p style={{ marginTop: 16, fontSize: 14, lineHeight: 1.6, color: "var(--text-on-inverse-muted)" }}>
             A digital solutions enterprise turning complex business requirements into elegant, scalable software.
