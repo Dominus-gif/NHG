@@ -43,8 +43,8 @@ export default function Footer() {
         className="footer-grid"
       >
         <div style={{ maxWidth: 320 }}>
-          <Link href="/" style={{ display: "inline-flex", alignItems: "center" }}>
-            <Wordmark size={30} />
+          <Link href="/" style={{ display: "inline-flex", alignItems: "center", width: "fit-content" }}>
+            <Wordmark size={21} />
           </Link>
           <p style={{ marginTop: 16, fontSize: 14, lineHeight: 1.6, color: "var(--text-on-inverse-muted)" }}>
             A digital solutions enterprise turning complex business requirements into elegant, scalable software.

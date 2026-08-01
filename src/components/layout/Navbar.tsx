@@ -65,7 +65,7 @@ export default function Navbar() {
           }}
         >
           <Link href="/" style={{ display: "flex", alignItems: "center" }} onClick={() => setActive("Home")}>
-            <Wordmark size={26} />
+            <Wordmark size={23} />
           </Link>
           <div style={{ display: "flex", gap: 4, marginLeft: 18, flex: 1 }} className="nav-links">
             {NAV.map((n) => {
