@@ -18,7 +18,7 @@ export const posts: Post[] = [
     tag: "Strategy & Architecture",
     date: "Jun 12, 2026", // Placeholder date
     readTime: "8 min read", 
-    author: "Marcus Nord Harton (Tech Strategy Lead)",
+    author: "Liam Fitzgerald",
     body: [
       // --- Introduction and Diagnosis ---
       "Enterprise transformation—the monumental effort to modernize processes, technology stacks, and corporate culture—is frequently viewed as a technical challenge. However, history consistently proves that the failure point is rarely the toolset or the funding; it is the systemic gap between strategic intent (what the boardroom believes) and operational delivery (what the engineers actually build). The common pitfall is treating transformation solely as an IT project rather than recognizing it as a deeply human and structural business evolution. If your current initiative feels stalled, the root cause likely lies in this misalignment.",
@@ -52,7 +52,7 @@ export const posts: Post[] = [
   tag: "Architecture & Modernization",
   date: "Jun 12, 2026",
   readTime: "8 min read",
-  author: "Marcus Nord Harton (Tech Strategy Lead)",
+  author: "Elena Popescu",
   body: [
     "Every large organization carries a debt the balance sheet can never fully reflect: technical debt. This debt lives inside legacy systems—mission-critical, decades-old applications built on architectures that were once reliable but are now difficult to maintain. These monolithic systems have powered businesses for years, yet they limit agility, slow feature delivery, and create growing security and operational risks.",
 
@@ -84,7 +84,7 @@ export const posts: Post[] = [
   tag: "UX Design & Strategy",
   date: "Jun 12, 2026",
   readTime: "9 min read",
-  author: "Marcus Nord Harton (Tech Strategy Lead)",
+  author: "Aryan Kapoor",
   body: [
     "Modern users expect software to feel as intuitive as their favorite consumer apps. Yet enterprise platforms must support multi-department workflows, process massive datasets, enforce granular permissions, and integrate with decades of existing infrastructure. Designing an interface that satisfies both expectations is one of the greatest challenges in modern product development.",
 
@@ -115,7 +115,7 @@ export const posts: Post[] = [
   tag: "Data Architecture & Governance",
   date: "Jun 12, 2026",
   readTime: "9 min read",
-  author: "Marcus Nord Harton (Tech Strategy Lead)",
+  author: "William Dubois",
   body: [
     "Modern enterprises operate in an increasingly connected ecosystem where every customer interaction, API request, sensor reading, and business transaction generates valuable data. While this continuous flow of information creates new opportunities for innovation, it also introduces significant architectural challenges. As integrations multiply across the organization, maintaining data quality, consistency, and governance becomes just as important as collecting the data itself.",
 
@@ -146,7 +146,7 @@ export const posts: Post[] = [
   tag: "AI & Workflow Strategy",
   date: "Jun 12, 2026",
   readTime: "9 min read",
-  author: "Marcus Nord Harton (Tech Strategy Lead)",
+  author: "Astrid Jensen",
   body: [
     "Generative AI has fundamentally changed the way designers, developers, and product teams work. From generating interface concepts and marketing copy to creating wireframes and writing boilerplate code, AI-powered tools dramatically accelerate the creative process. What once required days of manual effort can now be accomplished in minutes, allowing teams to explore more ideas than ever before.",
 
@@ -177,7 +177,7 @@ export const posts: Post[] = [
   tag: "Design Systems & Governance",
   date: "Jun 12, 2026",
   readTime: "9 min read",
-  author: "Marcus Nord Harton (Tech Strategy Lead)",
+  author: "Gabriel Petrova",
   body: [
     "A design system is often presented as the solution to inconsistent user experiences—a single source of truth for components, patterns, accessibility standards, and brand guidelines. While this vision is compelling, many organizations discover that simply creating a component library is not enough. Without strong governance, even the most polished design system gradually becomes outdated, fragmented, and underused.",
 
@@ -208,7 +208,7 @@ export const posts: Post[] = [
   tag: "Edge Computing & Cloud Architecture",
   date: "Jun 12, 2026",
   readTime: "9 min read",
-  author: "Marcus Nord Harton (Tech Strategy Lead)",
+  author: "Elena Popescu",
   body: [
     "For years, cloud computing has been built around a centralized model where applications run in powerful data centers and users connect remotely from around the world. This architecture has served businesses well, but as digital experiences become increasingly interactive and real-time, the biggest challenge is no longer processing power—it's latency. Users now expect instant responses regardless of where they are located.",
 
@@ -239,7 +239,7 @@ export const posts: Post[] = [
   tag: "UX Design & Inclusion",
   date: "Jun 12, 2026",
   readTime: "9 min read",
-  author: "Marcus Nord Harton (Tech Strategy Lead)",
+  author: "Liam Fitzgerald",
   body: [
     "Accessibility has long been misunderstood in digital product development. Too often, it is viewed as a compliance requirement that must be addressed before release rather than a fundamental part of creating great user experiences. This mindset leads to 'checkbox accessibility,' where features are added late in development to satisfy standards without truly improving usability.",
 
@@ -270,7 +270,7 @@ export const posts: Post[] = [
   tag: "Serverless & Cloud Architecture",
   date: "Jun 12, 2026",
   readTime: "9 min read",
-  author: "Marcus Nord Harton (Tech Strategy Lead)",
+  author: "Astrid Jensen",
   body: [
     "Serverless computing has evolved from an experimental cloud technology into a mature architectural approach for building scalable backend systems. By allowing developers to deploy code without managing servers or infrastructure, serverless platforms eliminate much of the operational complexity traditionally associated with backend development. What was once considered suitable only for lightweight automation now powers production systems across industries.",
 
@@ -332,7 +332,7 @@ export const posts: Post[] = [
   tag: "Language & Architecture",
   date: "Jun 12, 2026",
   readTime: "9 min read",
-  author: "Marcus Nord Harton (Tech Strategy Lead)",
+  author: "William Dubois",
   body: [
     "As modern applications grow in complexity, managing reliability across large codebases and engineering teams becomes one of the biggest challenges in software development. JavaScript provides tremendous flexibility, but its dynamic nature can introduce unexpected runtime failures as applications scale. TypeScript addresses this challenge by adding static type checking, allowing developers to identify many problems during development instead of discovering them after deployment.",
 
@@ -365,7 +365,7 @@ export const posts: Post[] = [
   tag: "UI/UX Design & Tokens",
   date: "Jun 12, 2026",
   readTime: "8 min read",
-  author: "Marcus Nord Harton (Tech Strategy Lead)",
+  author: "Elena Popescu",
   body: [
     "Dark mode has evolved from an optional visual preference into an expected capability in modern digital products. Early implementations often treated it as a simple CSS adjustment—changing light backgrounds to dark ones and reversing text colors. While this approach may work for small applications, it quickly breaks down as products grow in complexity across multiple platforms, components, and user experiences.",
 
@@ -433,7 +433,7 @@ export const posts: Post[] = [
   tag: "Architecture & Scalability",
   date: "Jun 12, 2026",
   readTime: "9 min read",
-  author: "Marcus Nord Harton (Tech Strategy Lead)",
+  author: "Gabriel Petrova",
   body: [
     "For decades, monolithic platforms dominated enterprise architecture. These systems combined authentication, payments, business logic, content management, and user interfaces into one tightly connected codebase. While this approach provided simplicity during early development, it eventually became a major constraint as organizations grew. Even small changes could require extensive testing, coordinated releases, and risky deployments across the entire platform.",
 
