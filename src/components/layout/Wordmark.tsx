@@ -11,15 +11,21 @@ export function Wordmark({ size = 24, className }: { size?: number; className?: 
   const [useFallback, setUseFallback] = useState(false);
 
   if (!useFallback) {
+    // Explicit intrinsic width/height (aspect ~7.5:1) so the browser reserves
+    // space and there's no layout shift while the logo loads.
+    const h = Math.round(size * 1.08);
+    const w = Math.round(h * 7.5);
     return (
       // eslint-disable-next-line @next/next/no-img-element
       <img
         src="/logo.png"
         alt="NordHarton"
+        width={w}
+        height={h}
         onError={() => setUseFallback(true)}
         className={className}
         style={{
-          height: Math.round(size * 1.08),
+          height: h,
           width: "auto",
           maxWidth: "100%",
           display: "block",

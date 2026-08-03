@@ -7,12 +7,14 @@ const hostGrotesk = Host_Grotesk({
   variable: "--font-host",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
+  display: "swap",
 });
 
 const inter = Inter({
   variable: "--font-inter",
   subsets: ["latin"],
   weight: ["400", "500", "600"],
+  display: "swap",
 });
 import SmoothScroll from "@/components/providers/SmoothScroll";
 import ContactModalProvider from "@/components/providers/ContactModalProvider";
