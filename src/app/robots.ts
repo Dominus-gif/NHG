@@ -3,12 +3,11 @@ import { siteUrl } from "@/lib/seo";
 
 export default function robots(): MetadataRoute.Robots {
   return {
+    // Allow everything to be crawled — no restrictions.
     rules: [
       {
         userAgent: "*",
         allow: "/",
-        // Private / non-content areas — no SEO value.
-        disallow: ["/portal", "/portal/", "/api/"],
       },
     ],
     sitemap: `${siteUrl}/sitemap.xml`,
