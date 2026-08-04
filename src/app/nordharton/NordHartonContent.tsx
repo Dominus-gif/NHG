@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import {
   Layers, Boxes, Cloud, ShieldCheck,
   Compass, PenTool, Hammer, Rocket, LifeBuoy,
@@ -9,6 +8,7 @@ import {
 } from "lucide-react";
 import { Reveal, Stagger, StaggerItem } from "@/components/ui/Reveal";
 import { Carousel } from "@/components/ui/carousel";
+import ProcessCardStack from "@/components/ui/process-card-stack";
 import CountUpInline from "@/components/site/CountUpInline";
 
 /* ------------------------------------------------------------------ */
@@ -54,10 +54,6 @@ const SILENT = [
 /* ------------------------------------------------------------------ */
 
 export default function NordHartonContent() {
-  const [step, setStep] = useState(0);
-  const active = PROCESS[step];
-  const ActiveIcon = active.icon;
-
   return (
     <>
       {/* WHAT WE DO */}
@@ -67,49 +63,10 @@ export default function NordHartonContent() {
         </Reveal>
       </Section>
 
-      {/* HOW WE DO IT — interactive process */}
-      <Section eyebrow="How we do it" title="A method, not a mystery" sub="Five stages, each with a clear owner and a clear outcome. Click a stage to see how we work.">
+      {/* HOW WE DO IT — animated card stack */}
+      <Section eyebrow="How we do it" title="A method, not a mystery" sub="Five stages, each with a clear owner and a clear outcome. Step through the stack to see how we work.">
         <Reveal>
-          <div className="mb-6 flex flex-wrap gap-2">
-            {PROCESS.map((p, i) => {
-              const Icon = p.icon;
-              const on = i === step;
-              return (
-                <button
-                  key={p.name}
-                  onClick={() => setStep(i)}
-                  className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-medium transition-all duration-300 ${
-                    on
-                      ? "border-transparent bg-white text-[#0E0E0E]"
-                      : "border-hairline-strong text-fg-muted hover:border-accent hover:text-fg"
-                  }`}
-                >
-                  <span className="font-mono text-xs opacity-70">0{i + 1}</span>
-                  <Icon size={15} strokeWidth={2} />
-                  {p.name}
-                </button>
-              );
-            })}
-          </div>
-          <div className="relative overflow-hidden rounded-2xl border border-hairline bg-elevated/60 p-8">
-            <div className="pointer-events-none absolute -right-10 -top-10 h-40 w-40 rounded-full bg-white/[0.05] blur-3xl" />
-            <div className="relative flex items-start gap-5">
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl border border-hairline bg-base text-accent">
-                <ActiveIcon size={22} strokeWidth={1.75} />
-              </div>
-              <div>
-                <div className="flex items-baseline gap-3">
-                  <span className="font-heading text-xl font-semibold tracking-tight text-fg">{active.name}</span>
-                  <span className="font-mono text-xs text-fg-subtle">Stage 0{step + 1} / 05</span>
-                </div>
-                <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-fg-muted">{active.detail}</p>
-              </div>
-            </div>
-            {/* progress rail */}
-            <div className="mt-7 h-1 w-full overflow-hidden rounded-full bg-surface-subtle">
-              <div className="h-full rounded-full bg-white transition-all duration-500" style={{ width: `${((step + 1) / PROCESS.length) * 100}%` }} />
-            </div>
-          </div>
+          <ProcessCardStack stages={PROCESS} />
         </Reveal>
       </Section>
 

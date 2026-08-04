@@ -7,7 +7,7 @@ export const metadata: Metadata = {
   title: "The Nord Harton Way — how we deliver",
   description:
     "What we do, how we do it, the practices we follow, and the client metrics we hold ourselves to. Nord Harton understands what clients expect and delivers quietly — without the noise.",
-  alternates: { canonical: "/NordHarton" },
+  alternates: { canonical: "/nordharton" },
 };
 
 export default function NordHartonPage() {
