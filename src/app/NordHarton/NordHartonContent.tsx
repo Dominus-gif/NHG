@@ -8,6 +8,7 @@ import {
   Radar, BellOff, Filter, CheckCircle2,
 } from "lucide-react";
 import { Reveal, Stagger, StaggerItem } from "@/components/ui/Reveal";
+import { Carousel } from "@/components/ui/carousel";
 import CountUpInline from "@/components/site/CountUpInline";
 
 /* ------------------------------------------------------------------ */
@@ -60,26 +61,10 @@ export default function NordHartonContent() {
   return (
     <>
       {/* WHAT WE DO */}
-      <Section eyebrow="What we do" title="One accountable partner, end to end">
-        <Stagger className="grid gap-5 sm:grid-cols-2">
-          {WHAT.map((c) => {
-            const Icon = c.icon;
-            return (
-              <StaggerItem key={c.title}>
-                <div className="group h-full rounded-2xl border border-hairline bg-elevated/60 p-7 transition-all duration-300 hover:-translate-y-1 hover:border-accent/40">
-                  <div className="flex items-center justify-between">
-                    <div className="flex h-11 w-11 items-center justify-center rounded-xl border border-hairline bg-base text-accent transition-transform duration-300 group-hover:scale-110">
-                      <Icon size={20} strokeWidth={1.75} />
-                    </div>
-                    <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-fg-subtle">{c.kicker}</span>
-                  </div>
-                  <h3 className="mt-5 text-lg font-semibold text-fg">{c.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-fg-muted">{c.body}</p>
-                </div>
-              </StaggerItem>
-            );
-          })}
-        </Stagger>
+      <Section eyebrow="What we do" title="One accountable partner, end to end" sub="Four ways we help — drag through, or use the arrows.">
+        <Reveal className="pb-24 sm:pb-20">
+          <Carousel slides={WHAT} />
+        </Reveal>
       </Section>
 
       {/* HOW WE DO IT — interactive process */}
@@ -130,22 +115,9 @@ export default function NordHartonContent() {
 
       {/* PRACTICES */}
       <Section eyebrow="What we practice" title="The habits behind the results" sub="Principles we hold to on every engagement — the reason clients trust us with what matters.">
-        <Stagger className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-          {PRACTICES.map((p) => {
-            const Icon = p.icon;
-            return (
-              <StaggerItem key={p.title}>
-                <div className="group flex h-full flex-col rounded-2xl border border-hairline bg-elevated/60 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-accent/40">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-lg border border-hairline bg-base text-accent">
-                    <Icon size={18} strokeWidth={1.75} />
-                  </div>
-                  <h3 className="mt-4 text-base font-semibold text-fg">{p.title}</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-fg-muted">{p.body}</p>
-                </div>
-              </StaggerItem>
-            );
-          })}
-        </Stagger>
+        <Reveal className="pb-24 sm:pb-20">
+          <Carousel slides={PRACTICES} />
+        </Reveal>
       </Section>
 
       {/* METRICS */}
