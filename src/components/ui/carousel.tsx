@@ -93,14 +93,11 @@ const Slide = ({ slide, index, current, handleSlideClick }: SlideProps) => {
             className="pointer-events-none absolute -right-16 -top-16 h-56 w-56 rounded-full bg-white/[0.06] blur-3xl transition-opacity duration-700"
             style={{ opacity: active ? 1 : 0 }}
           />
-          {!active && (
-            <div className="absolute inset-0 bg-black/40 transition-all duration-700" />
-          )}
         </div>
 
         <article
-          className={`relative w-full px-8 py-9 transition-opacity duration-700 ease-in-out sm:px-10 ${
-            active ? "visible opacity-100" : "invisible opacity-0"
+          className={`relative w-full px-8 py-9 transition-opacity duration-500 ease-in-out sm:px-10 ${
+            active ? "opacity-100" : "opacity-40"
           }`}
         >
           <div className="flex h-14 w-14 items-center justify-center rounded-xl border border-hairline bg-base text-accent">

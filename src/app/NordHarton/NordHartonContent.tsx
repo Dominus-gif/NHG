@@ -146,23 +146,9 @@ export default function NordHartonContent() {
             You get the outcome; we absorb the complexity.
           </p>
         </Reveal>
-        <Stagger className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {SILENT.map((s) => {
-            const Icon = s.icon;
-            return (
-              <StaggerItem key={s.title}>
-                <div className="group relative h-full overflow-hidden rounded-2xl border border-hairline bg-elevated/60 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-accent/40">
-                  <div className="pointer-events-none absolute -right-8 -top-8 h-24 w-24 rounded-full bg-white/[0.05] blur-2xl opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
-                  <div className="relative flex h-11 w-11 items-center justify-center rounded-xl border border-hairline bg-base text-accent">
-                    <Icon size={20} strokeWidth={1.75} />
-                  </div>
-                  <h3 className="relative mt-5 text-base font-semibold text-fg">{s.title}</h3>
-                  <p className="relative mt-2 text-sm leading-relaxed text-fg-muted">{s.body}</p>
-                </div>
-              </StaggerItem>
-            );
-          })}
-        </Stagger>
+        <Reveal className="pb-24 sm:pb-20">
+          <Carousel slides={SILENT} />
+        </Reveal>
       </Section>
     </>
   );
