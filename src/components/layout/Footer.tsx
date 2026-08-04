@@ -6,6 +6,7 @@ const cols: { title: string; links: [string, string][] }[] = [
     title: "Company",
     links: [
       ["About", "/about"],
+      ["Our Approach", "/NordHarton"],
       ["Services", "/services"],
       ["Posts", "/posts"],
       ["Careers", "/careers"],
