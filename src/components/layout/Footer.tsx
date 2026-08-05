@@ -5,7 +5,7 @@ const cols: { title: string; links: [string, string][] }[] = [
   {
     title: "Company",
     links: [
-      ["About", "/nordharton"],
+      ["About", "/about"],
       ["Services", "/services"],
       ["Posts", "/posts"],
       ["Careers", "/careers"],

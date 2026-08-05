@@ -72,7 +72,7 @@ export const metadata: Metadata = {
 // Main navigation, exposed to search engines as SiteNavigationElement — the
 // signal Google uses when it builds sitelinks under the main result.
 const NAV_LINKS = [
-  { name: "About", url: "/nordharton", description: "How Nord Harton engineers digital transformation at enterprise scale." },
+  { name: "About", url: "/about", description: "How Nord Harton engineers digital transformation at enterprise scale." },
   { name: "Services", url: "/services", description: "Custom web applications, business systems, mobile, cloud, and branding." },
   { name: "Posts", url: "/posts", description: "Insights on strategy, engineering, design, and cloud from the Nord Harton team." },
   { name: "Careers", url: "/careers", description: "Open roles across engineering, design, and platform." },

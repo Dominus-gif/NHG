@@ -10,7 +10,7 @@ import { Wordmark } from "@/components/layout/Wordmark";
 
 const NAV = [
   { label: "Home", href: "/" },
-  { label: "About", href: "/nordharton" },
+  { label: "About", href: "/about" },
   { label: "Services", href: "/services" },
   { label: "Posts", href: "/posts" },
   { label: "Client Portal", href: "/portal" },

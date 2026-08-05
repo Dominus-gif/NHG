@@ -1,8 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import Link from "next/link";
-import { ChevronDown } from "lucide-react";
+import { Check, ChevronDown } from "lucide-react";
 import { Stagger, StaggerItem } from "@/components/ui/Reveal";
 import type { Post } from "@/content/posts";
 
@@ -48,13 +48,92 @@ function domainForTag(tag: string): string {
   return "Strategy & Culture";
 }
 
+/* Themed, accessible dropdown — a native <select>'s open menu is OS-chrome that
+   can't be styled, so we render our own listbox that matches the dark theme. */
+function DomainDropdown({
+  value,
+  options,
+  onChange,
+}: {
+  value: string;
+  options: string[];
+  onChange: (v: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const onClick = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("mousedown", onClick);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onClick);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
+
+  return (
+    <div ref={ref} className="relative w-full sm:w-64">
+      <button
+        type="button"
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        onClick={() => setOpen((v) => !v)}
+        className="flex w-full items-center justify-between gap-2 rounded-xl border border-hairline bg-elevated py-2.5 pl-4 pr-3 text-sm font-medium text-fg outline-none transition-colors hover:border-hairline-strong focus-visible:border-accent"
+      >
+        <span className="truncate">{value}</span>
+        <ChevronDown
+          size={16}
+          className={`shrink-0 text-fg-subtle transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+        />
+      </button>
+
+      {open && (
+        <ul
+          role="listbox"
+          className="absolute left-0 right-0 z-30 mt-2 overflow-hidden rounded-xl border border-hairline bg-elevated p-1 shadow-2xl shadow-black/50"
+        >
+          {options.map((opt) => {
+            const active = opt === value;
+            return (
+              <li key={opt} role="option" aria-selected={active}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    onChange(opt);
+                    setOpen(false);
+                  }}
+                  className={`flex w-full items-center justify-between gap-2 rounded-lg px-3 py-2 text-left text-sm transition-colors ${
+                    active
+                      ? "bg-white/10 text-fg"
+                      : "text-fg-muted hover:bg-white/5 hover:text-fg"
+                  }`}
+                >
+                  <span className="truncate">{opt}</span>
+                  {active && <Check size={15} className="shrink-0 text-accent" />}
+                </button>
+              </li>
+            );
+          })}
+        </ul>
+      )}
+    </div>
+  );
+}
+
 export default function PostsIndex({ posts }: { posts: Post[] }) {
   const [domain, setDomain] = useState(ALL);
 
   // Only surface domains that actually have posts, in a stable order.
   const domains = useMemo(() => {
     const present = new Set(posts.map((p) => domainForTag(p.tag)));
-    return DOMAIN_ORDER.filter((d) => present.has(d));
+    return [ALL, ...DOMAIN_ORDER.filter((d) => present.has(d))];
   }, [posts]);
 
   const filtered = useMemo(
@@ -68,32 +147,13 @@ export default function PostsIndex({ posts }: { posts: Post[] }) {
         {/* Filter bar */}
         <div className="mb-10 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
-            <label
-              htmlFor="domain-filter"
+            <span
+              id="domain-filter-label"
               className="text-xs font-semibold uppercase tracking-[0.18em] text-accent"
             >
               Filter by Domain
-            </label>
-            <div className="relative w-full sm:w-auto">
-              <select
-                id="domain-filter"
-                value={domain}
-                onChange={(e) => setDomain(e.target.value)}
-                style={{ colorScheme: "dark" }}
-                className="w-full appearance-none rounded-xl border border-hairline bg-elevated py-2.5 pl-4 pr-10 text-sm font-medium text-fg outline-none transition-colors hover:border-hairline-strong focus:border-accent sm:w-64"
-              >
-                <option value={ALL}>{ALL}</option>
-                {domains.map((d) => (
-                  <option key={d} value={d}>
-                    {d}
-                  </option>
-                ))}
-              </select>
-              <ChevronDown
-                size={16}
-                className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-fg-subtle"
-              />
-            </div>
+            </span>
+            <DomainDropdown value={domain} options={domains} onChange={setDomain} />
           </div>
           <span className="text-xs text-fg-subtle">
             {filtered.length} {filtered.length === 1 ? "article" : "articles"}

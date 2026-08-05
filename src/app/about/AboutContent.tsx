@@ -61,7 +61,7 @@ const VALUES = [
 
 /* ------------------------------------------------------------------ */
 
-export default function NordHartonContent() {
+export default function AboutContent() {
   return (
     <>
       {/* OUR STORY */}
