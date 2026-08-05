@@ -51,14 +51,97 @@ const SILENT = [
   { icon: CheckCircle2, title: "No surprises", body: "Honest timelines, clear status, and outcomes delivered quietly and on schedule — the way you'd want it done." },
 ];
 
+const VALUES = [
+  { title: "Excellence Without Compromise", body: "For us, excellence is not an aspiration — it is our baseline expectation. Every deliverable undergoes rigorous review, every architecture plan defends its assumptions, and every project team operates under the principle that “good enough” never competes with Nord Harton quality." },
+  { title: "Strategic Partnership, Not Project Delivery", body: "Most IT providers build a feature set and hand over the keys. We build partnerships. Your success is our metric of performance — so we consult before coding, align technical decisions with business objectives at every stage, and stay involved long after launch to ensure outcomes are sustained." },
+  { title: "Innovation-Driven Methodology", body: "Technology moves faster than most organizations can adapt. We embrace emerging technologies — from AI and distributed cloud architecture to modern DevOps workflows — not as novelties, but as tools to build future-ready solutions your business won't outgrow in 18 months." },
+  { title: "Transparent Execution Defined by Outcomes", body: "We believe the biggest risk in enterprise IT is opacity. Nord Harton operates with radical transparency: clear communication on blockers and risks, honest timelines backed by data, and measurable outcomes instead of vanity metrics. If a project needs course correction, we flag it early — always with a proposed solution." },
+  { title: "Client-Centric Technical Governance", body: "Your business objectives guide every technical decision. We don't deploy tech for the sake of technology; we architect solutions around your KPIs, user behaviors, and operational realities. Your mission is our blueprint at every project stage." },
+];
+
 /* ------------------------------------------------------------------ */
 
 export default function NordHartonContent() {
   return (
     <>
+      {/* OUR STORY */}
+      <section className="border-t border-hairline py-16 lg:py-20">
+        <div className="mx-auto max-w-3xl px-6 lg:px-12">
+          <Reveal>
+            <span className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">
+              From vision to reality
+            </span>
+            <p className="mt-6 text-lg leading-relaxed text-fg-muted">
+              Nord Harton was founded 15 years ago on a single conviction:
+              technology should simplify business, not complicate it. What began as
+              a boutique consultancy has evolved into a global digital solutions
+              enterprise, built by teams who have seen the full lifecycle of
+              transformation — from the first line of code to board-level strategy
+              implementation.
+            </p>
+            <p className="mt-5 text-lg leading-relaxed text-fg-muted">
+              Today, we serve organizations worldwide, delivering the infrastructure
+              and innovation that allow legacy enterprises to compete with agile
+              startups and new companies to scale without technical debt. We don&apos;t
+              just build software; we engineer competitive advantage.
+            </p>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* MISSION & VISION */}
+      <section className="border-t border-hairline py-16 lg:py-20">
+        <div className="mx-auto grid max-w-7xl gap-12 px-6 lg:grid-cols-2 lg:gap-20 lg:px-12">
+          <Reveal>
+            <h2 className="text-2xl font-semibold sm:text-3xl">
+              Our mission: simplification as a strategy
+            </h2>
+            <p className="mt-4 leading-relaxed text-fg-muted">
+              In an era of overwhelming technological choice, our role is to distill
+              complexity into clarity. Nord Harton empowers organizations with
+              innovative digital solutions that accelerate growth and create lasting
+              value — not through the latest trend, but through strategic technology
+              partnerships built for your specific business objectives.
+            </p>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <h2 className="text-2xl font-semibold sm:text-3xl">
+              Our vision: setting global standards in client success
+            </h2>
+            <p className="mt-4 leading-relaxed text-fg-muted">
+              We aspire to be the most trusted partner for enterprises seeking
+              transformative capabilities. By consistently delivering quality that
+              exceeds industry standards and innovation that anticipates future
+              needs, we set the benchmark for what a digital services partnership
+              should look like across every market we serve.
+            </p>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* CORE VALUES */}
+      <Section eyebrow="What we stand for" title="Core values" sub="The principles behind every engagement — what clients can count on before a line of code is written.">
+        <Stagger className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+          {VALUES.map((value, i) => (
+            <StaggerItem key={value.title}>
+              <div className="group flex h-full flex-col rounded-2xl border border-hairline bg-elevated/60 p-7 transition-all duration-300 hover:-translate-y-1 hover:border-hairline-strong">
+                <div className="flex items-center gap-4">
+                  <span className="font-heading text-3xl font-semibold tracking-tight text-fg-subtle transition-colors duration-300 group-hover:text-fg">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <span className="h-px flex-1 bg-hairline transition-colors duration-300 group-hover:bg-hairline-strong" />
+                </div>
+                <h3 className="mt-6 text-lg font-semibold leading-snug">{value.title}</h3>
+                <p className="mt-3 text-sm leading-relaxed text-fg-muted">{value.body}</p>
+              </div>
+            </StaggerItem>
+          ))}
+        </Stagger>
+      </Section>
+
       {/* WHAT WE DO */}
       <Section eyebrow="What we do" title="One accountable partner, end to end" sub="Four ways we help — drag through, or use the arrows.">
-        <Reveal className="pb-24 sm:pb-20">
+        <Reveal className="overflow-hidden pb-24 sm:pb-20">
           <Carousel slides={WHAT} />
         </Reveal>
       </Section>
@@ -72,7 +155,7 @@ export default function NordHartonContent() {
 
       {/* PRACTICES */}
       <Section eyebrow="What we practice" title="The habits behind the results" sub="Principles we hold to on every engagement — the reason clients trust us with what matters.">
-        <Reveal className="pb-24 sm:pb-20">
+        <Reveal className="overflow-hidden pb-24 sm:pb-20">
           <Carousel slides={PRACTICES} />
         </Reveal>
       </Section>
@@ -103,7 +186,7 @@ export default function NordHartonContent() {
             You get the outcome; we absorb the complexity.
           </p>
         </Reveal>
-        <Reveal className="pb-24 sm:pb-20">
+        <Reveal className="overflow-hidden pb-24 sm:pb-20">
           <Carousel slides={SILENT} />
         </Reveal>
       </Section>

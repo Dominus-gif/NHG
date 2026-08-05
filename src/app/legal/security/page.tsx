@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import LegalDoc, { type LegalSection } from "@/components/legal/LegalDoc";
 
 export const metadata: Metadata = {
-  title: "Security — Nord Harton Group",
+  title: "Security — Nord Harton",
   description:
-    "How Nord Harton Group protects data and builds security into everything we ship.",
+    "How Nord Harton protects data and builds security into everything we ship.",
   alternates: { canonical: "/legal/security" },
 };
 

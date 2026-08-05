@@ -1,13 +1,13 @@
 export const nav = [
   { label: "Home", href: "/" },
-  { label: "About", href: "/about" },
+  { label: "About", href: "/nordharton" },
   { label: "Services", href: "/services" },
   { label: "Work", href: "/work" },
   { label: "Insights", href: "/insights" },
 ];
 
 export const company = {
-  name: "Nord Harton Group",
+  name: "Nord Harton",
   short: "Nord Harton",
   tagline: "Where strategy meets execution",
   blurb:

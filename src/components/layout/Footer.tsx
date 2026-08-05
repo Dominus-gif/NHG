@@ -5,8 +5,7 @@ const cols: { title: string; links: [string, string][] }[] = [
   {
     title: "Company",
     links: [
-      ["About", "/about"],
-      ["Our Approach", "/nordharton"],
+      ["About", "/nordharton"],
       ["Services", "/services"],
       ["Posts", "/posts"],
       ["Careers", "/careers"],
@@ -62,7 +61,7 @@ export default function Footer() {
               &ldquo;Complexity is inevitable. Elegance is the engineering challenge. We deliver both.&rdquo;
             </blockquote>
             <figcaption style={{ marginTop: 8, fontSize: 12.5, color: "var(--text-on-inverse-muted)" }}>
-              — Nord Harton Group
+              — Nord Harton
             </figcaption>
           </figure>
         </div>
@@ -105,7 +104,7 @@ export default function Footer() {
           gap: 12,
         }}
       >
-        <span style={{ fontSize: 13, color: "var(--text-on-inverse-muted)" }}>© 2026 Nord Harton Group. All rights reserved.</span>
+        <span style={{ fontSize: 13, color: "var(--text-on-inverse-muted)" }}>© 2026 Nord Harton. All rights reserved.</span>
         <span style={{ fontSize: 13, color: "var(--text-on-inverse-muted)" }}>projects@nordharton.com</span>
       </div>
     </footer>

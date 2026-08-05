@@ -303,7 +303,7 @@ function ReviewAvatar({ src, initials, name }: { src?: string; initials: string;
   return (
     <Image
       src={src}
-      alt={name}
+      alt={`${name} — Nord Harton client`}
       width={46}
       height={46}
       onError={() => setFailed(true)}

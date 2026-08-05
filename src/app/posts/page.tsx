@@ -5,7 +5,7 @@ import { Stagger, StaggerItem } from "@/components/ui/Reveal";
 import { posts } from "@/content/posts";
 
 export const metadata: Metadata = {
-  title: "Posts — Nord Harton Group",
+  title: "Posts — Nord Harton",
   description:
     "Perspectives on enterprise digital transformation, engineering, design, and cloud from the Nord Harton team.",
   alternates: { canonical: "/posts" },

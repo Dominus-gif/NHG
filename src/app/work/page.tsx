@@ -6,7 +6,7 @@ import { projects } from "@/content/work";
 import { ArrowUpRight } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "Work — Nord Harton Group",
+  title: "Work — Nord Harton",
   description:
     "Selected enterprise projects and the measurable outcomes we delivered.",
 };

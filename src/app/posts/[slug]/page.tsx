@@ -15,9 +15,9 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const post = getPost(slug);
-  if (!post) return { title: "Post not found — Nord Harton Group" };
+  if (!post) return { title: "Post not found — Nord Harton" };
   return {
-    title: `${post.title} — Nord Harton Group`,
+    title: `${post.title} — Nord Harton`,
     description: post.excerpt,
     alternates: { canonical: `/posts/${slug}` },
     openGraph: {

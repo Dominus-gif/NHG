@@ -2,9 +2,9 @@ import type { Metadata } from "next";
 import LegalDoc, { type LegalSection } from "@/components/legal/LegalDoc";
 
 export const metadata: Metadata = {
-  title: "Terms of Service — Nord Harton Group",
+  title: "Terms of Service — Nord Harton",
   description:
-    "The terms and conditions governing your use of Nord Harton Group's website and services.",
+    "The terms and conditions governing your use of Nord Harton's website and services.",
   alternates: { canonical: "/legal/terms" },
 };
 

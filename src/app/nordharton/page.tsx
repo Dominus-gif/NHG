@@ -4,9 +4,9 @@ import CtaBand from "@/components/sections/CtaBand";
 import NordHartonContent from "./NordHartonContent";
 
 export const metadata: Metadata = {
-  title: "The Nord Harton Way — how we deliver",
+  title: "About Nord Harton — Engineering digital transformation at scale",
   description:
-    "What we do, how we do it, the practices we follow, and the client metrics we hold ourselves to. Nord Harton understands what clients expect and delivers quietly — without the noise.",
+    "Nord Harton is a global digital solutions enterprise turning complexity into competitive advantage. Our story, mission, values, and the way we do it — what we build, how we deliver, and the client metrics we hold ourselves to.",
   alternates: { canonical: "/nordharton" },
 };
 
@@ -14,9 +14,9 @@ export default function NordHartonPage() {
   return (
     <>
       <PageHeader
-        eyebrow="The Nord Harton Way"
-        title="How we turn ambition into shipped software"
-        description="We understand exactly what our clients expect — then deliver it quietly, on time, and without the noise. This is what we do, how we do it, and the standards we hold ourselves to."
+        eyebrow="About Nord Harton"
+        title="Engineering digital transformation at scale"
+        description="Founded 15 years ago on a single conviction: technology should simplify business, not complicate it. This is who we are, what we do, and how we deliver — quietly, on time, and without the noise."
       />
       <NordHartonContent />
       <CtaBand />

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Contact — Nord Harton Group",
+  title: "Contact — Nord Harton",
   description:
     "Tell us about your project. A member of the Nord Harton team will respond within one business day.",
   alternates: { canonical: "/contact" },

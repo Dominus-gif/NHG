@@ -1,7 +1,7 @@
 import { ImageResponse } from "next/og";
 
 export const runtime = "edge";
-export const alt = "Nord Harton Group — Where strategy meets execution";
+export const alt = "Nord Harton — Where strategy meets execution";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
 

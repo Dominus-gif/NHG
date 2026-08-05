@@ -8,7 +8,7 @@ import { Laptop2, Workflow, Gem } from "lucide-react";
 import { jobs } from "@/content/jobs";
 
 export const metadata: Metadata = {
-  title: "Careers — Nord Harton Group",
+  title: "Careers — Nord Harton",
   description:
     "Join a small, senior team building mission-critical enterprise platforms. Open roles across engineering, design, and platform.",
   alternates: { canonical: "/careers" },

@@ -3,14 +3,14 @@
 
 export const siteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? "https://nordharton.com").replace(/\/+$/, "");
 
-export const siteName = "Nord Harton Group";
+export const siteName = "Nord Harton";
 export const siteTagline = "Where strategy meets execution";
 
 export const siteDescription =
-  "Nord Harton Group is a digital solutions enterprise building custom web applications, business systems, mobile apps, cloud infrastructure, and brand experiences. 15+ years of expertise and 100+ projects delivered worldwide.";
+  "Nord Harton is a digital solutions enterprise building custom web applications, business systems, mobile apps, cloud infrastructure, and brand experiences. 15+ years of expertise and 100+ projects delivered worldwide.";
 
 export const siteKeywords = [
-  "Nord Harton Group",
+  "Nord Harton",
   "digital solutions enterprise",
   "custom web application development",
   "enterprise software development",

@@ -19,7 +19,7 @@ export function Wordmark({ size = 24, className }: { size?: number; className?: 
       // eslint-disable-next-line @next/next/no-img-element
       <img
         src="/logo.png"
-        alt="NordHarton"
+        alt="Nord Harton"
         width={w}
         height={h}
         onError={() => setUseFallback(true)}
@@ -39,7 +39,7 @@ export function Wordmark({ size = 24, className }: { size?: number; className?: 
   return (
     <span
       className={className}
-      aria-label="NordHarton"
+      aria-label="Nord Harton"
       style={{ display: "inline-flex", alignItems: "flex-end", gap: Math.max(2, Math.round(size * 0.05)), lineHeight: 1, userSelect: "none" }}
     >
       <span

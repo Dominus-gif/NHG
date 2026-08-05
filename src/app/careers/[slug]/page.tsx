@@ -16,9 +16,9 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { slug } = await params;
   const job = getJob(slug);
-  if (!job) return { title: "Role not found — Nord Harton Group" };
+  if (!job) return { title: "Role not found — Nord Harton" };
   return {
-    title: `${job.title} — Careers — Nord Harton Group`,
+    title: `${job.title} — Careers — Nord Harton`,
     description: job.summary,
     alternates: { canonical: `/careers/${slug}` },
     openGraph: {
