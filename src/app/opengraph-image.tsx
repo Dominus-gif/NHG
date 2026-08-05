@@ -35,7 +35,7 @@ export default function OpengraphImage() {
           </div>
         </div>
 
-        <div style={{ display: "flex", fontSize: 24, color: "#6E6E73" }}>nordhartongroup.com</div>
+        <div style={{ display: "flex", fontSize: 24, color: "#6E6E73" }}>nordharton.com</div>
       </div>
     ),
     { ...size },

@@ -12,7 +12,7 @@ const sections: LegalSection[] = [
   {
     heading: "Acceptance of Terms",
     body: [
-      "These Terms of Service (\"Terms\") govern your access to and use of the website and services provided by Nord Harton Group (\"Nord Harton\", \"we\", \"us\", or \"our\"). By accessing or using our website, you agree to be bound by these Terms. If you do not agree, please do not use our website or services.",
+      "These Terms of Service (\"Terms\") govern your access to and use of the website and services provided by Nord Harton (\"we\", \"us\", or \"our\"). By accessing or using our website, you agree to be bound by these Terms. If you do not agree, please do not use our website or services.",
     ],
   },
   {

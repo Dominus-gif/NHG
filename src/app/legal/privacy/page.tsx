@@ -12,7 +12,7 @@ const sections: LegalSection[] = [
   {
     heading: "Introduction",
     body: [
-      "Nord Harton Group (\"Nord Harton\", \"we\", \"us\", or \"our\") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website, engage our services, or otherwise interact with us.",
+      "Nord Harton (\"we\", \"us\", or \"our\") is committed to protecting your privacy. This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you visit our website, engage our services, or otherwise interact with us.",
       "By using our website or services, you agree to the collection and use of information in accordance with this policy. If you do not agree, please discontinue use of our website and services.",
     ],
   },

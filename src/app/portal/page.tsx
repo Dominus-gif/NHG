@@ -95,8 +95,8 @@ export default function PortalLoginPage() {
 
           <p className="text-center text-xs text-fg-subtle">
             Trouble signing in? Email{" "}
-            <a href="mailto:support@nordhartongroup.com" className="text-accent hover:underline">
-              support@nordhartongroup.com
+            <a href="mailto:support@nordharton.com" className="text-accent hover:underline">
+              support@nordharton.com
             </a>
           </p>
         </form>

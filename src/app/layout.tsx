@@ -87,7 +87,7 @@ const jsonLd = {
       "@type": "Organization",
       "@id": `${siteUrl}/#organization`,
       name: siteName,
-      alternateName: ["NordHarton", "Nord Harton Group"],
+      alternateName: ["NordHarton"],
       url: siteUrl,
       logo: {
         "@type": "ImageObject",
@@ -97,7 +97,7 @@ const jsonLd = {
       },
       description: siteDescription,
       slogan: siteTagline,
-      email: "hello@nordhartongroup.com",
+      email: "hello@nordharton.com",
       sameAs: [] as string[],
     },
     {

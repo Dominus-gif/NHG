@@ -59,8 +59,8 @@ export default function LegalDoc({
           <Reveal>
             <div className="mt-4 rounded-2xl border border-hairline bg-elevated/60 p-6 text-sm leading-relaxed text-fg-muted">
               Questions about this document? Contact us at{" "}
-              <a href="mailto:legal@nordhartongroup.com" className="text-accent hover:underline">
-                legal@nordhartongroup.com
+              <a href="mailto:legal@nordharton.com" className="text-accent hover:underline">
+                legal@nordharton.com
               </a>
               .
             </div>

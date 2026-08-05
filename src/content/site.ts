@@ -12,7 +12,7 @@ export const company = {
   tagline: "Where strategy meets execution",
   blurb:
     "A digital solutions enterprise specializing in custom web applications, business systems, and enterprise platforms. With 15+ years of experience and over 100 successful projects delivered worldwide, we transform complex business requirements into elegant digital experiences that drive measurable growth.",
-  email: "hello@nordhartongroup.com",
+  email: "hello@nordharton.com",
 };
 
 export const stats = [
