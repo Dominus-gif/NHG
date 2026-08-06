@@ -16,7 +16,7 @@ export const posts: Post[] = [
     excerpt: 
       "Most transformation programs stall not because of technology, but because strategy and delivery drift apart. Here's a detailed blueprint on aligning your vision with your execution.",
     tag: "Strategy & Architecture",
-    date: "Jun 12, 2026", // Placeholder date
+    date: "May 18, 2026", // Placeholder date
     readTime: "8 min read", 
     author: "Liam Fitzgerald",
     body: [
@@ -50,7 +50,7 @@ export const posts: Post[] = [
   excerpt:
     "The 'big bang' rewrite is one of the riskiest ways to modernize. Learn how phased migration, API gateways, and the Strangler Fig Pattern reduce risk while keeping business operations running.",
   tag: "Architecture & Modernization",
-  date: "Jun 12, 2026",
+  date: "Jun 10, 2026",
   readTime: "8 min read",
   author: "Elena Popescu",
   body: [
@@ -82,7 +82,7 @@ export const posts: Post[] = [
   excerpt:
     "Enterprise applications must balance consumer-grade simplicity with enterprise-scale complexity. Learn how progressive disclosure, role-based interfaces, and modular design create intuitive experiences that scale.",
   tag: "UX Design & Strategy",
-  date: "Jun 12, 2026",
+  date: "April 2, 2026",
   readTime: "9 min read",
   author: "Aryan Kapoor",
   body: [
@@ -113,7 +113,7 @@ export const posts: Post[] = [
   excerpt:
     "As enterprise integrations multiply, data becomes both a competitive advantage and a potential risk. Discover the architectural patterns that enable real-time insights, reliable governance, and scalable data management.",
   tag: "Data Architecture & Governance",
-  date: "Jun 12, 2026",
+  date: "Jun 19, 2024",
   readTime: "9 min read",
   author: "William Dubois",
   body: [
@@ -144,7 +144,7 @@ export const posts: Post[] = [
   excerpt:
     "Generative AI is transforming design and product development, but its greatest value comes from augmenting human expertise—not replacing it. Learn how to use AI as a strategic co-pilot for better outcomes.",
   tag: "AI & Workflow Strategy",
-  date: "Jun 12, 2026",
+  date: "July 10, 2025",
   readTime: "9 min read",
   author: "Astrid Jensen",
   body: [
@@ -175,7 +175,7 @@ export const posts: Post[] = [
   excerpt:
     "Great design systems are built on governance, not just components. Discover how design tokens, cross-functional ownership, and practical documentation help design systems scale across growing organizations.",
   tag: "Design Systems & Governance",
-  date: "Jun 12, 2026",
+  date: "July 23, 2025",
   readTime: "9 min read",
   author: "Gabriel Petrova",
   body: [
@@ -206,7 +206,7 @@ export const posts: Post[] = [
   excerpt:
     "As applications become increasingly latency-sensitive, edge computing is moving from niche use cases to mainstream architecture. Learn how distributed computing improves performance, resilience, and scalability.",
   tag: "Edge Computing & Cloud Architecture",
-  date: "Jun 12, 2026",
+  date: "Jun 15, 2024",
   readTime: "9 min read",
   author: "Elena Popescu",
   body: [
@@ -237,7 +237,7 @@ export const posts: Post[] = [
   excerpt:
     "Accessibility is more than compliance. By treating it as a core design principle, teams create products that are more usable, inclusive, and intuitive for every user—not just those with disabilities.",
   tag: "UX Design & Inclusion",
-  date: "Jun 12, 2026",
+  date: "Jun 11, 2025",
   readTime: "9 min read",
   author: "Liam Fitzgerald",
   body: [
@@ -268,7 +268,7 @@ export const posts: Post[] = [
   excerpt:
     "Serverless computing has evolved beyond its early limitations. With improved runtimes, better tooling, and seamless scalability, it's becoming the preferred architecture for building modern, event-driven applications.",
   tag: "Serverless & Cloud Architecture",
-  date: "Jun 12, 2026",
+  date: "Nov 12, 2025",
   readTime: "9 min read",
   author: "Astrid Jensen",
   body: [
@@ -299,7 +299,7 @@ export const posts: Post[] = [
   excerpt:
     "Animation should do more than impress. Discover how meaningful motion improves usability, guides attention, provides feedback, and creates intuitive digital experiences without sacrificing performance.",
   tag: "UX Motion & Design Principles",
-  date: "Jun 12, 2026",
+  date: "Dec 12, 2025",
   readTime: "8 min read",
   author: "Marcus Nord Harton (Tech Strategy Lead)",
   body: [
@@ -330,7 +330,7 @@ export const posts: Post[] = [
   excerpt:
     "TypeScript has evolved from an optional enhancement into a foundation for scalable engineering. Learn how advanced typing patterns help teams prevent bugs, enforce architecture, and build more reliable systems.",
   tag: "Language & Architecture",
-  date: "Jun 12, 2026",
+  date: "Jun 10, 2025",
   readTime: "9 min read",
   author: "William Dubois",
   body: [
@@ -416,7 +416,7 @@ export const posts: Post[] = [
   excerpt:
     "Dark mode is more than a color swap. Learn how Design Token architecture creates scalable, consistent themes by separating design intent from implementation details.",
   tag: "UI/UX Design & Tokens",
-  date: "Jun 12, 2026",
+  date: "Jan 11, 2026",
   readTime: "8 min read",
   author: "Elena Popescu",
   body: [
@@ -502,7 +502,7 @@ export const posts: Post[] = [
   excerpt:
     "Traditional security perimeters are no longer enough. Zero Trust architecture replaces implicit trust with continuous verification, identity-driven access, and adaptive security controls for modern systems.",
   tag: "Security & Cloud Architecture",
-  date: "Jun 12, 2026",
+  date: "Jun 10, 2025",
   readTime: "9 min read",
   author: "Marcus Nord Harton (Tech Strategy Lead)",
   body: [
@@ -537,7 +537,7 @@ export const posts: Post[] = [
   excerpt:
     "Modern enterprises are moving beyond rigid monolithic platforms toward composable architectures. By combining headless services, microservices, and API-first principles, organizations gain the flexibility to build with the best tools available while managing complexity through strong governance.",
   tag: "Architecture & Scalability",
-  date: "Jun 12, 2026",
+  date: "Dec 12, 2024",
   readTime: "9 min read",
   author: "Gabriel Petrova",
   body: [
