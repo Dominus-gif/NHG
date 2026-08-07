@@ -301,7 +301,7 @@ export const posts: Post[] = [
   tag: "UX Motion & Design Principles",
   date: "Dec 12, 2025",
   readTime: "8 min read",
-  author: "Marcus Nord Harton (Tech Strategy Lead)",
+  author: "Marcus L.",
   body: [
     "Motion has become an essential part of modern digital experiences. Thoughtfully designed animations make interfaces feel responsive, polished, and intuitive, while excessive or unnecessary motion quickly becomes distracting. The difference lies in purpose. Every animation should help users understand what is happening rather than simply adding visual flair.",
 
@@ -504,7 +504,7 @@ export const posts: Post[] = [
   tag: "Security & Cloud Architecture",
   date: "Jun 10, 2025",
   readTime: "9 min read",
-  author: "Marcus Nord Harton (Tech Strategy Lead)",
+  author: "Astrid Jensen",
   body: [
     "For decades, enterprise security relied on the idea of a trusted internal network protected by a strong external perimeter. Firewalls, VPNs, and physical office boundaries created a 'castle-and-moat' security model where anything inside the network was considered trustworthy. However, modern organizations no longer operate within clearly defined boundaries. Remote work, cloud platforms, SaaS applications, APIs, and distributed services have made the traditional perimeter model increasingly ineffective.",
 
@@ -531,7 +531,38 @@ export const posts: Post[] = [
     "Zero Trust represents the evolution of enterprise security from perimeter defense to continuous validation. By treating trust as something that must always be earned through identity verification, least privilege access, and adaptive security controls, organizations can build systems that are more resilient against modern threats. Zero Trust is no longer an advanced security strategy; it is becoming the baseline architecture for protecting distributed digital environments."
   ],
 },
-  {
+
+{
+  slug: "corporate-productivity-stack-7-tools",
+  title: " The Corporate Productivity Stack: 7 Tools to Master Your Day",
+  excerpt:
+    "Discover seven essential productivity tools and methods that help professionals reduce distractions, improve collaboration, and accomplish meaningful work every day.",
+  tag: "Productivity",
+  date: "August 1, 2026",
+  readTime: "8 min read",
+  author: "Astrid Jensen",
+  body: [
+    "Are You Doing Busy Work, Or Making Progress?\n\nIn today's workplace—whether remote, hybrid, or in the office—it's easy to stay busy without making real progress. Endless meetings, overflowing inboxes, and scattered files often consume the day while important work gets delayed. True productivity isn't about working longer hours; it's about building systems that reduce chaos, improve focus, and help you consistently move projects forward.",
+
+    "1. The Central Hub (Notion, Confluence)\n\nOne of the biggest productivity killers is searching for information spread across emails, shared drives, and personal folders. A centralized knowledge base like Notion or Confluence creates a single source of truth where teams can store documentation, SOPs, project updates, and client information. By keeping everything searchable in one place, you eliminate confusion, reduce duplicate work, and save valuable time.",
+
+    "2. Project Management Software (Asana, ClickUp)\n\nTasks hidden inside emails or sticky notes often lead to missed deadlines and unclear ownership. Project management platforms bring structure by assigning responsibilities, tracking deadlines, and keeping every task visible. Make it a habit to log every request, follow-up, and deliverable into your project management system instead of relying on memory.",
+
+    "3. The Digital Brain (OneNote, Evernote)\n\nMeeting notes become far more valuable when they're organized for action instead of documentation. Rather than recording everything word for word, structure your notes into three sections: Key Decisions, Outstanding Questions, and Action Items. This simple approach transforms passive notes into a practical execution plan that keeps everyone aligned.",
+
+    "4. Time Blocking & Deep Work\n\nConstant notifications and interruptions make it difficult to complete meaningful work. Protect your focus by scheduling dedicated blocks of uninterrupted work on your calendar. Combine 90-minute deep work sessions with techniques like the Pomodoro Method to maintain concentration. During these sessions, silence notifications, close email, and treat the time as an unbreakable meeting with yourself.",
+
+    "5. The Eisenhower Matrix\n\nNot every task deserves immediate attention. Before beginning your day, categorize your work into four groups: Urgent & Important, Important but Not Urgent, Urgent but Not Important, and Neither. This prioritization framework helps you spend more time on high-impact work while minimizing distractions and unnecessary tasks.",
+
+    "6. Writing Assistants (Grammarly & AI Tools)\n\nClear communication is a competitive advantage in every workplace. Writing assistants help improve grammar, tone, clarity, and conciseness before you send emails, reports, or messages. Spending a few extra moments polishing your communication reduces misunderstandings and helps you present yourself more professionally.",
+
+    "7. Focus Blockers & Task Batching\n\nFrequent email checks and constant notifications fragment attention throughout the day. Instead, schedule dedicated times for checking email and messages, such as once in the morning and once in the afternoon. Pair this habit with website or app blockers to eliminate unnecessary distractions and maintain focus on important work.",
+
+    "Final Takeaway\n\nCorporate productivity isn't powered by willpower—it's driven by well-designed systems. By adopting these seven tools and habits, you can reduce context switching, improve collaboration, and make consistent progress toward your goals. Start with one tool, use it every day, and gradually build a productivity system that supports long-term success."
+  ],
+},
+
+{
   slug: "composable-headless-return-best-tool",
   title: "Composable Stacks: Why Microservices Are Making the Monolith Obsolete",
   excerpt:
