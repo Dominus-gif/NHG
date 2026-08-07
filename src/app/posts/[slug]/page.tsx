@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Reveal } from "@/components/ui/Reveal";
 import { posts, getPost } from "@/content/posts";
+import PostBody from "./PostBody";
 
 export function generateStaticParams() {
   return posts.map((p) => ({ slug: p.slug }));
@@ -51,12 +52,13 @@ export default async function PostPage({
             <Link href="/posts" className="text-sm text-fg-muted transition-colors hover:text-accent">
               ← All posts
             </Link>
-            <div className="mt-6 flex items-center gap-3 text-xs text-fg-subtle">
-              <span className="font-mono text-accent">{post.tag}</span>
-              <span>·</span>
-              <span>{post.date}</span>
-              <span>·</span>
-              <span>{post.readTime}</span>
+            <div className="mt-6 flex flex-wrap items-center gap-x-3 gap-y-2">
+              <span className="inline-flex items-center rounded-full border border-hairline bg-base px-3 py-1 font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-fg-muted">
+                {post.tag}
+              </span>
+              <span className="text-xs text-fg-subtle">
+                {post.date} · {post.readTime}
+              </span>
             </div>
             <h1 className="mt-4 text-4xl font-semibold leading-[1.1] tracking-tight sm:text-5xl">
               {post.title}
@@ -74,11 +76,7 @@ export default async function PostPage({
 
       <section className="py-16 lg:py-20">
         <div className="mx-auto max-w-3xl px-6 lg:px-8">
-          {post.body.map((para, i) => (
-            <Reveal key={i} delay={i * 0.04}>
-              <p className="mb-6 text-lg leading-relaxed text-fg-muted">{para}</p>
-            </Reveal>
-          ))}
+          <PostBody body={post.body} />
         </div>
       </section>
     </>

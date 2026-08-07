@@ -166,20 +166,21 @@ export default function PostsIndex({ posts }: { posts: Post[] }) {
             <StaggerItem key={post.slug}>
               <Link
                 href={`/posts/${post.slug}`}
-                className="group flex h-full flex-col rounded-2xl border border-hairline bg-elevated/60 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-accent/40"
+                className="group flex h-full flex-col rounded-2xl border border-hairline bg-elevated/60 p-6 transition-all duration-300 hover:-translate-y-1 hover:border-accent/40 sm:p-7"
               >
-                <div className="flex items-center justify-between">
-                  <span className="font-mono text-xs uppercase tracking-wider text-accent">{post.tag}</span>
-                  <span className="text-xs text-fg-subtle">{post.readTime}</span>
-                </div>
-                <h2 className="mt-4 text-lg font-semibold leading-snug text-fg transition-colors group-hover:text-accent">
+                <span className="inline-flex w-fit items-center rounded-full border border-hairline bg-base px-3 py-1 font-mono text-[10px] font-medium uppercase tracking-[0.14em] text-fg-muted">
+                  {post.tag}
+                </span>
+                <h2 className="mt-6 text-lg font-semibold leading-snug tracking-tight text-fg transition-colors group-hover:text-accent">
                   {post.title}
                 </h2>
                 <p className="mt-3 flex-1 text-sm leading-relaxed text-fg-muted">{post.excerpt}</p>
-                <div className="mt-6 flex items-center gap-2 border-t border-hairline pt-4 text-xs text-fg-subtle">
-                  <span>{post.author}</span>
-                  <span>·</span>
+                <div className="mt-6 flex flex-wrap items-center gap-x-2 gap-y-1 border-t border-hairline pt-4 text-xs text-fg-subtle">
+                  <span className="text-fg-muted">{post.author}</span>
+                  <span aria-hidden="true">·</span>
                   <span>{post.date}</span>
+                  <span aria-hidden="true">·</span>
+                  <span>{post.readTime}</span>
                 </div>
               </Link>
             </StaggerItem>
