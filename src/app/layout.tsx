@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from "next";
+import Script from "next/script";
 import { Host_Grotesk, Inter } from "next/font/google";
 import { GeistMono } from "geist/font/mono";
 import "./globals.css";
@@ -133,6 +134,12 @@ export default function RootLayout({
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
+        {/* Ahrefs Web Analytics */}
+        <Script
+          src="https://analytics.ahrefs.com/analytics.js"
+          data-key="WicrEZnxG4nFZLu/xeEfDQ"
+          strategy="afterInteractive"
         />
         <SmoothScroll />
         <ContactModalProvider>
