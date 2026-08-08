@@ -10,6 +10,7 @@ import { Reveal, Stagger, StaggerItem } from "@/components/ui/Reveal";
 import { Carousel } from "@/components/ui/carousel";
 import ProcessCardStack from "@/components/ui/process-card-stack";
 import CountUpInline from "@/components/site/CountUpInline";
+import { ABOUT_FAQ } from "./faq";
 
 /* ------------------------------------------------------------------ */
 
@@ -189,6 +190,20 @@ export default function AboutContent() {
         <Reveal className="overflow-hidden pb-24 sm:pb-20">
           <Carousel slides={SILENT} />
         </Reveal>
+      </Section>
+
+      {/* FAQ — answers the "what is Nord Harton?" queries; matches FAQPage schema */}
+      <Section eyebrow="Frequently asked" title="What is Nord Harton?" sub="The short answers to what people ask most about Nord Harton.">
+        <Stagger className="divide-y divide-hairline border-y border-hairline">
+          {ABOUT_FAQ.map((f) => (
+            <StaggerItem key={f.q}>
+              <div className="py-6">
+                <h3 className="text-lg font-semibold text-fg">{f.q}</h3>
+                <p className="mt-2 max-w-3xl text-[15px] leading-relaxed text-fg-muted">{f.a}</p>
+              </div>
+            </StaggerItem>
+          ))}
+        </Stagger>
       </Section>
     </>
   );
