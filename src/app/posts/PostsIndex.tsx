@@ -26,6 +26,21 @@ const TAG_TO_DOMAIN: Record<string, string> = {
   "Artificial Intelligence & Enterprise Security": "Security",
   "Security & Cloud Architecture": "Security",
   "Architecture & Scalability": "Architecture & Cloud",
+  // Newer articles
+  "Blockchain & Distributed Systems": "Architecture & Cloud",
+  "Data Analytics & Trends": "Data & AI",
+  "Cloud & Customer Experience": "Architecture & Cloud",
+  "DevOps & Delivery": "Architecture & Cloud",
+  "Machine Learning & Security": "Security",
+  "Emerging Technology": "Strategy & Culture",
+  "Business Intelligence & Strategy": "Data & AI",
+  "3D Printing & Manufacturing": "Strategy & Culture",
+  "Technology Selection": "Strategy & Culture",
+  "Social Analytics & Marketing": "Data & AI",
+  "Cybersecurity & Risk": "Security",
+  "E-commerce & Retail": "Strategy & Culture",
+  "Cloud Strategy": "Architecture & Cloud",
+  "AI & Business Intelligence": "Data & AI",
 };
 
 const DOMAIN_ORDER = [
