@@ -21,7 +21,7 @@ const TAG_TO_DOMAIN: Record<string, string> = {
   "Serverless & Cloud Architecture": "Architecture & Cloud",
   "UX Motion & Design Principles": "UX & Design",
   "Language & Architecture": "Architecture & Cloud",
-  "Remote Work & Culture": "Strategy & Culture",
+  "Remote Work & Culture": "People & Culture",
   "UI/UX Design & Tokens": "UX & Design",
   "Artificial Intelligence & Enterprise Security": "Security",
   "Security & Cloud Architecture": "Security",
@@ -41,6 +41,16 @@ const TAG_TO_DOMAIN: Record<string, string> = {
   "E-commerce & Retail": "Strategy & Culture",
   "Cloud Strategy": "Architecture & Cloud",
   "AI & Business Intelligence": "Data & AI",
+  // Workplace & people articles
+  "People & Culture": "People & Culture",
+  "Leadership & Culture": "People & Culture",
+  "Workforce & Engagement": "People & Culture",
+  "Workplace Communication": "People & Culture",
+  "Management & Operations": "People & Culture",
+  "Workplace Trends": "People & Culture",
+  "Performance & Feedback": "People & Culture",
+  "Wellbeing & Culture": "People & Culture",
+  "AI Governance & Ethics": "Data & AI",
 };
 
 const DOMAIN_ORDER = [
@@ -49,6 +59,7 @@ const DOMAIN_ORDER = [
   "Data & AI",
   "Security",
   "Strategy & Culture",
+  "People & Culture",
 ];
 
 const ALL = "All domains";
