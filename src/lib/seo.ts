@@ -26,3 +26,15 @@ export const siteKeywords = [
 export function absoluteUrl(path = "/"): string {
   return `${siteUrl}${path.startsWith("/") ? path : `/${path}`}`;
 }
+
+/** Convert a human date like "Mar 6, 2026" to an ISO date ("2026-03-06").
+ *  Used for machine-readable datePublished / og:published_time. Falls back to
+ *  the original string if it can't be parsed. */
+export function toISODate(input: string): string {
+  const d = new Date(input);
+  if (Number.isNaN(d.getTime())) return input;
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}

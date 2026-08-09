@@ -25,12 +25,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: r.priority,
   }));
 
-  const postEntries: MetadataRoute.Sitemap = posts.map((p) => ({
-    url: `${siteUrl}/posts/${p.slug}`,
-    lastModified: now,
-    changeFrequency: "monthly",
-    priority: 0.6,
-  }));
+  const postEntries: MetadataRoute.Sitemap = posts.map((p) => {
+    const d = new Date(p.date);
+    return {
+      url: `${siteUrl}/posts/${p.slug}`,
+      lastModified: Number.isNaN(d.getTime()) ? now : d,
+      changeFrequency: "monthly",
+      priority: 0.6,
+    };
+  });
 
   const jobEntries: MetadataRoute.Sitemap = jobs.map((j) => ({
     url: `${siteUrl}/careers/${j.slug}`,

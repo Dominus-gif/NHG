@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Reveal } from "@/components/ui/Reveal";
 import { posts, getPost } from "@/content/posts";
+import { siteUrl, absoluteUrl, toISODate } from "@/lib/seo";
 import PostBody from "./PostBody";
 
 export function generateStaticParams() {
@@ -26,7 +27,7 @@ export async function generateMetadata({
       title: post.title,
       description: post.excerpt,
       url: `/posts/${slug}`,
-      publishedTime: post.date,
+      publishedTime: toISODate(post.date),
       authors: [post.author],
       tags: [post.tag],
     },
@@ -43,8 +44,43 @@ export default async function PostPage({
   const post = getPost(slug);
   if (!post) notFound();
 
+  const published = toISODate(post.date);
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BlogPosting",
+        "@id": `${siteUrl}/posts/${slug}#article`,
+        headline: post.title,
+        description: post.excerpt,
+        datePublished: published,
+        dateModified: published,
+        author: { "@type": "Person", name: post.author },
+        publisher: { "@id": `${siteUrl}/#organization` },
+        mainEntityOfPage: { "@type": "WebPage", "@id": `${siteUrl}/posts/${slug}` },
+        image: absoluteUrl("/opengraph-image"),
+        articleSection: post.tag,
+        url: `${siteUrl}/posts/${slug}`,
+        inLanguage: "en",
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": `${siteUrl}/posts/${slug}#breadcrumb`,
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Home", item: siteUrl },
+          { "@type": "ListItem", position: 2, name: "Posts", item: `${siteUrl}/posts` },
+          { "@type": "ListItem", position: 3, name: post.title, item: `${siteUrl}/posts/${slug}` },
+        ],
+      },
+    ],
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       <article className="relative overflow-hidden border-b border-hairline pt-40 pb-16 lg:pt-44 lg:pb-20">
         <div className="blob h-[320px] w-[320px] bg-accent/10" style={{ top: "-120px", right: "10%" }} />
         <div className="relative mx-auto max-w-3xl px-6 lg:px-8">
