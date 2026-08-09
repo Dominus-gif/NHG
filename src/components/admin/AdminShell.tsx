@@ -16,11 +16,11 @@ type NavItem = { label: string; href: string; icon: typeof LayoutDashboard; soon
 const NAV: NavItem[] = [
   { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
   { label: "Clients", href: "/admin/clients", icon: Users },
-  { label: "Onboarding", href: "/admin/onboarding", icon: UserPlus, soon: true },
-  { label: "Service catalog", href: "/admin/services", icon: Package, soon: true },
-  { label: "Invoicing", href: "/admin/invoices", icon: Receipt, soon: true },
-  { label: "Documents", href: "/admin/documents", icon: FileText, soon: true },
-  { label: "Notifications", href: "/admin/notifications", icon: Bell, soon: true },
+  { label: "Onboarding", href: "/admin/onboarding", icon: UserPlus },
+  { label: "Service catalog", href: "/admin/services", icon: Package },
+  { label: "Invoicing", href: "/admin/invoices", icon: Receipt },
+  { label: "Documents", href: "/admin/documents", icon: FileText },
+  { label: "Notifications", href: "/admin/notifications", icon: Bell },
 ];
 
 export default function AdminShell({ children }: { children: React.ReactNode }) {

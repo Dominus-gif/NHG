@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Search } from "lucide-react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { Search, UserPlus } from "lucide-react";
 import { adminFetch } from "@/lib/adminClient";
 import type { AdminClientRow } from "@/lib/adminData";
 
@@ -26,6 +28,7 @@ function fmtDate(iso: string): string {
 }
 
 export default function AdminClientsPage() {
+  const router = useRouter();
   const [clients, setClients] = useState<AdminClientRow[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -76,6 +79,9 @@ export default function AdminClientsPage() {
             {loading ? "Loading…" : `${filtered.length} of ${clients.length} clients`}
           </p>
         </div>
+        <Link href="/admin/onboarding" className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-4 py-2 text-sm font-medium text-on-accent">
+          <UserPlus size={15} /> New client
+        </Link>
       </header>
 
       {/* Filters */}
@@ -119,7 +125,11 @@ export default function AdminClientsPage() {
             </thead>
             <tbody>
               {filtered.map((c) => (
-                <tr key={c.id} className="border-b border-hairline/60 last:border-0 transition-colors hover:bg-elevated/40">
+                <tr
+                  key={c.id}
+                  onClick={() => router.push(`/admin/clients/${c.id}`)}
+                  className="cursor-pointer border-b border-hairline/60 last:border-0 transition-colors hover:bg-elevated/40"
+                >
                   <td className="px-5 py-3.5">
                     <div className="font-medium text-fg">{c.name}</div>
                     <div className="font-mono text-[11px] text-fg-subtle">{c.client_id}</div>

@@ -98,3 +98,121 @@ export const DEMO_OVERVIEW: AdminOverview = computeOverview(DEMO_CLIENTS, {
   currency: "USD",
   activity: DEMO_ACTIVITY,
 });
+
+/* --------------------------- service catalog ----------------------------- */
+
+export type BillingCycle = "one_time" | "monthly" | "quarterly" | "yearly";
+
+export type ServiceCatalogItem = {
+  id: string;
+  name: string;
+  description: string | null;
+  price: number;
+  currency: string;
+  billing_cycle: BillingCycle;
+  active: boolean;
+};
+
+export const BILLING_CYCLES: { value: BillingCycle; label: string }[] = [
+  { value: "one_time", label: "One-time" },
+  { value: "monthly", label: "Monthly" },
+  { value: "quarterly", label: "Quarterly" },
+  { value: "yearly", label: "Yearly" },
+];
+
+export const DEMO_CATALOG: ServiceCatalogItem[] = [
+  { id: "sc1", name: "Custom Web Application", description: "Bespoke platform build — advanced UI, dense data, custom workflows.", price: 45000, currency: "USD", billing_cycle: "one_time", active: true },
+  { id: "sc2", name: "Cloud & Infrastructure", description: "AWS architecture, CI/CD, observability, zero-downtime deploys.", price: 6000, currency: "USD", billing_cycle: "monthly", active: true },
+  { id: "sc3", name: "Web Experience & Branding", description: "Marketing site + reusable design system.", price: 18000, currency: "USD", billing_cycle: "one_time", active: true },
+  { id: "sc4", name: "Security & Governance", description: "Hardening, audit-readiness, and compliance support.", price: 4500, currency: "USD", billing_cycle: "monthly", active: true },
+  { id: "sc5", name: "Managed Support (Retainer)", description: "Ongoing maintenance, monitoring, and iteration.", price: 3500, currency: "USD", billing_cycle: "monthly", active: false },
+];
+
+/* ------------------------------- invoices -------------------------------- */
+
+export type AdminInvoiceRow = {
+  id: string;
+  client_id: string | null;
+  client_name?: string | null;
+  number: string;
+  service: string | null;
+  amount: number;
+  currency: string;
+  status: "paid" | "pending" | "overdue";
+  issued: string | null;
+  due: string | null;
+  paid_on: string | null;
+  pay_url: string | null;
+};
+
+export const DEMO_INVOICES: AdminInvoiceRow[] = [
+  { id: "inv5", client_id: "c1", client_name: "Vertex Retail Group", number: "INV-1042", service: "Custom Web Application", amount: 24000, currency: "USD", status: "paid", issued: "Apr 1, 2026", due: "Apr 15, 2026", paid_on: "2026-04-12", pay_url: null },
+  { id: "inv6", client_id: "c3", client_name: "NorthRidge Services", number: "INV-1067", service: "Cloud & Infrastructure", amount: 18500, currency: "USD", status: "pending", issued: "Jun 1, 2026", due: "Jun 30, 2026", paid_on: null, pay_url: "#" },
+  { id: "inv7", client_id: "c1", client_name: "Vertex Retail Group", number: "INV-1071", service: "Custom Web Application", amount: 9200, currency: "USD", status: "overdue", issued: "May 5, 2026", due: "May 20, 2026", paid_on: null, pay_url: "#" },
+  { id: "inv8", client_id: "c5", client_name: "Meridian Capital", number: "INV-1080", service: "Security & Governance", amount: 4500, currency: "USD", status: "pending", issued: "Jul 1, 2026", due: "Jul 31, 2026", paid_on: null, pay_url: "#" },
+];
+
+export type TransactionRow = {
+  id: string;
+  created_at: string;
+  client_name?: string | null;
+  kind: string;
+  provider: string | null;
+  amount: number;
+  currency: string;
+  status: string;
+  reference: string | null;
+};
+
+export const DEMO_TRANSACTIONS: TransactionRow[] = [
+  { id: "tx1", created_at: "2026-04-12T10:02:00Z", client_name: "Vertex Retail Group", kind: "payment", provider: "dodo", amount: 24000, currency: "USD", status: "succeeded", reference: "dodo_ch_9F2A" },
+  { id: "tx2", created_at: "2026-06-01T09:00:00Z", client_name: "NorthRidge Services", kind: "invoice_created", provider: "manual", amount: 18500, currency: "USD", status: "pending", reference: "INV-1067" },
+  { id: "tx3", created_at: "2026-02-02T14:20:00Z", client_name: "Auriel Consultants", kind: "payment", provider: "dodo", amount: 8000, currency: "USD", status: "succeeded", reference: "dodo_ch_71Bd" },
+];
+
+/* ------------------------------ documents -------------------------------- */
+
+export type AdminDocRow = {
+  id: string;
+  client_id: string | null;
+  client_name?: string | null;
+  title: string;
+  kind: string;
+  service: string | null;
+  version: number;
+  released: boolean;
+  created_at?: string;
+};
+
+export const DEMO_DOCS: AdminDocRow[] = [
+  { id: "doc1", client_id: "c1", client_name: "Vertex Retail Group", title: "Solution Architecture", kind: "PDF", service: "Custom Web Application", version: 3, released: true },
+  { id: "doc2", client_id: "c1", client_name: "Vertex Retail Group", title: "API Reference & Contracts", kind: "Spec", service: "Custom Web Application", version: 1, released: false },
+  { id: "doc3", client_id: "c3", client_name: "NorthRidge Services", title: "Infrastructure Diagram", kind: "PDF", service: "Cloud & Infrastructure", version: 2, released: true },
+];
+
+/* ---------------------------- notifications ------------------------------ */
+
+export type NotificationRow = {
+  id: string;
+  created_at: string;
+  type: string;
+  title: string;
+  body: string | null;
+  read: boolean;
+};
+
+export const DEMO_NOTIFICATIONS: NotificationRow[] = [
+  { id: "n1", created_at: "2026-08-06T14:20:00Z", type: "invoice_paid", title: "Invoice INV-1042 paid", body: "Vertex Retail Group paid $24,000.", read: false },
+  { id: "n2", created_at: "2026-07-01T09:00:00Z", type: "client_onboarded", title: "New client onboarded", body: "Meridian Capital was added.", read: false },
+  { id: "n3", created_at: "2026-05-21T00:00:00Z", type: "invoice_overdue", title: "Invoice INV-1071 overdue", body: "Vertex Retail Group · $9,200 is overdue.", read: true },
+];
+
+/* --------------------------- email templates ----------------------------- */
+
+export type EmailTemplate = { key: string; subject: string; body: string; updated_at?: string };
+
+export const DEMO_TEMPLATES: EmailTemplate[] = [
+  { key: "client_invite", subject: "Welcome to Nord Harton", body: "Hi {{name}},\n\nYour client workspace is ready. Sign in with Client ID {{client_id}} using the temporary password provided, then set a new one.\n\n— Nord Harton" },
+  { key: "invoice_paid", subject: "Payment received — {{number}}", body: "Hi {{name}},\n\nWe have received your payment for invoice {{number}} ({{amount}}). Thank you.\n\n— Nord Harton" },
+  { key: "invoice_overdue", subject: "Invoice {{number}} is overdue", body: "Hi {{name}},\n\nInvoice {{number}} ({{amount}}) is now overdue. You can pay securely here: {{pay_url}}\n\n— Nord Harton" },
+];

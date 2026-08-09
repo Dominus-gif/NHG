@@ -8,10 +8,13 @@ export async function adminFetch(path: string, init: RequestInit = {}): Promise<
   const sb = getSupabaseBrowser();
   const token = sb ? (await sb.auth.getSession()).data.session?.access_token : null;
 
+  // Let the browser set the multipart boundary for FormData uploads.
+  const isForm = typeof FormData !== "undefined" && init.body instanceof FormData;
+
   return fetch(path, {
     ...init,
     headers: {
-      "Content-Type": "application/json",
+      ...(isForm ? {} : { "Content-Type": "application/json" }),
       ...(init.headers || {}),
       ...(token ? { Authorization: `Bearer ${token}` } : {}),
     },

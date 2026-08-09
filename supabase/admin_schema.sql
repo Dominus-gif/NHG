@@ -27,6 +27,11 @@ create table if not exists public.admin_users (
 alter table public.portal_clients add column if not exists status   text not null default 'active';  -- 'active' | 'suspended'
 alter table public.portal_clients add column if not exists industry text;
 
+-- 2b) Document versioning columns (for the tech docs hub). --------------------
+alter table public.portal_documents add column if not exists version      int not null default 1;
+alter table public.portal_documents add column if not exists storage_path text;         -- object path in the 'documents' bucket
+alter table public.portal_documents add column if not exists created_at    timestamptz not null default now();
+
 -- 3) Global service catalog (name, description, price, billing cycle). -------
 create table if not exists public.service_catalog (
   id            uuid primary key default gen_random_uuid(),
