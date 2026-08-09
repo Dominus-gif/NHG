@@ -99,6 +99,11 @@ const jsonLd = {
       description: siteDescription,
       slogan: siteTagline,
       email: "hello@nordharton.com",
+      contactPoint: [
+        { "@type": "ContactPoint", contactType: "customer service", email: "hello@nordharton.com", availableLanguage: "English" },
+        { "@type": "ContactPoint", contactType: "sales", email: "projects@nordharton.com", availableLanguage: "English" },
+        { "@type": "ContactPoint", contactType: "technical support", email: "support@nordharton.com", availableLanguage: "English" },
+      ],
       sameAs: [] as string[],
     },
     {

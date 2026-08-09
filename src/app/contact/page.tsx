@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Check, Mail, Clock } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+import { Check, Mail, Clock, Briefcase, LifeBuoy } from "lucide-react";
 import PageHeader from "@/components/layout/PageHeader";
 import SelectMenu from "@/components/forms/SelectMenu";
 import { services } from "@/content/services";
@@ -110,10 +111,12 @@ export default function ContactPage() {
 
           <div className="lg:col-span-2">
             <div className="space-y-7 rounded-2xl border border-hairline bg-elevated/60 p-8">
-              {[
-                { icon: Mail, label: "Email", value: company.email },
+              {([
+                { icon: Mail, label: "General queries", value: company.emails.general, href: `mailto:${company.emails.general}` },
+                { icon: Briefcase, label: "New projects", value: company.emails.projects, href: `mailto:${company.emails.projects}` },
+                { icon: LifeBuoy, label: "Client support", value: company.emails.support, href: `mailto:${company.emails.support}` },
                 { icon: Clock, label: "Response time", value: "Within one business day" },
-              ].map((item) => {
+              ] as { icon: LucideIcon; label: string; value: string; href?: string }[]).map((item) => {
                 const Icon = item.icon;
                 return (
                   <div key={item.label} className="flex items-start gap-4">
@@ -124,7 +127,15 @@ export default function ContactPage() {
                       <div className="text-xs uppercase tracking-wider text-fg-subtle">
                         {item.label}
                       </div>
-                      <div className="mt-1 text-sm text-fg">{item.value}</div>
+                      <div className="mt-1 text-sm text-fg">
+                        {item.href ? (
+                          <a href={item.href} className="transition-colors hover:text-accent">
+                            {item.value}
+                          </a>
+                        ) : (
+                          item.value
+                        )}
+                      </div>
                     </div>
                   </div>
                 );

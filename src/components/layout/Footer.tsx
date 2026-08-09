@@ -1,5 +1,12 @@
 import Link from "next/link";
 import { Wordmark } from "@/components/layout/Wordmark";
+import { company } from "@/content/site";
+
+const contactEmails: [string, string][] = [
+  ["General", company.emails.general],
+  ["Projects", company.emails.projects],
+  ["Support", company.emails.support],
+];
 
 const cols: { title: string; links: [string, string][] }[] = [
   {
@@ -37,7 +44,7 @@ export default function Footer() {
           maxWidth: 1180,
           margin: "0 auto",
           display: "grid",
-          gridTemplateColumns: "1.7fr 1fr 1fr",
+          gridTemplateColumns: "1.6fr 0.9fr 0.9fr 1.1fr",
           gap: 48,
         }}
         className="footer-grid"
@@ -91,6 +98,33 @@ export default function Footer() {
             </ul>
           </div>
         ))}
+
+        <div>
+          <h4
+            style={{
+              fontSize: 12,
+              letterSpacing: ".12em",
+              textTransform: "uppercase",
+              color: "rgba(255,255,255,.4)",
+              fontFamily: "var(--font-body-sans)",
+              fontWeight: 600,
+            }}
+          >
+            Contact
+          </h4>
+          <ul style={{ listStyle: "none", padding: 0, margin: "16px 0 0", display: "flex", flexDirection: "column", gap: 14 }}>
+            {contactEmails.map(([label, addr]) => (
+              <li key={label}>
+                <div style={{ fontSize: 11, letterSpacing: ".1em", textTransform: "uppercase", color: "rgba(255,255,255,.35)", marginBottom: 3 }}>
+                  {label}
+                </div>
+                <a href={`mailto:${addr}`} style={{ fontSize: 14, color: "var(--text-on-inverse-muted)" }}>
+                  {addr}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
       <div
         style={{
@@ -105,7 +139,7 @@ export default function Footer() {
         }}
       >
         <span style={{ fontSize: 13, color: "var(--text-on-inverse-muted)" }}>© 2026 Nord Harton. All rights reserved.</span>
-        <span style={{ fontSize: 13, color: "var(--text-on-inverse-muted)" }}>projects@nordharton.com</span>
+        <a href={`mailto:${company.emails.general}`} style={{ fontSize: 13, color: "var(--text-on-inverse-muted)" }}>{company.emails.general}</a>
       </div>
     </footer>
   );
