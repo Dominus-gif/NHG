@@ -17,6 +17,7 @@ export default function DocumentsPage() {
   const [title, setTitle] = useState("");
   const [service, setService] = useState("");
   const [file, setFile] = useState<File | null>(null);
+  const [dragging, setDragging] = useState(false);
 
   const load = () => adminFetch("/api/admin/documents").then((r) => r.json()).then((d) => setDocs(d.documents || [])).catch(() => {});
   useEffect(() => {
@@ -74,9 +75,23 @@ export default function DocumentsPage() {
           </label>
           <label className="flex flex-col gap-1.5 text-sm"><span className="font-medium text-fg">Title (optional)</span><input className={field} value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Defaults to the file name" /></label>
           <label className="flex flex-col gap-1.5 text-sm"><span className="font-medium text-fg">Service (optional)</span><input className={field} value={service} onChange={(e) => setService(e.target.value)} placeholder="Custom Web Application" /></label>
-          <label className="flex flex-col gap-1.5 text-sm"><span className="font-medium text-fg">File</span>
-            <input type="file" onChange={(e) => setFile(e.target.files?.[0] || null)} className="text-sm text-fg-muted file:mr-3 file:rounded-lg file:border file:border-hairline-strong file:bg-elevated file:px-3 file:py-1.5 file:text-sm file:text-fg" />
-          </label>
+        </div>
+
+        {/* Drag & drop zone */}
+        <div
+          onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
+          onDragLeave={() => setDragging(false)}
+          onDrop={(e) => { e.preventDefault(); setDragging(false); if (e.dataTransfer.files?.[0]) setFile(e.dataTransfer.files[0]); }}
+          className={`mt-4 flex flex-col items-center justify-center rounded-xl border-2 border-dashed px-4 py-8 text-center transition-colors ${dragging ? "border-accent bg-base" : "border-hairline"}`}
+        >
+          <Upload size={20} className="text-fg-subtle" />
+          {file ? (
+            <p className="mt-2 text-sm text-fg">{file.name} <button onClick={() => setFile(null)} className="ml-2 text-xs text-fg-subtle hover:text-danger">remove</button></p>
+          ) : (
+            <p className="mt-2 text-sm text-fg-muted">Drag a file here, or{" "}
+              <label className="cursor-pointer text-accent hover:underline">browse<input type="file" className="hidden" onChange={(e) => setFile(e.target.files?.[0] || null)} /></label>
+            </p>
+          )}
         </div>
         <button onClick={upload} disabled={busy} className="mt-4 inline-flex items-center gap-1.5 rounded-lg bg-accent px-4 py-2 text-sm font-medium text-on-accent disabled:opacity-50">
           <Upload size={15} /> {busy ? "Uploading…" : "Upload"}

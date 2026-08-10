@@ -209,6 +209,42 @@ export const DEMO_NOTIFICATIONS: NotificationRow[] = [
 
 /* --------------------------- email templates ----------------------------- */
 
+/* ------------------------------ task board ------------------------------- */
+
+export type TaskCategory = "task" | "follow_up" | "invoice" | "onboarding" | "support";
+export type TaskStatus = "todo" | "doing" | "done";
+export type TaskPriority = "low" | "medium" | "high";
+
+export type AdminTask = {
+  id: string;
+  created_at: string;
+  title: string;
+  notes: string | null;
+  category: TaskCategory;
+  status: TaskStatus;
+  priority: TaskPriority;
+  due_date: string | null;
+  client_id?: string | null;
+};
+
+export const TASK_CATEGORIES: { value: TaskCategory; label: string; color: string }[] = [
+  { value: "follow_up", label: "Follow-up", color: "var(--warning)" },
+  { value: "invoice", label: "Invoice", color: "var(--accent)" },
+  { value: "onboarding", label: "Onboarding", color: "var(--success)" },
+  { value: "support", label: "Support", color: "var(--danger)" },
+  { value: "task", label: "Task", color: "var(--text-muted)" },
+];
+
+export const DEMO_ADMIN_TASKS: AdminTask[] = [
+  { id: "k1", created_at: "2026-08-07T09:00:00Z", title: "Follow up with Meridian Capital on proposal", notes: "Sent revised scope; awaiting sign-off.", category: "follow_up", status: "todo", priority: "high", due_date: "2026-08-11" },
+  { id: "k2", created_at: "2026-08-06T14:00:00Z", title: "Chase INV-1071 (overdue)", notes: "Vertex Retail Group · $9,200", category: "invoice", status: "doing", priority: "high", due_date: "2026-08-09" },
+  { id: "k3", created_at: "2026-08-05T11:00:00Z", title: "Kick off onboarding for Coastline Media", notes: null, category: "onboarding", status: "todo", priority: "medium", due_date: "2026-08-14" },
+  { id: "k4", created_at: "2026-08-04T16:00:00Z", title: "Resolve staging access ticket", notes: "NorthRidge Services", category: "support", status: "doing", priority: "medium", due_date: null },
+  { id: "k5", created_at: "2026-08-01T10:00:00Z", title: "Send Q3 architecture review notes", notes: null, category: "task", status: "done", priority: "low", due_date: "2026-08-02" },
+];
+
+/* --------------------------- email templates ----------------------------- */
+
 export type EmailTemplate = { key: string; subject: string; body: string; updated_at?: string };
 
 export const DEMO_TEMPLATES: EmailTemplate[] = [

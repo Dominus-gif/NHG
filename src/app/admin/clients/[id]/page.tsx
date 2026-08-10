@@ -3,9 +3,11 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Save, Power, Trash2 } from "lucide-react";
+import { ArrowLeft, Save, Power, Trash2, KeyRound, Copy, Check } from "lucide-react";
 import { adminFetch } from "@/lib/adminClient";
 import { formatMoney } from "@/lib/portal";
+
+const PROFILE_FIELDS: (keyof Client)[] = ["name", "company", "industry", "crm_name", "crm_email", "crm_phone"];
 
 type Client = {
   id: string; client_id: string; name: string; company: string | null; industry: string | null;
@@ -27,6 +29,10 @@ export default function ClientDetailPage() {
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
   const [msg, setMsg] = useState("");
+  const [customPw, setCustomPw] = useState("");
+  const [issuedPw, setIssuedPw] = useState("");
+  const [pwBusy, setPwBusy] = useState(false);
+  const [pwCopied, setPwCopied] = useState(false);
 
   useEffect(() => {
     adminFetch(`/api/admin/clients/${id}`)
@@ -67,11 +73,22 @@ export default function ClientDetailPage() {
     else setError((await res.json()).error || "Delete failed.");
   };
 
+  const resetPassword = async (custom?: string) => {
+    setPwBusy(true); setIssuedPw("");
+    const res = await adminFetch(`/api/admin/clients/${id}/password`, { method: "POST", body: JSON.stringify(custom ? { password: custom } : {}) });
+    const data = await res.json();
+    setPwBusy(false);
+    if (res.ok) { setIssuedPw(data.password); setCustomPw(""); }
+    else setError(data.error || "Could not set password.");
+  };
+
   if (loading) return <p className="text-sm text-fg-muted">Loading…</p>;
   if (error && !client) return <p className="text-sm text-danger">{error}</p>;
   if (!client) return null;
 
   const suspended = client.status === "suspended";
+  const filled = PROFILE_FIELDS.filter((f) => String((client as Client)[f] ?? "").trim()).length;
+  const completeness = Math.round((filled / PROFILE_FIELDS.length) * 100);
 
   return (
     <div className="max-w-3xl">
@@ -96,6 +113,17 @@ export default function ClientDetailPage() {
 
       {suspended && <p className="mt-3 rounded-lg border border-hairline bg-elevated/60 px-3 py-2 text-xs text-[color:var(--danger)]">This account is suspended — the client cannot sign in.</p>}
 
+      {/* Profile completeness */}
+      <div className="mt-5 rounded-xl border border-hairline bg-elevated/60 px-4 py-3">
+        <div className="flex items-center justify-between text-xs">
+          <span className="text-fg-muted">Profile completeness</span>
+          <span className={completeness === 100 ? "text-[color:var(--success)]" : "text-fg"}>{completeness}%{completeness < 100 ? " · complete the profile below" : ""}</span>
+        </div>
+        <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-surface-subtle">
+          <div className="h-full rounded-full transition-all" style={{ width: `${completeness}%`, background: completeness === 100 ? "var(--success)" : "var(--accent)" }} />
+        </div>
+      </div>
+
       {/* Edit form */}
       <section className="mt-6 rounded-2xl border border-hairline bg-elevated/60 p-6">
         <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-fg-subtle">Details</h2>
@@ -114,6 +142,33 @@ export default function ClientDetailPage() {
           {msg && <span className="text-sm text-[color:var(--success)]">{msg}</span>}
           {error && <span className="text-sm text-danger">{error}</span>}
         </div>
+      </section>
+
+      {/* Login & security */}
+      <section className="mt-6 rounded-2xl border border-hairline bg-elevated/60 p-6">
+        <h2 className="mb-4 flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-fg-subtle"><KeyRound size={15} /> Login &amp; security</h2>
+        <p className="text-sm text-fg-muted">Reset the client&apos;s portal password. They sign in with Client ID <span className="font-mono text-fg">{client.client_id}</span>.</p>
+        <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-end">
+          <label className="flex flex-1 flex-col gap-1.5 text-sm">
+            <span className="font-medium text-fg">Set a specific password (optional)</span>
+            <input value={customPw} onChange={(e) => setCustomPw(e.target.value)} placeholder="Min 8 characters" className={field} />
+          </label>
+          <div className="flex gap-2">
+            <button onClick={() => resetPassword(customPw)} disabled={pwBusy || customPw.length < 8} className="rounded-lg border border-hairline-strong px-4 py-2 text-sm text-fg-muted transition-colors hover:text-fg disabled:opacity-40">Set password</button>
+            <button onClick={() => resetPassword()} disabled={pwBusy} className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-4 py-2 text-sm font-medium text-on-accent disabled:opacity-50"><KeyRound size={14} /> {pwBusy ? "Working…" : "Generate & reset"}</button>
+          </div>
+        </div>
+        {issuedPw && (
+          <div className="mt-4 rounded-lg border border-hairline bg-base p-3">
+            <div className="text-xs uppercase tracking-wider text-fg-subtle">New password — share securely</div>
+            <div className="mt-1 flex items-center gap-2">
+              <code className="rounded-md border border-hairline bg-elevated px-2 py-1 font-mono text-sm text-fg">{issuedPw}</code>
+              <button onClick={() => { navigator.clipboard.writeText(issuedPw); setPwCopied(true); setTimeout(() => setPwCopied(false), 1200); }} className="text-fg-subtle hover:text-fg">
+                {pwCopied ? <Check size={15} className="text-[color:var(--success)]" /> : <Copy size={15} />}
+              </button>
+            </div>
+          </div>
+        )}
       </section>
 
       {/* Services + invoices */}

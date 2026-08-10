@@ -3,6 +3,7 @@ import { randomInt } from "crypto";
 import { getAdminClient, isAdminConfigured } from "@/lib/supabaseAdmin";
 import { requireAdmin } from "@/lib/adminAuth";
 import { logAudit } from "@/lib/adminServer";
+import { createDodoCheckout, isDodoConfigured } from "@/lib/dodo";
 import { DEMO_INVOICES, type AdminInvoiceRow } from "@/lib/adminData";
 
 export const dynamic = "force-dynamic";
@@ -51,9 +52,30 @@ export async function POST(req: Request) {
   const gate = await requireAdmin(req);
   if (!gate.ok) return NextResponse.json({ error: gate.error }, { status: gate.status });
   const svc = getAdminClient()!;
+  const currency = String(body.currency || "USD");
 
-  // Placeholder hosted-checkout link — swap for a real Stripe/PayPal/Dodo session.
-  const payUrl = String(body.pay_url || `https://checkout.nordharton.com/pay/${number}`);
+  // Try a real Dodo Payments checkout link; fall back to a placeholder.
+  let payUrl = String(body.pay_url || `https://checkout.nordharton.com/pay/${number}`);
+  let provider = "manual";
+  let providerSession: string | null = null;
+  let payWarning: string | null = null;
+
+  if (isDodoConfigured()) {
+    try {
+      const { data: cl } = await svc.from("portal_clients").select("name, crm_email").eq("id", String(body.client_id)).maybeSingle();
+      const checkout = await createDodoCheckout({
+        amount,
+        email: cl?.crm_email ?? null,
+        name: cl?.name ?? null,
+        metadata: { invoice_number: number },
+      });
+      payUrl = checkout.checkout_url;
+      provider = "dodo";
+      providerSession = checkout.session_id;
+    } catch (e) {
+      payWarning = e instanceof Error ? e.message : "Dodo checkout failed; used a placeholder link.";
+    }
+  }
 
   const { data, error } = await svc
     .from("portal_invoices")
@@ -62,11 +84,13 @@ export async function POST(req: Request) {
       number,
       service: body.service ? String(body.service) : null,
       amount,
-      currency: String(body.currency || "USD"),
+      currency,
       status: "pending",
       issued: today(),
       due: body.due ? String(body.due) : null,
       pay_url: payUrl,
+      provider,
+      provider_session: providerSession,
     })
     .select("id")
     .maybeSingle();
@@ -76,13 +100,13 @@ export async function POST(req: Request) {
     client_id: String(body.client_id),
     invoice_id: data?.id ?? null,
     kind: "invoice_created",
-    provider: "manual",
+    provider,
     amount,
-    currency: String(body.currency || "USD"),
+    currency,
     status: "pending",
     reference: number,
   });
   await logAudit(svc, gate.admin.id, "invoice.created", "invoice", data?.id ?? null, `Created ${number} (${amount})`);
 
-  return NextResponse.json({ demo: false, ok: true, id: data?.id, number, pay_url: payUrl });
+  return NextResponse.json({ demo: false, ok: true, id: data?.id, number, pay_url: payUrl, provider, warning: payWarning });
 }

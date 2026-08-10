@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getAdminClient, isAdminConfigured } from "@/lib/supabaseAdmin";
 import { requireAdmin } from "@/lib/adminAuth";
 import { logAudit, notify } from "@/lib/adminServer";
+import { createDodoCheckout, isDodoConfigured } from "@/lib/dodo";
 
 export const dynamic = "force-dynamic";
 type Ctx = { params: Promise<{ id: string }> };
@@ -51,5 +52,48 @@ export async function PATCH(req: Request, { params }: Ctx) {
   }
   await logAudit(svc, gate.admin.id, `invoice.${status}`, "invoice", id, `Invoice marked ${status}`);
 
+  return NextResponse.json({ demo: false, ok: true });
+}
+
+// Generate / refresh a Dodo Payments checkout link for this invoice.
+export async function POST(req: Request, { params }: Ctx) {
+  const { id } = await params;
+  if (!isAdminConfigured) return NextResponse.json({ demo: true, pay_url: "#" });
+  const gate = await requireAdmin(req);
+  if (!gate.ok) return NextResponse.json({ error: gate.error }, { status: gate.status });
+  if (!isDodoConfigured()) return NextResponse.json({ error: "Dodo Payments is not configured." }, { status: 400 });
+  const svc = getAdminClient()!;
+
+  const { data: inv } = await svc
+    .from("portal_invoices")
+    .select("id, number, amount, client_id, portal_clients(name, crm_email)")
+    .eq("id", id)
+    .maybeSingle();
+  if (!inv) return NextResponse.json({ error: "Invoice not found." }, { status: 404 });
+  const cl = (inv as unknown as { portal_clients?: { name?: string; crm_email?: string } | null }).portal_clients;
+
+  try {
+    const checkout = await createDodoCheckout({
+      amount: Number(inv.amount) || 0,
+      email: cl?.crm_email ?? null,
+      name: cl?.name ?? null,
+      metadata: { invoice_number: inv.number },
+    });
+    await svc.from("portal_invoices").update({ pay_url: checkout.checkout_url, provider: "dodo", provider_session: checkout.session_id }).eq("id", id);
+    return NextResponse.json({ demo: false, ok: true, pay_url: checkout.checkout_url });
+  } catch (e) {
+    return NextResponse.json({ error: e instanceof Error ? e.message : "Checkout failed." }, { status: 502 });
+  }
+}
+
+export async function DELETE(req: Request, { params }: Ctx) {
+  const { id } = await params;
+  if (!isAdminConfigured) return NextResponse.json({ demo: true, ok: true });
+  const gate = await requireAdmin(req);
+  if (!gate.ok) return NextResponse.json({ error: gate.error }, { status: gate.status });
+  const svc = getAdminClient()!;
+  const { error } = await svc.from("portal_invoices").delete().eq("id", id);
+  if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+  await logAudit(svc, gate.admin.id, "invoice.deleted", "invoice", id, "Invoice deleted");
   return NextResponse.json({ demo: false, ok: true });
 }

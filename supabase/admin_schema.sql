@@ -89,6 +89,25 @@ create table if not exists public.admin_audit (
   summary     text
 );
 
+-- 8) Task board / follow-ups (dashboard homepage). ---------------------------
+create table if not exists public.admin_tasks (
+  id          uuid primary key default gen_random_uuid(),
+  created_at  timestamptz not null default now(),
+  title       text not null,
+  notes       text,
+  category    text not null default 'task',      -- 'task' | 'follow_up' | 'invoice' | 'onboarding' | 'support'
+  status      text not null default 'todo',      -- 'todo' | 'doing' | 'done'
+  priority    text not null default 'medium',    -- 'low' | 'medium' | 'high'
+  due_date    date,
+  client_id   uuid references public.portal_clients(id) on delete set null
+);
+alter table public.admin_tasks enable row level security;
+grant select, insert, update, delete on public.admin_tasks to service_role;
+
+-- 9) Invoice payment-provider columns (Dodo Payments). -----------------------
+alter table public.portal_invoices add column if not exists provider         text;   -- 'dodo' | 'manual'
+alter table public.portal_invoices add column if not exists provider_session text;   -- Dodo checkout session id
+
 -- ----------------------------------------------------------------------------
 -- Row Level Security: lock everything. With RLS enabled and NO policies for
 -- anon/authenticated, only the service_role (server) can read or write these.

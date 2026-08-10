@@ -6,19 +6,35 @@ import { DEMO_CLIENTS, type AdminClientRow } from "@/lib/adminData";
 
 export const dynamic = "force-dynamic";
 
-// ---- List clients ----------------------------------------------------------
+// ---- List clients (paginated + searchable, built to scale) -----------------
 export async function GET(req: Request) {
+  const url = new URL(req.url);
+  const page = Math.max(1, parseInt(url.searchParams.get("page") || "1", 10) || 1);
+  const per = Math.min(100, Math.max(5, parseInt(url.searchParams.get("per") || "25", 10) || 25));
+  const q = (url.searchParams.get("q") || "").trim();
+  const status = url.searchParams.get("status") || "";
+  const from = (page - 1) * per;
+
   if (!isAdminConfigured) {
-    return NextResponse.json({ demo: true, clients: DEMO_CLIENTS });
+    let rows = DEMO_CLIENTS;
+    if (q) { const s = q.toLowerCase(); rows = rows.filter((c) => c.name.toLowerCase().includes(s) || (c.company || "").toLowerCase().includes(s) || c.client_id.toLowerCase().includes(s) || (c.industry || "").toLowerCase().includes(s)); }
+    if (status === "active" || status === "suspended") rows = rows.filter((c) => c.status === status);
+    return NextResponse.json({ demo: true, clients: rows.slice(from, from + per), total: rows.length, page, per });
   }
+
   const gate = await requireAdmin(req);
   if (!gate.ok) return NextResponse.json({ error: gate.error }, { status: gate.status });
-
   const svc = getAdminClient()!;
-  const { data, error } = await svc
+
+  let query = svc
     .from("portal_clients")
-    .select("id, client_id, name, company, industry, status, created_at")
+    .select("id, client_id, name, company, industry, status, created_at", { count: "exact" })
     .order("created_at", { ascending: false });
+  if (q) query = query.or(`name.ilike.%${q}%,company.ilike.%${q}%,client_id.ilike.%${q}%,industry.ilike.%${q}%`);
+  if (status === "active" || status === "suspended") query = query.eq("status", status);
+  query = query.range(from, from + per - 1);
+
+  const { data, error, count } = await query;
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
 
   const clients: AdminClientRow[] = (data ?? []).map((c) => ({
@@ -30,7 +46,7 @@ export async function GET(req: Request) {
     status: c.status === "suspended" ? "suspended" : "active",
     created_at: c.created_at,
   }));
-  return NextResponse.json({ demo: false, clients });
+  return NextResponse.json({ demo: false, clients, total: count ?? clients.length, page, per });
 }
 
 // ---- Onboard a new client --------------------------------------------------

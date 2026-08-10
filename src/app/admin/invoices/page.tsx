@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Plus, ExternalLink } from "lucide-react";
+import { Plus, ExternalLink, Copy, RefreshCw, Trash2 } from "lucide-react";
 import { adminFetch } from "@/lib/adminClient";
 import { formatMoney } from "@/lib/portal";
 import type { AdminInvoiceRow, AdminClientRow, TransactionRow } from "@/lib/adminData";
@@ -49,6 +49,23 @@ export default function InvoicesPage() {
   const markPaid = async (inv: AdminInvoiceRow) => {
     const res = await adminFetch(`/api/admin/invoices/${inv.id}`, { method: "PATCH", body: JSON.stringify({ status: "paid" }) });
     if (res.ok) load();
+  };
+  const del = async (inv: AdminInvoiceRow) => {
+    if (!confirm(`Delete invoice ${inv.number}?`)) return;
+    const res = await adminFetch(`/api/admin/invoices/${inv.id}`, { method: "DELETE" });
+    if (res.ok) load();
+  };
+  const genLink = async (inv: AdminInvoiceRow) => {
+    setError("");
+    const res = await adminFetch(`/api/admin/invoices/${inv.id}`, { method: "POST" });
+    const d = await res.json();
+    if (res.ok) load(); else setError(d.error || "Could not generate a payment link.");
+  };
+  const [copied, setCopied] = useState("");
+  const copyLink = (inv: AdminInvoiceRow) => {
+    if (!inv.pay_url) return;
+    navigator.clipboard.writeText(inv.pay_url);
+    setCopied(inv.id); setTimeout(() => setCopied(""), 1200);
   };
 
   return (
@@ -102,11 +119,16 @@ export default function InvoicesPage() {
                 <td className="px-5 py-3.5"><span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium capitalize ${statusTone[i.status] || ""}`}>{i.status}</span></td>
                 <td className="px-5 py-3.5 text-fg-muted">{i.due || "—"}</td>
                 <td className="px-5 py-3.5">
-                  <div className="flex items-center justify-end gap-3">
+                  <div className="flex items-center justify-end gap-2 text-fg-subtle">
                     {i.pay_url && i.status !== "paid" && (
-                      <a href={i.pay_url} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-xs text-fg-muted hover:text-accent" title="Open checkout link"><ExternalLink size={13} /> Link</a>
+                      <>
+                        <a href={i.pay_url} target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-accent" title="Open checkout link"><ExternalLink size={14} /></a>
+                        <button onClick={() => copyLink(i)} className="transition-colors hover:text-fg" title="Copy payment link">{copied === i.id ? <span className="text-[10px] text-[color:var(--success)]">Copied</span> : <Copy size={14} />}</button>
+                      </>
                     )}
+                    {i.status !== "paid" && <button onClick={() => genLink(i)} className="transition-colors hover:text-fg" title="Generate Dodo payment link"><RefreshCw size={14} /></button>}
                     {i.status !== "paid" && <button onClick={() => markPaid(i)} className="rounded-lg border border-hairline-strong px-2.5 py-1 text-xs text-fg-muted transition-colors hover:text-fg">Mark paid</button>}
+                    <button onClick={() => del(i)} className="transition-colors hover:text-danger" title="Delete invoice"><Trash2 size={14} /></button>
                   </div>
                 </td>
               </tr>
