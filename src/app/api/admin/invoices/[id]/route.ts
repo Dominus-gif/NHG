@@ -13,7 +13,20 @@ const todayISO = () => new Date().toISOString().slice(0, 10);
 // records a succeeded payment transaction and raises an "invoice paid" alert.
 export async function PATCH(req: Request, { params }: Ctx) {
   const { id } = await params;
-  const body = (await req.json().catch(() => ({}))) as { status?: string };
+  const body = (await req.json().catch(() => ({}))) as { status?: string; restore?: boolean };
+
+  // Restore a soft-deleted invoice.
+  if (body.restore) {
+    if (!isAdminConfigured) return NextResponse.json({ demo: true, ok: true });
+    const rgate = await requireAdmin(req);
+    if (!rgate.ok) return NextResponse.json({ error: rgate.error }, { status: rgate.status });
+    const rsvc = getAdminClient()!;
+    const { error } = await rsvc.from("portal_invoices").update({ deleted_at: null }).eq("id", id);
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    await logAudit(rsvc, rgate.admin.id, "invoice.restored", "invoice", id, "Invoice restored");
+    return NextResponse.json({ demo: false, ok: true });
+  }
+
   const status = body.status;
   if (!status || !["paid", "pending", "overdue"].includes(status)) {
     return NextResponse.json({ error: "Invalid status." }, { status: 400 });
@@ -86,14 +99,16 @@ export async function POST(req: Request, { params }: Ctx) {
   }
 }
 
+// Soft-delete: the row is kept (with deleted_at set) as a restorable backup,
+// and an audit-log entry is written. Nothing is permanently removed.
 export async function DELETE(req: Request, { params }: Ctx) {
   const { id } = await params;
   if (!isAdminConfigured) return NextResponse.json({ demo: true, ok: true });
   const gate = await requireAdmin(req);
   if (!gate.ok) return NextResponse.json({ error: gate.error }, { status: gate.status });
   const svc = getAdminClient()!;
-  const { error } = await svc.from("portal_invoices").delete().eq("id", id);
+  const { error } = await svc.from("portal_invoices").update({ deleted_at: new Date().toISOString() }).eq("id", id);
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  await logAudit(svc, gate.admin.id, "invoice.deleted", "invoice", id, "Invoice deleted");
+  await logAudit(svc, gate.admin.id, "invoice.deleted", "invoice", id, "Invoice deleted (archived, restorable)");
   return NextResponse.json({ demo: false, ok: true });
 }

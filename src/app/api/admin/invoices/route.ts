@@ -11,14 +11,17 @@ export const dynamic = "force-dynamic";
 const today = () => new Date().toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" });
 
 export async function GET(req: Request) {
-  if (!isAdminConfigured) return NextResponse.json({ demo: true, invoices: DEMO_INVOICES });
+  const deleted = new URL(req.url).searchParams.get("deleted") === "true";
+  if (!isAdminConfigured) return NextResponse.json({ demo: true, invoices: deleted ? [] : DEMO_INVOICES });
   const gate = await requireAdmin(req);
   if (!gate.ok) return NextResponse.json({ error: gate.error }, { status: gate.status });
   const svc = getAdminClient()!;
-  const { data, error } = await svc
+  let q = svc
     .from("portal_invoices")
     .select("id, client_id, number, service, amount, currency, status, issued, due, paid_on, pay_url, portal_clients(name, company)")
     .order("issued", { ascending: false });
+  q = deleted ? q.not("deleted_at", "is", null) : q.is("deleted_at", null);
+  const { data, error } = await q;
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   const invoices: AdminInvoiceRow[] = (data ?? []).map((r) => {
     const rc = r as unknown as { portal_clients?: { name?: string; company?: string } | null } & Record<string, unknown>;

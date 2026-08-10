@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Plus, ExternalLink, Copy, RefreshCw, Trash2 } from "lucide-react";
+import { Plus, ExternalLink, Copy, Trash2, RotateCcw } from "lucide-react";
 import { adminFetch } from "@/lib/adminClient";
 import { formatMoney } from "@/lib/portal";
 import type { AdminInvoiceRow, AdminClientRow, TransactionRow } from "@/lib/adminData";
@@ -20,6 +20,7 @@ export default function InvoicesPage() {
   const [txns, setTxns] = useState<TransactionRow[]>([]);
   const [error, setError] = useState("");
   const [adding, setAdding] = useState(false);
+  const [showDeleted, setShowDeleted] = useState(false);
 
   const [clientId, setClientId] = useState("");
   const [service, setService] = useState("");
@@ -27,14 +28,14 @@ export default function InvoicesPage() {
   const [currency, setCurrency] = useState("USD");
   const [due, setDue] = useState("");
 
-  const load = () => {
-    adminFetch("/api/admin/invoices").then((r) => r.json()).then((d) => setInvoices(d.invoices || [])).catch(() => {});
+  const load = (deleted = showDeleted) => {
+    adminFetch(`/api/admin/invoices?deleted=${deleted}`).then((r) => r.json()).then((d) => setInvoices(d.invoices || [])).catch(() => {});
     adminFetch("/api/admin/transactions").then((r) => r.json()).then((d) => setTxns(d.transactions || [])).catch(() => {});
   };
   useEffect(() => {
-    load();
+    load(showDeleted);
     adminFetch("/api/admin/clients").then((r) => r.json()).then((d) => setClients(d.clients || [])).catch(() => {});
-  }, []);
+  }, [showDeleted]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const create = async () => {
     if (!clientId || !(Number(amount) > 0)) { setError("Pick a client and enter an amount."); return; }
@@ -51,15 +52,13 @@ export default function InvoicesPage() {
     if (res.ok) load();
   };
   const del = async (inv: AdminInvoiceRow) => {
-    if (!confirm(`Delete invoice ${inv.number}?`)) return;
+    if (!confirm(`Delete invoice ${inv.number}? It will be archived and can be restored.`)) return;
     const res = await adminFetch(`/api/admin/invoices/${inv.id}`, { method: "DELETE" });
     if (res.ok) load();
   };
-  const genLink = async (inv: AdminInvoiceRow) => {
-    setError("");
-    const res = await adminFetch(`/api/admin/invoices/${inv.id}`, { method: "POST" });
-    const d = await res.json();
-    if (res.ok) load(); else setError(d.error || "Could not generate a payment link.");
+  const restore = async (inv: AdminInvoiceRow) => {
+    const res = await adminFetch(`/api/admin/invoices/${inv.id}`, { method: "PATCH", body: JSON.stringify({ restore: true }) });
+    if (res.ok) load();
   };
   const [copied, setCopied] = useState("");
   const copyLink = (inv: AdminInvoiceRow) => {
@@ -75,10 +74,18 @@ export default function InvoicesPage() {
           <h1 className="font-heading text-2xl font-semibold tracking-tight text-fg sm:text-3xl">Invoicing</h1>
           <p className="mt-1 text-sm text-fg-muted">Generate invoices with a hosted-checkout link, track status, and review the audit trail.</p>
         </div>
-        <button onClick={() => setAdding((v) => !v)} className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-4 py-2 text-sm font-medium text-on-accent">
-          <Plus size={15} /> New invoice
-        </button>
+        <div className="flex items-center gap-2">
+          <button onClick={() => setShowDeleted((v) => !v)} className={`rounded-lg border px-3 py-2 text-sm transition-colors ${showDeleted ? "border-accent text-fg" : "border-hairline-strong text-fg-muted hover:text-fg"}`}>
+            {showDeleted ? "Active invoices" : "Deleted"}
+          </button>
+          {!showDeleted && (
+            <button onClick={() => setAdding((v) => !v)} className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-4 py-2 text-sm font-medium text-on-accent">
+              <Plus size={15} /> New invoice
+            </button>
+          )}
+        </div>
       </header>
+      {showDeleted && <p className="mb-4 rounded-lg border border-hairline bg-elevated/60 px-3 py-2 text-xs text-fg-muted">Deleted invoices are archived as a backup and can be restored.</p>}
 
       {adding && (
         <div className="mb-6 rounded-2xl border border-hairline bg-elevated/60 p-6">
@@ -119,16 +126,21 @@ export default function InvoicesPage() {
                 <td className="px-5 py-3.5"><span className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-medium capitalize ${statusTone[i.status] || ""}`}>{i.status}</span></td>
                 <td className="px-5 py-3.5 text-fg-muted">{i.due || "—"}</td>
                 <td className="px-5 py-3.5">
-                  <div className="flex items-center justify-end gap-2 text-fg-subtle">
-                    {i.pay_url && i.status !== "paid" && (
+                  <div className="flex items-center justify-end gap-2">
+                    {showDeleted ? (
+                      <button onClick={() => restore(i)} className="inline-flex items-center gap-1 rounded-lg border border-hairline-strong px-2.5 py-1 text-xs text-fg-muted transition-colors hover:text-fg"><RotateCcw size={13} /> Restore</button>
+                    ) : (
                       <>
-                        <a href={i.pay_url} target="_blank" rel="noopener noreferrer" className="transition-colors hover:text-accent" title="Open checkout link"><ExternalLink size={14} /></a>
-                        <button onClick={() => copyLink(i)} className="transition-colors hover:text-fg" title="Copy payment link">{copied === i.id ? <span className="text-[10px] text-[color:var(--success)]">Copied</span> : <Copy size={14} />}</button>
+                        {i.pay_url && i.status !== "paid" && (
+                          <>
+                            <a href={i.pay_url} target="_blank" rel="noopener noreferrer" className="text-fg-subtle transition-colors hover:text-accent" title="Open checkout link"><ExternalLink size={14} /></a>
+                            <button onClick={() => copyLink(i)} className="text-fg-subtle transition-colors hover:text-fg" title="Copy payment link">{copied === i.id ? <span className="text-[10px] text-[color:var(--success)]">Copied</span> : <Copy size={14} />}</button>
+                          </>
+                        )}
+                        {i.status !== "paid" && <button onClick={() => markPaid(i)} className="rounded-lg border border-hairline-strong px-2.5 py-1 text-xs text-fg-muted transition-colors hover:text-fg">Mark paid</button>}
+                        <button onClick={() => del(i)} className="inline-flex items-center gap-1 rounded-lg border border-hairline-strong px-2.5 py-1 text-xs text-fg-muted transition-colors hover:border-danger hover:text-danger" title="Delete (archives, restorable)"><Trash2 size={13} /> Delete</button>
                       </>
                     )}
-                    {i.status !== "paid" && <button onClick={() => genLink(i)} className="transition-colors hover:text-fg" title="Generate Dodo payment link"><RefreshCw size={14} /></button>}
-                    {i.status !== "paid" && <button onClick={() => markPaid(i)} className="rounded-lg border border-hairline-strong px-2.5 py-1 text-xs text-fg-muted transition-colors hover:text-fg">Mark paid</button>}
-                    <button onClick={() => del(i)} className="transition-colors hover:text-danger" title="Delete invoice"><Trash2 size={14} /></button>
                   </div>
                 </td>
               </tr>

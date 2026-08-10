@@ -11,9 +11,10 @@ const PROFILE_FIELDS: (keyof Client)[] = ["name", "company", "industry", "crm_na
 
 type Client = {
   id: string; client_id: string; name: string; company: string | null; industry: string | null;
-  status: string; created_at?: string; crm_name?: string | null; crm_email?: string | null; crm_phone?: string | null;
+  status: string; created_at?: string; crm_name?: string | null; crm_email?: string | null; crm_phone?: string | null; notes?: string | null;
 };
 type Svc = { id: string; name: string; description: string | null; status: string };
+type Catalog = { id: string; name: string; description: string | null };
 type Inv = { id: string; number: string; service: string | null; amount: number; currency: string; status: string; due: string | null };
 
 const field = "h-10 w-full rounded-lg border border-hairline-strong bg-elevated px-3 text-sm text-fg outline-none transition-colors focus:border-accent";
@@ -25,6 +26,8 @@ export default function ClientDetailPage() {
   const [client, setClient] = useState<Client | null>(null);
   const [services, setServices] = useState<Svc[]>([]);
   const [invoices, setInvoices] = useState<Inv[]>([]);
+  const [catalog, setCatalog] = useState<Catalog[]>([]);
+  const [assignId, setAssignId] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
@@ -40,7 +43,20 @@ export default function ClientDetailPage() {
       .then((d) => { setClient(d.client); setServices(d.services || []); setInvoices(d.invoices || []); })
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
+    adminFetch("/api/admin/services").then((r) => r.json()).then((d) => setCatalog(d.services || [])).catch(() => {});
   }, [id]);
+
+  const assignService = async () => {
+    const item = catalog.find((c) => c.id === assignId);
+    if (!item) return;
+    const res = await adminFetch(`/api/admin/clients/${id}/services`, { method: "POST", body: JSON.stringify({ name: item.name, description: item.description }) });
+    const d = await res.json();
+    if (res.ok && d.service) { setServices((s) => [...s, d.service]); setAssignId(""); }
+  };
+  const removeService = async (sid: string) => {
+    const res = await adminFetch(`/api/admin/clients/${id}/services?service_id=${sid}`, { method: "DELETE" });
+    if (res.ok) setServices((s) => s.filter((x) => x.id !== sid));
+  };
 
   const set = (k: keyof Client) => (e: React.ChangeEvent<HTMLInputElement>) =>
     setClient((c) => (c ? { ...c, [k]: e.target.value } : c));
@@ -52,7 +68,7 @@ export default function ClientDetailPage() {
       method: "PATCH",
       body: JSON.stringify({
         name: client.name, company: client.company, industry: client.industry,
-        crm_name: client.crm_name, crm_email: client.crm_email, crm_phone: client.crm_phone,
+        crm_name: client.crm_name, crm_email: client.crm_email, crm_phone: client.crm_phone, notes: client.notes,
       }),
     });
     setSaving(false);
@@ -134,6 +150,10 @@ export default function ClientDetailPage() {
           <Label t="Relationship manager"><input className={field} value={client.crm_name ?? ""} onChange={set("crm_name")} /></Label>
           <Label t="Contact email"><input className={field} value={client.crm_email ?? ""} onChange={set("crm_email")} /></Label>
           <Label t="Contact phone"><input className={field} value={client.crm_phone ?? ""} onChange={set("crm_phone")} /></Label>
+          <label className="flex flex-col gap-1.5 text-sm sm:col-span-2">
+            <span className="font-medium text-fg">Notes</span>
+            <textarea value={client.notes ?? ""} onChange={(e) => setClient((c) => (c ? { ...c, notes: e.target.value } : c))} rows={3} placeholder="Internal notes about this client" className="w-full rounded-lg border border-hairline-strong bg-elevated px-3 py-2 text-sm text-fg outline-none transition-colors focus:border-accent" />
+          </label>
         </div>
         <div className="mt-5 flex items-center gap-3">
           <button onClick={save} disabled={saving} className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-4 py-2 text-sm font-medium text-on-accent disabled:opacity-50">
@@ -175,16 +195,27 @@ export default function ClientDetailPage() {
       <div className="mt-6 grid gap-6 lg:grid-cols-2">
         <section className="rounded-2xl border border-hairline bg-elevated/60 p-6">
           <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-fg-subtle">Services</h2>
-          {services.length === 0 ? <p className="text-sm text-fg-subtle">No services assigned.</p> : (
+          {services.length === 0 ? <p className="text-sm text-fg-subtle">No services assigned yet.</p> : (
             <ul className="space-y-2">
               {services.map((s) => (
-                <li key={s.id} className="rounded-lg border border-hairline p-3">
-                  <div className="text-sm font-medium text-fg">{s.name}</div>
-                  {s.description && <div className="text-xs text-fg-subtle">{s.description}</div>}
+                <li key={s.id} className="flex items-start justify-between gap-2 rounded-lg border border-hairline p-3">
+                  <div className="min-w-0">
+                    <div className="text-sm font-medium text-fg">{s.name}</div>
+                    {s.description && <div className="text-xs text-fg-subtle">{s.description}</div>}
+                  </div>
+                  <button onClick={() => removeService(s.id)} className="shrink-0 text-fg-subtle transition-colors hover:text-danger" title="Remove service"><Trash2 size={14} /></button>
                 </li>
               ))}
             </ul>
           )}
+          {/* Assign from catalog */}
+          <div className="mt-4 flex gap-2">
+            <select value={assignId} onChange={(e) => setAssignId(e.target.value)} style={{ colorScheme: "dark" }} className="h-9 flex-1 rounded-lg border border-hairline-strong bg-elevated px-3 text-sm text-fg outline-none focus:border-accent">
+              <option value="">Assign a service…</option>
+              {catalog.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+            </select>
+            <button onClick={assignService} disabled={!assignId} className="rounded-lg bg-accent px-3 py-1.5 text-sm font-medium text-on-accent disabled:opacity-50">Assign</button>
+          </div>
         </section>
         <section className="rounded-2xl border border-hairline bg-elevated/60 p-6">
           <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-fg-subtle">Invoices</h2>

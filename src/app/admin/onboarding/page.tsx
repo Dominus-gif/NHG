@@ -70,6 +70,9 @@ function Wizard() {
   const [crmName, setCrmName] = useState("");
   const [crmEmail, setCrmEmail] = useState("");
   const [crmPhone, setCrmPhone] = useState("");
+  const [notes, setNotes] = useState("");
+  const [idMode, setIdMode] = useState<"auto" | "custom">("auto");
+  const [clientId, setClientId] = useState("");
   const [catalog, setCatalog] = useState<ServiceCatalogItem[]>([]);
   const [selected, setSelected] = useState<Set<string>>(new Set());
 
@@ -86,7 +89,10 @@ function Wizard() {
     const services = catalog.filter((c) => selected.has(c.id)).map((c) => ({ name: c.name, description: c.description || "" }));
     const res = await adminFetch("/api/admin/clients", {
       method: "POST",
-      body: JSON.stringify({ name, company, industry, crm_name: crmName, crm_email: crmEmail, crm_phone: crmPhone, services }),
+      body: JSON.stringify({
+        name, company, industry, crm_name: crmName, crm_email: crmEmail, crm_phone: crmPhone, notes, services,
+        ...(idMode === "custom" && clientId.trim() ? { client_id: clientId.trim() } : {}),
+      }),
     });
     setSaving(false);
     const data = await res.json();
@@ -113,7 +119,7 @@ function Wizard() {
             View clients
           </Link>
           <button
-            onClick={() => { setResult(null); setStep(0); setCompany(""); setIndustry(""); setName(""); setCrmName(""); setCrmEmail(""); setCrmPhone(""); setSelected(new Set()); }}
+            onClick={() => { setResult(null); setStep(0); setCompany(""); setIndustry(""); setName(""); setCrmName(""); setCrmEmail(""); setCrmPhone(""); setNotes(""); setClientId(""); setIdMode("auto"); setSelected(new Set()); }}
             className="rounded-lg bg-accent px-4 py-2 text-sm font-medium text-on-accent"
           >
             Onboard another
@@ -139,6 +145,18 @@ function Wizard() {
           <div className="grid gap-4 sm:grid-cols-2">
             <label className={labelCls}><span className="font-medium text-fg">Company</span><input className={field} value={company} onChange={(e) => setCompany(e.target.value)} placeholder="Vertex Retail Group" /></label>
             <label className={labelCls}><span className="font-medium text-fg">Industry</span><input className={field} value={industry} onChange={(e) => setIndustry(e.target.value)} placeholder="Retail" /></label>
+            <div className="sm:col-span-2">
+              <span className="text-sm font-medium text-fg">Client ID</span>
+              <div className="mt-1.5 inline-flex rounded-lg border border-hairline bg-elevated p-1 text-sm">
+                <button type="button" onClick={() => setIdMode("auto")} className={`rounded-md px-3 py-1 ${idMode === "auto" ? "bg-base text-fg" : "text-fg-muted"}`}>Auto-generate</button>
+                <button type="button" onClick={() => setIdMode("custom")} className={`rounded-md px-3 py-1 ${idMode === "custom" ? "bg-base text-fg" : "text-fg-muted"}`}>Set custom</button>
+              </div>
+              {idMode === "custom" ? (
+                <input className={`${field} mt-2`} value={clientId} onChange={(e) => setClientId(e.target.value)} placeholder="e.g. NHG-2048 or ACME-001" />
+              ) : (
+                <p className="mt-2 text-xs text-fg-subtle">A unique Client ID will be generated automatically.</p>
+              )}
+            </div>
           </div>
         )}
         {step === 1 && (
@@ -147,6 +165,9 @@ function Wizard() {
             <label className={labelCls}><span className="font-medium text-fg">Relationship manager</span><input className={field} value={crmName} onChange={(e) => setCrmName(e.target.value)} placeholder="Elena Whitmore" /></label>
             <label className={labelCls}><span className="font-medium text-fg">Contact email</span><input className={field} value={crmEmail} onChange={(e) => setCrmEmail(e.target.value)} placeholder="alex@vertex.com" /></label>
             <label className={labelCls}><span className="font-medium text-fg">Contact phone</span><input className={field} value={crmPhone} onChange={(e) => setCrmPhone(e.target.value)} placeholder="+44 20 7946 1180" /></label>
+            <label className={`${labelCls} sm:col-span-2`}><span className="font-medium text-fg">Notes (optional)</span>
+              <textarea value={notes} onChange={(e) => setNotes(e.target.value)} rows={3} placeholder="Internal notes about this client, scope, or context" className="w-full rounded-lg border border-hairline-strong bg-elevated px-3 py-2 text-sm text-fg outline-none transition-colors focus:border-accent" />
+            </label>
           </div>
         )}
         {step === 2 && (

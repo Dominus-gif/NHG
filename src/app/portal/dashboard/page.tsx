@@ -70,6 +70,7 @@ export default function PortalDashboard() {
   const [chatOpen, setChatOpen] = useState(false);
   const [chatInput, setChatInput] = useState("");
   const [sending, setSending] = useState(false);
+  const [mustSetPw, setMustSetPw] = useState(false);
 
   useEffect(() => {
     const sb = getSupabaseBrowser();
@@ -84,6 +85,7 @@ export default function PortalDashboard() {
         return;
       }
       setToken(session.access_token);
+      setMustSetPw(Boolean((session.user.user_metadata as Record<string, unknown> | undefined)?.must_set_password));
       const uid = session.user.id;
       const [prof, svc, tsk, doc, inv, msg] = await Promise.all([
         sb.from("portal_clients").select("client_id, name, company, crm_name, crm_role, crm_email, crm_phone").eq("id", uid).single(),
@@ -172,7 +174,16 @@ export default function PortalDashboard() {
     );
   }
 
-  const p = profile;
+  // Coalesce optional CRM fields — a freshly onboarded client may not have a
+  // relationship manager assigned yet, and rendering null here used to crash.
+  const p = {
+    ...profile,
+    company: profile.company || "",
+    crm_name: profile.crm_name || "Your Nord Harton team",
+    crm_role: profile.crm_role || "Relationship Manager",
+    crm_email: profile.crm_email || "hello@nordharton.com",
+    crm_phone: profile.crm_phone || "",
+  };
   const openInvoices = invoices.filter((i) => i.status !== "paid");
   const outstanding = openInvoices.reduce((sum, i) => sum + i.amount, 0);
   const paidUp = outstanding <= 0; // documents unlock when nothing is outstanding (or when the CRM releases them)
@@ -211,7 +222,7 @@ export default function PortalDashboard() {
             </div>
             <div className="mt-5 flex flex-col gap-2 text-sm">
               <a href={`mailto:${p.crm_email}`} className="text-fg-muted transition hover:text-accent">{p.crm_email}</a>
-              <a href={`tel:${p.crm_phone.replace(/\s/g, "")}`} className="text-fg-muted transition hover:text-accent">{p.crm_phone}</a>
+              {p.crm_phone && <a href={`tel:${p.crm_phone.replace(/\s/g, "")}`} className="text-fg-muted transition hover:text-accent">{p.crm_phone}</a>}
             </div>
             <button
               onClick={() => setChatOpen(true)}
@@ -343,6 +354,48 @@ export default function PortalDashboard() {
           sending={sending}
         />
       )}
+
+      {mustSetPw && <FirstLoginPassword onDone={() => setMustSetPw(false)} />}
+    </div>
+  );
+}
+
+function FirstLoginPassword({ onDone }: { onDone: () => void }) {
+  const [pw, setPw] = useState("");
+  const [confirm, setConfirm] = useState("");
+  const [err, setErr] = useState("");
+  const [busy, setBusy] = useState(false);
+
+  const submit = async () => {
+    setErr("");
+    if (pw.length < 8) { setErr("Use at least 8 characters."); return; }
+    if (pw !== confirm) { setErr("The passwords don't match."); return; }
+    const sb = getSupabaseBrowser();
+    if (!sb) return;
+    setBusy(true);
+    const { error } = await sb.auth.updateUser({ password: pw, data: { must_set_password: false } });
+    setBusy(false);
+    if (error) { setErr(error.message); return; }
+    onDone();
+  };
+
+  const fieldClass = "h-11 w-full rounded-lg border border-hairline-strong bg-surface px-4 text-sm text-fg outline-none transition focus:border-accent";
+
+  return (
+    <div className="fixed inset-0 z-[130] flex items-center justify-center bg-black/60 px-6 backdrop-blur-sm">
+      <div className="w-full max-w-md rounded-2xl border border-hairline bg-surface p-7">
+        <span className="text-xs font-semibold uppercase tracking-[0.18em] text-accent">First sign-in</span>
+        <h2 className="mt-2 text-xl font-semibold tracking-tight">Set your password</h2>
+        <p className="mt-2 text-sm text-fg-muted">Welcome to your workspace. Choose a new password to replace the temporary one.</p>
+        <div className="mt-5 flex flex-col gap-3">
+          <input type="password" value={pw} onChange={(e) => setPw(e.target.value)} placeholder="New password (min 8 characters)" autoComplete="new-password" className={fieldClass} />
+          <input type="password" value={confirm} onChange={(e) => setConfirm(e.target.value)} placeholder="Confirm new password" autoComplete="new-password" className={fieldClass} onKeyDown={(e) => e.key === "Enter" && submit()} />
+          {err && <p className="text-sm text-danger">{err}</p>}
+          <button onClick={submit} disabled={busy} className="mt-1 h-11 rounded-full bg-white text-sm font-semibold text-[#0E0E0E] transition hover:bg-[#ECECEC] disabled:opacity-60">
+            {busy ? "Saving…" : "Save & continue"}
+          </button>
+        </div>
+      </div>
     </div>
   );
 }

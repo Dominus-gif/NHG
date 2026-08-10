@@ -61,6 +61,7 @@ type OnboardBody = {
   crm_email?: string;
   crm_phone?: string;
   crm_telegram?: string;
+  notes?: string;
   services?: { name: string; description?: string }[];
 };
 
@@ -93,6 +94,7 @@ export async function POST(req: Request) {
     email: authEmail,
     password: tempPassword,
     email_confirm: true,
+    user_metadata: { must_set_password: true, client_id: clientId },
   });
   if (authErr || !created?.user) {
     return NextResponse.json({ error: authErr?.message || "Could not create the account." }, { status: 500 });
@@ -110,6 +112,7 @@ export async function POST(req: Request) {
     crm_email: body.crm_email?.trim() || null,
     crm_phone: body.crm_phone?.trim() || null,
     crm_telegram: body.crm_telegram?.trim() || null,
+    notes: body.notes?.trim() || null,
     status: "active",
   });
   if (profErr) {

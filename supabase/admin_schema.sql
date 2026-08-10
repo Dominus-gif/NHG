@@ -108,6 +108,10 @@ grant select, insert, update, delete on public.admin_tasks to service_role;
 alter table public.portal_invoices add column if not exists provider         text;   -- 'dodo' | 'manual'
 alter table public.portal_invoices add column if not exists provider_session text;   -- Dodo checkout session id
 
+-- 10) Soft-delete for invoices (restorable backup) + client notes. -----------
+alter table public.portal_invoices add column if not exists deleted_at timestamptz;  -- set when "deleted"; row kept as backup
+alter table public.portal_clients  add column if not exists notes      text;          -- internal onboarding notes
+
 -- ----------------------------------------------------------------------------
 -- Row Level Security: lock everything. With RLS enabled and NO policies for
 -- anon/authenticated, only the service_role (server) can read or write these.

@@ -30,9 +30,9 @@ export async function GET(req: Request, { params }: Ctx) {
   const svc = getAdminClient()!;
 
   const [{ data: client, error: cErr }, { data: services }, { data: invoices }] = await Promise.all([
-    svc.from("portal_clients").select("id, client_id, name, company, industry, status, created_at, crm_name, crm_email, crm_phone, crm_telegram").eq("id", id).maybeSingle(),
+    svc.from("portal_clients").select("id, client_id, name, company, industry, status, created_at, crm_name, crm_email, crm_phone, crm_telegram, notes").eq("id", id).maybeSingle(),
     svc.from("portal_services").select("id, name, description, status").eq("client_id", id),
-    svc.from("portal_invoices").select("id, number, service, amount, currency, status, issued, due, paid_on, pay_url").eq("client_id", id).order("issued", { ascending: false }),
+    svc.from("portal_invoices").select("id, number, service, amount, currency, status, issued, due, paid_on, pay_url").eq("client_id", id).is("deleted_at", null).order("issued", { ascending: false }),
   ]);
   if (cErr) return NextResponse.json({ error: cErr.message }, { status: 500 });
   if (!client) return NextResponse.json({ error: "Client not found." }, { status: 404 });
@@ -51,7 +51,7 @@ export async function PATCH(req: Request, { params }: Ctx) {
   if (!gate.ok) return NextResponse.json({ error: gate.error }, { status: gate.status });
   const svc = getAdminClient()!;
 
-  const allowed = ["name", "company", "industry", "status", "crm_name", "crm_email", "crm_phone", "crm_telegram"] as const;
+  const allowed = ["name", "company", "industry", "status", "crm_name", "crm_email", "crm_phone", "crm_telegram", "notes"] as const;
   const patch: Record<string, unknown> = {};
   for (const k of allowed) if (k in body) patch[k] = body[k];
   if (Object.keys(patch).length === 0) return NextResponse.json({ error: "Nothing to update." }, { status: 400 });
