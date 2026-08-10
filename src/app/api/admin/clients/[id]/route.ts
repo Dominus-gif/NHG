@@ -31,7 +31,7 @@ export async function GET(req: Request, { params }: Ctx) {
 
   const [{ data: client, error: cErr }, { data: services }, { data: invoices }] = await Promise.all([
     svc.from("portal_clients").select("id, client_id, name, company, industry, status, created_at, crm_name, crm_email, crm_phone, crm_telegram, notes").eq("id", id).maybeSingle(),
-    svc.from("portal_services").select("id, name, description, status").eq("client_id", id),
+    svc.from("portal_services").select("id, name, description, status, progress").eq("client_id", id),
     svc.from("portal_invoices").select("id, number, service, amount, currency, status, issued, due, paid_on, pay_url").eq("client_id", id).is("deleted_at", null).order("issued", { ascending: false }),
   ]);
   if (cErr) return NextResponse.json({ error: cErr.message }, { status: 500 });

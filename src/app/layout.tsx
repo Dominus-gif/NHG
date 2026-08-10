@@ -19,8 +19,7 @@ const inter = Inter({
 });
 import SmoothScroll from "@/components/providers/SmoothScroll";
 import ContactModalProvider from "@/components/providers/ContactModalProvider";
-import Navbar from "@/components/layout/Navbar";
-import Footer from "@/components/layout/Footer";
+import SiteChrome from "@/components/layout/SiteChrome";
 import { siteUrl, siteName, siteTagline, siteDescription, siteKeywords, absoluteUrl } from "@/lib/seo";
 
 export const viewport: Viewport = {
@@ -148,9 +147,7 @@ export default function RootLayout({
         />
         <SmoothScroll />
         <ContactModalProvider>
-          <Navbar />
-          <main>{children}</main>
-          <Footer />
+          <SiteChrome>{children}</SiteChrome>
         </ContactModalProvider>
       </body>
     </html>

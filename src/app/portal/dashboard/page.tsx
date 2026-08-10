@@ -6,7 +6,7 @@ import Link from "next/link";
 import { getSupabaseBrowser } from "@/lib/supabaseBrowser";
 import {
   formatMoney,
-  type ClientProfile, type Service, type Task, type DocItem, type Invoice, type Message,
+  type ClientProfile, type Service, type Task, type DocItem, type Invoice, type Message, type ServiceUpdate,
 } from "@/lib/portal";
 
 type Tone = "green" | "amber" | "red" | "muted";
@@ -66,6 +66,7 @@ export default function PortalDashboard() {
   const [docs, setDocs] = useState<DocItem[]>([]);
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [messages, setMessages] = useState<Message[]>([]);
+  const [updates, setUpdates] = useState<ServiceUpdate[]>([]);
 
   const [chatOpen, setChatOpen] = useState(false);
   const [chatInput, setChatInput] = useState("");
@@ -87,13 +88,14 @@ export default function PortalDashboard() {
       setToken(session.access_token);
       setMustSetPw(Boolean((session.user.user_metadata as Record<string, unknown> | undefined)?.must_set_password));
       const uid = session.user.id;
-      const [prof, svc, tsk, doc, inv, msg] = await Promise.all([
+      const [prof, svc, tsk, doc, inv, msg, upd] = await Promise.all([
         sb.from("portal_clients").select("client_id, name, company, crm_name, crm_role, crm_email, crm_phone").eq("id", uid).single(),
         sb.from("portal_services").select("*").eq("client_id", uid),
         sb.from("portal_tasks").select("*").eq("client_id", uid).order("progress", { ascending: false }),
         sb.from("portal_documents").select("*").eq("client_id", uid),
         sb.from("portal_invoices").select("*").eq("client_id", uid),
         sb.from("portal_messages").select("*").eq("client_id", uid).order("created_at", { ascending: true }),
+        sb.from("service_updates").select("*").eq("client_id", uid).order("created_at", { ascending: false }),
       ]);
       setProfile((prof.data as ClientProfile) ?? null);
       setServices((svc.data as Service[]) ?? []);
@@ -101,6 +103,7 @@ export default function PortalDashboard() {
       setDocs((doc.data as DocItem[]) ?? []);
       setInvoices((inv.data as Invoice[]) ?? []);
       setMessages((msg.data as Message[]) ?? []);
+      setUpdates((upd.data as ServiceUpdate[]) ?? []);
       setLoading(false);
     })();
   }, [router]);
@@ -189,7 +192,7 @@ export default function PortalDashboard() {
   const paidUp = outstanding <= 0; // documents unlock when nothing is outstanding (or when the CRM releases them)
 
   return (
-    <div className="mx-auto max-w-7xl px-6 pb-24 pt-28 lg:px-12">
+    <div className="mx-auto max-w-7xl px-6 pb-24 pt-10 lg:px-12">
       {/* Header */}
       <div className="flex flex-col gap-4 border-b border-hairline pb-8 sm:flex-row sm:items-end sm:justify-between">
         <div>
@@ -281,6 +284,12 @@ export default function PortalDashboard() {
                     <Badge status={s.status} />
                   </div>
                   <p className="mt-2 text-sm leading-relaxed text-fg-muted">{s.description}</p>
+                  {typeof s.progress === "number" && (
+                    <div className="mt-3">
+                      <div className="flex items-center justify-between text-xs text-fg-subtle"><span>Progress</span><span className="font-mono text-fg">{s.progress}%</span></div>
+                      <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-surface-subtle"><div className="h-full rounded-full bg-white transition-all" style={{ width: `${s.progress}%` }} /></div>
+                    </div>
+                  )}
                 </div>
               ))}
               {services.length === 0 && <p className="text-sm text-fg-muted">No services yet.</p>}
@@ -339,6 +348,22 @@ export default function PortalDashboard() {
               })}
               {docs.length === 0 && <p className="text-sm text-fg-muted">No documents shared yet.</p>}
             </div>
+          </Card>
+
+          <Card title="Updates from your team">
+            {updates.length === 0 ? <p className="text-sm text-fg-muted">No updates yet.</p> : (
+              <ul className="space-y-4">
+                {updates.slice(0, 6).map((u) => (
+                  <li key={u.id} className="border-l-2 border-hairline pl-3">
+                    <p className="text-sm leading-relaxed text-fg">{u.body}</p>
+                    <p className="mt-1 text-xs text-fg-subtle">
+                      {new Date(u.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                      {u.service_id ? ` · ${services.find((s) => s.id === u.service_id)?.name ?? ""}` : ""}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            )}
           </Card>
         </div>
       </div>

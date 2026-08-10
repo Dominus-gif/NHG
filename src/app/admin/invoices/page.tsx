@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Plus, ExternalLink, Copy, Trash2, RotateCcw } from "lucide-react";
+import { Plus, ExternalLink, Copy, Trash2, RotateCcw, Link2 } from "lucide-react";
 import { adminFetch } from "@/lib/adminClient";
 import { formatMoney } from "@/lib/portal";
 import type { AdminInvoiceRow, AdminClientRow, TransactionRow } from "@/lib/adminData";
@@ -27,6 +27,7 @@ export default function InvoicesPage() {
   const [amount, setAmount] = useState("");
   const [currency, setCurrency] = useState("USD");
   const [due, setDue] = useState("");
+  const [payUrl, setPayUrl] = useState("");
 
   const load = (deleted = showDeleted) => {
     adminFetch(`/api/admin/invoices?deleted=${deleted}`).then((r) => r.json()).then((d) => setInvoices(d.invoices || [])).catch(() => {});
@@ -41,9 +42,9 @@ export default function InvoicesPage() {
     if (!clientId || !(Number(amount) > 0)) { setError("Pick a client and enter an amount."); return; }
     const res = await adminFetch("/api/admin/invoices", {
       method: "POST",
-      body: JSON.stringify({ client_id: clientId, service, amount: Number(amount), currency, due }),
+      body: JSON.stringify({ client_id: clientId, service, amount: Number(amount), currency, due, pay_url: payUrl.trim() || undefined }),
     });
-    if (res.ok) { setAdding(false); setClientId(""); setService(""); setAmount(""); setDue(""); setError(""); load(); }
+    if (res.ok) { setAdding(false); setClientId(""); setService(""); setAmount(""); setDue(""); setPayUrl(""); setError(""); load(); }
     else setError((await res.json()).error || "Could not create invoice.");
   };
 
@@ -59,6 +60,12 @@ export default function InvoicesPage() {
   const restore = async (inv: AdminInvoiceRow) => {
     const res = await adminFetch(`/api/admin/invoices/${inv.id}`, { method: "PATCH", body: JSON.stringify({ restore: true }) });
     if (res.ok) load();
+  };
+  const setLinkFor = async (inv: AdminInvoiceRow) => {
+    const url = window.prompt("Payment link for this invoice (the client clicks it to pay):", inv.pay_url || "");
+    if (url === null) return;
+    const res = await adminFetch(`/api/admin/invoices/${inv.id}`, { method: "PATCH", body: JSON.stringify({ pay_url: url }) });
+    if (res.ok) load(); else setError((await res.json()).error || "Could not set link.");
   };
   const [copied, setCopied] = useState("");
   const copyLink = (inv: AdminInvoiceRow) => {
@@ -100,9 +107,10 @@ export default function InvoicesPage() {
             <label className="flex flex-col gap-1.5 text-sm"><span className="font-medium text-fg">Amount</span><input className={field} type="number" value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="15000" /></label>
             <label className="flex flex-col gap-1.5 text-sm"><span className="font-medium text-fg">Currency</span><input className={field} value={currency} onChange={(e) => setCurrency(e.target.value)} /></label>
             <label className="flex flex-col gap-1.5 text-sm"><span className="font-medium text-fg">Due date</span><input className={field} value={due} onChange={(e) => setDue(e.target.value)} placeholder="Aug 31, 2026" /></label>
+            <label className="flex flex-col gap-1.5 text-sm sm:col-span-2"><span className="font-medium text-fg">Payment link (optional)</span><input className={field} value={payUrl} onChange={(e) => setPayUrl(e.target.value)} placeholder="https://… — paste any payment link (Stripe, PayPal, Dodo, etc.)" /></label>
           </div>
           <button onClick={create} className="mt-4 rounded-lg bg-accent px-4 py-2 text-sm font-medium text-on-accent">Create invoice</button>
-          <p className="mt-2 text-xs text-fg-subtle">A placeholder checkout link is generated. Wire a Stripe/PayPal/Dodo session to make it live.</p>
+          <p className="mt-2 text-xs text-fg-subtle">Paste a payment link and the client can pay from their portal directly. Leave it blank to add one later.</p>
         </div>
       )}
 
@@ -133,10 +141,11 @@ export default function InvoicesPage() {
                       <>
                         {i.pay_url && i.status !== "paid" && (
                           <>
-                            <a href={i.pay_url} target="_blank" rel="noopener noreferrer" className="text-fg-subtle transition-colors hover:text-accent" title="Open checkout link"><ExternalLink size={14} /></a>
+                            <a href={i.pay_url} target="_blank" rel="noopener noreferrer" className="text-fg-subtle transition-colors hover:text-accent" title="Open payment link"><ExternalLink size={14} /></a>
                             <button onClick={() => copyLink(i)} className="text-fg-subtle transition-colors hover:text-fg" title="Copy payment link">{copied === i.id ? <span className="text-[10px] text-[color:var(--success)]">Copied</span> : <Copy size={14} />}</button>
                           </>
                         )}
+                        {i.status !== "paid" && <button onClick={() => setLinkFor(i)} className="text-fg-subtle transition-colors hover:text-fg" title={i.pay_url ? "Edit payment link" : "Set payment link"}><Link2 size={14} /></button>}
                         {i.status !== "paid" && <button onClick={() => markPaid(i)} className="rounded-lg border border-hairline-strong px-2.5 py-1 text-xs text-fg-muted transition-colors hover:text-fg">Mark paid</button>}
                         <button onClick={() => del(i)} className="inline-flex items-center gap-1 rounded-lg border border-hairline-strong px-2.5 py-1 text-xs text-fg-muted transition-colors hover:border-danger hover:text-danger" title="Delete (archives, restorable)"><Trash2 size={13} /> Delete</button>
                       </>

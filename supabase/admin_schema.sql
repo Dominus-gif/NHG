@@ -112,6 +112,23 @@ alter table public.portal_invoices add column if not exists provider_session tex
 alter table public.portal_invoices add column if not exists deleted_at timestamptz;  -- set when "deleted"; row kept as backup
 alter table public.portal_clients  add column if not exists notes      text;          -- internal onboarding notes
 
+-- 11) Per-assigned-service progress + per-client service updates. -------------
+alter table public.portal_services add column if not exists progress int not null default 0;  -- 0–100 completion
+
+create table if not exists public.service_updates (
+  id          uuid primary key default gen_random_uuid(),
+  created_at  timestamptz not null default now(),
+  client_id   uuid not null references public.portal_clients(id) on delete cascade,
+  service_id  uuid references public.portal_services(id) on delete set null,
+  body        text not null
+);
+alter table public.service_updates enable row level security;
+grant select, insert, update, delete on public.service_updates to service_role;
+grant select on public.service_updates to authenticated;
+drop policy if exists "client reads own service updates" on public.service_updates;
+create policy "client reads own service updates" on public.service_updates
+  for select to authenticated using (auth.uid() = client_id);
+
 -- ----------------------------------------------------------------------------
 -- Row Level Security: lock everything. With RLS enabled and NO policies for
 -- anon/authenticated, only the service_role (server) can read or write these.

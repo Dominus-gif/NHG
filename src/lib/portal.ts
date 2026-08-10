@@ -18,6 +18,14 @@ export type Service = {
   name: string;
   description: string;
   status: "Active" | "In progress" | "Planning" | "Completed" | "On hold";
+  progress?: number;
+};
+
+export type ServiceUpdate = {
+  id: string;
+  created_at: string;
+  body: string;
+  service_id: string | null;
 };
 
 export type Task = {

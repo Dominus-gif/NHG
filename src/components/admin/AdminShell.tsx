@@ -74,7 +74,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
       <div className="mx-auto flex max-w-[1400px] flex-col lg:flex-row">
         {/* Sidebar */}
         <aside className="border-b border-hairline lg:min-h-screen lg:w-64 lg:shrink-0 lg:border-b-0 lg:border-r">
-          <div className="flex items-center gap-2 px-6 pt-7 pb-5">
+          <Link href="/" title="Back to nordharton.com" className="flex items-center gap-2 px-6 pt-7 pb-5 transition-opacity hover:opacity-80">
             <span className="flex h-8 w-8 items-center justify-center rounded-lg border border-hairline bg-elevated text-accent">
               <ShieldCheck size={17} />
             </span>
@@ -82,7 +82,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
               <div className="text-sm font-semibold text-fg">Nord Harton</div>
               <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-fg-subtle">Admin</div>
             </div>
-          </div>
+          </Link>
 
           <nav className="flex flex-wrap gap-1 px-3 pb-4 lg:flex-col lg:flex-nowrap">
             {NAV.map((item) => {

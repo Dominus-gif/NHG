@@ -1,11 +1,25 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Users, UserCheck, UserX, DollarSign, TrendingUp, ZoomIn, ZoomOut, RotateCcw, ArrowUpRight } from "lucide-react";
+import Link from "next/link";
+import { Users, UserCheck, UserX, DollarSign, TrendingUp, ZoomIn, ZoomOut, RotateCcw, ArrowUpRight, ListTodo, ReceiptText, UserPlus, ChevronRight } from "lucide-react";
 import { adminFetch } from "@/lib/adminClient";
 import { formatMoney } from "@/lib/portal";
 import type { AdminOverview } from "@/lib/adminData";
 import TaskBoard from "@/components/admin/TaskBoard";
+
+function NeedsCard({ icon: Icon, count, label, href, tone }: { icon: typeof ListTodo; count: number; label: string; href: string; tone: string }) {
+  return (
+    <Link href={href} className="group flex items-center gap-4 rounded-2xl border border-hairline bg-elevated/60 p-5 transition-colors hover:border-hairline-strong">
+      <span className="flex h-11 w-11 items-center justify-center rounded-xl" style={{ background: `color-mix(in oklab, ${tone} 15%, transparent)`, color: tone }}><Icon size={19} /></span>
+      <div className="min-w-0 flex-1">
+        <div className="font-heading text-2xl font-semibold leading-none text-fg">{count}</div>
+        <div className="mt-1 text-xs text-fg-subtle">{label}</div>
+      </div>
+      <ChevronRight size={16} className="text-fg-subtle transition-transform group-hover:translate-x-0.5" />
+    </Link>
+  );
+}
 
 function Kpi({ icon: Icon, label, value, sub, tone }: { icon: typeof Users; label: string; value: string; sub?: string; tone: string }) {
   return (
@@ -89,12 +103,16 @@ export default function AdminDashboard() {
   const [overview, setOverview] = useState<AdminOverview | null>(null);
   const [error, setError] = useState("");
   const [zoom, setZoom] = useState(1);
+  const [openTasks, setOpenTasks] = useState(0);
+  const [overdue, setOverdue] = useState(0);
 
   useEffect(() => {
     adminFetch("/api/admin/overview")
       .then(async (res) => { if (!res.ok) throw new Error((await res.json()).error || "Failed to load"); return res.json(); })
       .then((d) => setOverview(d.overview))
       .catch((e) => setError(e.message));
+    adminFetch("/api/admin/tasks").then((r) => r.json()).then((d) => setOpenTasks((d.tasks || []).filter((t: { status: string }) => t.status !== "done").length)).catch(() => {});
+    adminFetch("/api/admin/invoices").then((r) => r.json()).then((d) => setOverdue((d.invoices || []).filter((i: { status: string }) => i.status === "overdue").length)).catch(() => {});
   }, []);
 
   const zoomBy = (dir: 1 | -1) => setZoom((z) => ZOOMS[Math.min(ZOOMS.length - 1, Math.max(0, ZOOMS.indexOf(z) + dir))] ?? 1);
@@ -119,6 +137,16 @@ export default function AdminDashboard() {
 
       {overview && (
         <div style={{ zoom }} className="space-y-6">
+          {/* Needs you */}
+          <div>
+            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wider text-fg-subtle">Needs you</h2>
+            <div className="grid gap-4 sm:grid-cols-3">
+              <NeedsCard icon={ReceiptText} count={overdue} label="Overdue invoices" href="/admin/invoices" tone="var(--danger)" />
+              <NeedsCard icon={ListTodo} count={openTasks} label="Open tasks & follow-ups" href="/admin" tone="var(--warning)" />
+              <NeedsCard icon={UserPlus} count={overview.suspendedClients} label="Suspended accounts" href="/admin/clients" tone="var(--accent)" />
+            </div>
+          </div>
+
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <Kpi icon={Users} label="Total clients" value={String(overview.totalClients)} tone="var(--accent)" />
             <Kpi icon={UserCheck} label="Active" value={String(overview.activeClients)} sub="In good standing" tone="var(--success)" />

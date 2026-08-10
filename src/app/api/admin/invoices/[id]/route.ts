@@ -13,7 +13,19 @@ const todayISO = () => new Date().toISOString().slice(0, 10);
 // records a succeeded payment transaction and raises an "invoice paid" alert.
 export async function PATCH(req: Request, { params }: Ctx) {
   const { id } = await params;
-  const body = (await req.json().catch(() => ({}))) as { status?: string; restore?: boolean };
+  const body = (await req.json().catch(() => ({}))) as { status?: string; restore?: boolean; pay_url?: string };
+
+  // Set/replace the payment link (shown as "Pay now" in the client portal).
+  if (body.pay_url !== undefined && !body.restore && !body.status) {
+    if (!isAdminConfigured) return NextResponse.json({ demo: true, ok: true });
+    const pgate = await requireAdmin(req);
+    if (!pgate.ok) return NextResponse.json({ error: pgate.error }, { status: pgate.status });
+    const psvc = getAdminClient()!;
+    const { error } = await psvc.from("portal_invoices").update({ pay_url: body.pay_url.trim() || null, provider: "manual" }).eq("id", id);
+    if (error) return NextResponse.json({ error: error.message }, { status: 500 });
+    await logAudit(psvc, pgate.admin.id, "invoice.link_set", "invoice", id, "Payment link updated");
+    return NextResponse.json({ demo: false, ok: true });
+  }
 
   // Restore a soft-deleted invoice.
   if (body.restore) {

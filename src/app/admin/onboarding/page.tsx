@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { Check, Copy, Upload, ArrowRight, ArrowLeft, UserPlus } from "lucide-react";
 import { adminFetch } from "@/lib/adminClient";
-import { formatMoney } from "@/lib/portal";
 import type { ServiceCatalogItem } from "@/lib/adminData";
 
 const field =
@@ -179,7 +178,7 @@ function Wizard() {
                 <label key={c.id} className={`flex cursor-pointer items-start gap-3 rounded-lg border p-3 transition-colors ${selected.has(c.id) ? "border-accent bg-base" : "border-hairline hover:border-hairline-strong"}`}>
                   <input type="checkbox" checked={selected.has(c.id)} onChange={() => toggle(c.id)} className="mt-1 accent-[color:var(--accent)]" />
                   <div className="min-w-0">
-                    <div className="text-sm font-medium text-fg">{c.name} <span className="text-fg-subtle">· {formatMoney(c.price, c.currency)}</span></div>
+                    <div className="text-sm font-medium text-fg">{c.name}</div>
                     {c.description && <div className="truncate text-xs text-fg-subtle">{c.description}</div>}
                   </div>
                 </label>

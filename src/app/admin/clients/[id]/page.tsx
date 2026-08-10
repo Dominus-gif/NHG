@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Save, Power, Trash2, KeyRound, Copy, Check } from "lucide-react";
+import { ArrowLeft, Save, Power, Trash2, KeyRound, Copy, Check, AtSign, Upload, Download, Send } from "lucide-react";
 import { adminFetch } from "@/lib/adminClient";
 import { formatMoney } from "@/lib/portal";
 
@@ -13,8 +13,10 @@ type Client = {
   id: string; client_id: string; name: string; company: string | null; industry: string | null;
   status: string; created_at?: string; crm_name?: string | null; crm_email?: string | null; crm_phone?: string | null; notes?: string | null;
 };
-type Svc = { id: string; name: string; description: string | null; status: string };
+type Svc = { id: string; name: string; description: string | null; status: string; progress?: number };
 type Catalog = { id: string; name: string; description: string | null };
+type Doc = { id: string; title: string; kind: string; version: number; released: boolean };
+type Update = { id: string; created_at: string; body: string; service_id: string | null };
 type Inv = { id: string; number: string; service: string | null; amount: number; currency: string; status: string; due: string | null };
 
 const field = "h-10 w-full rounded-lg border border-hairline-strong bg-elevated px-3 text-sm text-fg outline-none transition-colors focus:border-accent";
@@ -28,6 +30,16 @@ export default function ClientDetailPage() {
   const [invoices, setInvoices] = useState<Inv[]>([]);
   const [catalog, setCatalog] = useState<Catalog[]>([]);
   const [assignId, setAssignId] = useState("");
+  const [username, setUsername] = useState("");
+  const [unBusy, setUnBusy] = useState(false);
+  const [unMsg, setUnMsg] = useState("");
+  const [docs, setDocs] = useState<Doc[]>([]);
+  const [docFile, setDocFile] = useState<File | null>(null);
+  const [docTitle, setDocTitle] = useState("");
+  const [docBusy, setDocBusy] = useState(false);
+  const [updates, setUpdates] = useState<Update[]>([]);
+  const [updateBody, setUpdateBody] = useState("");
+  const [updateSvc, setUpdateSvc] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
@@ -37,14 +49,54 @@ export default function ClientDetailPage() {
   const [pwBusy, setPwBusy] = useState(false);
   const [pwCopied, setPwCopied] = useState(false);
 
+  const loadDocs = () => adminFetch("/api/admin/documents").then((r) => r.json()).then((d) => setDocs((d.documents || []).filter((x: { client_id?: string }) => x.client_id === id))).catch(() => {});
+  const loadUpdates = () => adminFetch(`/api/admin/clients/${id}/updates`).then((r) => r.json()).then((d) => setUpdates(d.updates || [])).catch(() => {});
+
   useEffect(() => {
     adminFetch(`/api/admin/clients/${id}`)
       .then(async (r) => { if (!r.ok) throw new Error((await r.json()).error || "Failed"); return r.json(); })
-      .then((d) => { setClient(d.client); setServices(d.services || []); setInvoices(d.invoices || []); })
+      .then((d) => { setClient(d.client); setServices(d.services || []); setInvoices(d.invoices || []); setUsername(d.client?.client_id || ""); })
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
     adminFetch("/api/admin/services").then((r) => r.json()).then((d) => setCatalog(d.services || [])).catch(() => {});
+    loadDocs();
+    loadUpdates();
   }, [id]);
+
+  const saveUsername = async () => {
+    setUnBusy(true); setUnMsg("");
+    const res = await adminFetch(`/api/admin/clients/${id}/username`, { method: "POST", body: JSON.stringify({ username }) });
+    const d = await res.json();
+    setUnBusy(false);
+    if (res.ok) { setUnMsg("Saved."); setClient((c) => (c ? { ...c, client_id: d.client_id } : c)); }
+    else setUnMsg(d.error || "Could not update username.");
+  };
+
+  const uploadDoc = async () => {
+    if (!docFile) return;
+    setDocBusy(true);
+    const fd = new FormData();
+    fd.append("file", docFile); fd.append("client_id", id);
+    if (docTitle) fd.append("title", docTitle);
+    const res = await adminFetch("/api/admin/documents", { method: "POST", body: fd });
+    setDocBusy(false);
+    if (res.ok) { setDocFile(null); setDocTitle(""); loadDocs(); }
+  };
+  const downloadDoc = async (d: Doc) => {
+    const res = await adminFetch(`/api/admin/documents/${d.id}`);
+    const j = await res.json();
+    if (res.ok && j.url && j.url !== "#") window.open(j.url, "_blank");
+  };
+  const setProgress = async (s: Svc, progress: number) => {
+    setServices((xs) => xs.map((x) => (x.id === s.id ? { ...x, progress } : x)));
+    await adminFetch(`/api/admin/clients/${id}/services`, { method: "PATCH", body: JSON.stringify({ service_id: s.id, progress }) });
+  };
+  const postUpdate = async () => {
+    if (!updateBody.trim()) return;
+    const res = await adminFetch(`/api/admin/clients/${id}/updates`, { method: "POST", body: JSON.stringify({ body: updateBody, service_id: updateSvc || undefined }) });
+    const d = await res.json();
+    if (res.ok) { setUpdateBody(""); setUpdateSvc(""); if (d.update) setUpdates((u) => [d.update, ...u]); else loadUpdates(); }
+  };
 
   const assignService = async () => {
     const item = catalog.find((c) => c.id === assignId);
@@ -167,7 +219,23 @@ export default function ClientDetailPage() {
       {/* Login & security */}
       <section className="mt-6 rounded-2xl border border-hairline bg-elevated/60 p-6">
         <h2 className="mb-4 flex items-center gap-2 text-sm font-semibold uppercase tracking-wider text-fg-subtle"><KeyRound size={15} /> Login &amp; security</h2>
-        <p className="text-sm text-fg-muted">Reset the client&apos;s portal password. They sign in with Client ID <span className="font-mono text-fg">{client.client_id}</span>.</p>
+
+        {/* Login username (changeable anytime) */}
+        <div className="mb-5">
+          <label className="text-sm font-medium text-fg">Login username</label>
+          <p className="mt-0.5 text-xs text-fg-subtle">The client signs in with this. Changing it updates their login immediately.</p>
+          <div className="mt-2 flex flex-col gap-2 sm:flex-row sm:items-center">
+            <div className="relative flex-1">
+              <AtSign size={14} className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-fg-subtle" />
+              <input value={username} onChange={(e) => setUsername(e.target.value)} className={`${field} pl-8`} placeholder="e.g. NHG-2048 or ACME-001" />
+            </div>
+            <button onClick={saveUsername} disabled={unBusy || !username.trim() || username === client.client_id} className="rounded-lg border border-hairline-strong px-4 py-2 text-sm text-fg-muted transition-colors hover:text-fg disabled:opacity-40">{unBusy ? "Saving…" : "Update username"}</button>
+          </div>
+          {unMsg && <p className={`mt-2 text-sm ${unMsg === "Saved." ? "text-[color:var(--success)]" : "text-danger"}`}>{unMsg}</p>}
+        </div>
+
+        <div className="mb-4 border-t border-hairline" />
+        <p className="text-sm text-fg-muted">Reset the client&apos;s portal password.</p>
         <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-end">
           <label className="flex flex-1 flex-col gap-1.5 text-sm">
             <span className="font-medium text-fg">Set a specific password (optional)</span>
@@ -198,12 +266,21 @@ export default function ClientDetailPage() {
           {services.length === 0 ? <p className="text-sm text-fg-subtle">No services assigned yet.</p> : (
             <ul className="space-y-2">
               {services.map((s) => (
-                <li key={s.id} className="flex items-start justify-between gap-2 rounded-lg border border-hairline p-3">
-                  <div className="min-w-0">
-                    <div className="text-sm font-medium text-fg">{s.name}</div>
-                    {s.description && <div className="text-xs text-fg-subtle">{s.description}</div>}
+                <li key={s.id} className="rounded-lg border border-hairline p-3">
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="min-w-0">
+                      <div className="text-sm font-medium text-fg">{s.name}</div>
+                      {s.description && <div className="text-xs text-fg-subtle">{s.description}</div>}
+                    </div>
+                    <button onClick={() => removeService(s.id)} className="shrink-0 text-fg-subtle transition-colors hover:text-danger" title="Remove service"><Trash2 size={14} /></button>
                   </div>
-                  <button onClick={() => removeService(s.id)} className="shrink-0 text-fg-subtle transition-colors hover:text-danger" title="Remove service"><Trash2 size={14} /></button>
+                  <div className="mt-2.5 flex items-center gap-2">
+                    <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-surface-subtle">
+                      <div className="h-full rounded-full bg-accent transition-all" style={{ width: `${s.progress ?? 0}%` }} />
+                    </div>
+                    <input type="number" min={0} max={100} value={s.progress ?? 0} onChange={(e) => setProgress(s, Number(e.target.value))} className="h-7 w-14 rounded-md border border-hairline-strong bg-elevated px-2 text-xs text-fg outline-none focus:border-accent" />
+                    <span className="text-xs text-fg-subtle">%</span>
+                  </div>
                 </li>
               ))}
             </ul>
@@ -234,6 +311,53 @@ export default function ClientDetailPage() {
           )}
         </section>
       </div>
+
+      {/* Updates & notes */}
+      <section className="mt-6 rounded-2xl border border-hairline bg-elevated/60 p-6">
+        <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-fg-subtle">Updates &amp; notes</h2>
+        <div className="flex flex-col gap-2 sm:flex-row">
+          <textarea value={updateBody} onChange={(e) => setUpdateBody(e.target.value)} rows={2} placeholder="Post an update for this client (visible in their portal)…" className="flex-1 rounded-lg border border-hairline-strong bg-elevated px-3 py-2 text-sm text-fg outline-none focus:border-accent" />
+          <div className="flex flex-col gap-2">
+            <select value={updateSvc} onChange={(e) => setUpdateSvc(e.target.value)} style={{ colorScheme: "dark" }} className="h-9 rounded-lg border border-hairline-strong bg-elevated px-2 text-sm text-fg outline-none focus:border-accent">
+              <option value="">General</option>
+              {services.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
+            </select>
+            <button onClick={postUpdate} disabled={!updateBody.trim()} className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-accent px-4 py-2 text-sm font-medium text-on-accent disabled:opacity-50"><Send size={14} /> Post</button>
+          </div>
+        </div>
+        <ul className="mt-5 space-y-3">
+          {updates.map((u) => (
+            <li key={u.id} className="rounded-lg border border-hairline p-3">
+              <p className="text-sm text-fg">{u.body}</p>
+              <p className="mt-1 text-[11px] text-fg-subtle">{new Date(u.created_at).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}{u.service_id ? ` · ${services.find((s) => s.id === u.service_id)?.name ?? "service"}` : ""}</p>
+            </li>
+          ))}
+          {updates.length === 0 && <li className="text-sm text-fg-subtle">No updates yet.</li>}
+        </ul>
+      </section>
+
+      {/* Documents (per client) */}
+      <section className="mt-6 rounded-2xl border border-hairline bg-elevated/60 p-6">
+        <h2 className="mb-4 text-sm font-semibold uppercase tracking-wider text-fg-subtle">Documents</h2>
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-end">
+          <label className="flex flex-col gap-1.5 text-sm sm:flex-1"><span className="font-medium text-fg">Title (optional)</span><input className={field} value={docTitle} onChange={(e) => setDocTitle(e.target.value)} placeholder="Defaults to the file name" /></label>
+          <input type="file" onChange={(e) => setDocFile(e.target.files?.[0] || null)} className="text-sm text-fg-muted file:mr-3 file:rounded-lg file:border file:border-hairline-strong file:bg-elevated file:px-3 file:py-1.5 file:text-sm file:text-fg" />
+          <button onClick={uploadDoc} disabled={!docFile || docBusy} className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-4 py-2 text-sm font-medium text-on-accent disabled:opacity-50"><Upload size={14} /> {docBusy ? "Uploading…" : "Upload"}</button>
+        </div>
+        <p className="mt-2 text-xs text-fg-subtle">Uploads here are attached to this client. The full library lives under Documents.</p>
+        <ul className="mt-4 space-y-2">
+          {docs.map((d) => (
+            <li key={d.id} className="flex items-center justify-between rounded-lg border border-hairline p-3">
+              <div className="min-w-0">
+                <div className="text-sm font-medium text-fg">{d.title} <span className="font-mono text-[11px] text-fg-subtle">v{d.version}</span></div>
+                <div className="text-xs text-fg-subtle">{d.kind}{d.released ? " · released" : " · internal"}</div>
+              </div>
+              <button onClick={() => downloadDoc(d)} className="text-fg-subtle transition-colors hover:text-fg" title="Download"><Download size={15} /></button>
+            </li>
+          ))}
+          {docs.length === 0 && <li className="text-sm text-fg-subtle">No documents for this client yet.</li>}
+        </ul>
+      </section>
     </div>
   );
 }
