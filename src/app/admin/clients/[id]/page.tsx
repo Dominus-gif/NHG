@@ -3,11 +3,29 @@
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Save, Power, Trash2, KeyRound, Copy, Check, AtSign, Upload, Download, Send } from "lucide-react";
+import { ArrowLeft, Save, Power, Trash2, KeyRound, Copy, Check, AtSign, Upload, Download, Send, Eye, EyeOff, ChevronRight } from "lucide-react";
 import { adminFetch } from "@/lib/adminClient";
 import { formatMoney } from "@/lib/portal";
 
 const PROFILE_FIELDS: (keyof Client)[] = ["name", "company", "industry", "crm_name", "crm_email", "crm_phone"];
+
+function dayLabel(iso: string): string {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "Undated";
+  const now = new Date();
+  const yest = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
+  if (d.toDateString() === now.toDateString()) return "Today";
+  if (d.toDateString() === yest.toDateString()) return "Yesterday";
+  return d.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+}
+function groupByDay<T>(items: T[], iso: (t: T) => string): [string, T[]][] {
+  const map = new Map<string, T[]>();
+  for (const it of items) {
+    const k = dayLabel(iso(it));
+    (map.get(k) ?? map.set(k, []).get(k)!).push(it);
+  }
+  return [...map.entries()];
+}
 
 type Client = {
   id: string; client_id: string; name: string; company: string | null; industry: string | null;
@@ -15,7 +33,7 @@ type Client = {
 };
 type Svc = { id: string; name: string; description: string | null; status: string; progress?: number };
 type Catalog = { id: string; name: string; description: string | null };
-type Doc = { id: string; title: string; kind: string; version: number; released: boolean };
+type Doc = { id: string; title: string; kind: string; version: number; released: boolean; created_at?: string };
 type Update = { id: string; created_at: string; body: string; service_id: string | null };
 type Inv = { id: string; number: string; service: string | null; amount: number; currency: string; status: string; due: string | null };
 
@@ -86,6 +104,16 @@ export default function ClientDetailPage() {
     const res = await adminFetch(`/api/admin/documents/${d.id}`);
     const j = await res.json();
     if (res.ok && j.url && j.url !== "#") window.open(j.url, "_blank");
+  };
+  const toggleRelease = async (d: Doc) => {
+    const next = !d.released;
+    setDocs((xs) => xs.map((x) => (x.id === d.id ? { ...x, released: next } : x)));
+    await adminFetch(`/api/admin/documents/${d.id}`, { method: "PATCH", body: JSON.stringify({ released: next }) });
+  };
+  const deleteDoc = async (d: Doc) => {
+    if (!confirm(`Delete "${d.title}" v${d.version}?`)) return;
+    setDocs((xs) => xs.filter((x) => x.id !== d.id));
+    await adminFetch(`/api/admin/documents/${d.id}`, { method: "DELETE" });
   };
   const setProgress = async (s: Svc, progress: number) => {
     setServices((xs) => xs.map((x) => (x.id === s.id ? { ...x, progress } : x)));
@@ -289,7 +317,7 @@ export default function ClientDetailPage() {
           <div className="mt-4 flex gap-2">
             <select value={assignId} onChange={(e) => setAssignId(e.target.value)} style={{ colorScheme: "dark" }} className="h-9 flex-1 rounded-lg border border-hairline-strong bg-elevated px-3 text-sm text-fg outline-none focus:border-accent">
               <option value="">Assign a service…</option>
-              {catalog.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+              {catalog.filter((c) => !services.some((s) => s.name === c.name)).map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
             </select>
             <button onClick={assignService} disabled={!assignId} className="rounded-lg bg-accent px-3 py-1.5 text-sm font-medium text-on-accent disabled:opacity-50">Assign</button>
           </div>
@@ -325,15 +353,26 @@ export default function ClientDetailPage() {
             <button onClick={postUpdate} disabled={!updateBody.trim()} className="inline-flex items-center justify-center gap-1.5 rounded-lg bg-accent px-4 py-2 text-sm font-medium text-on-accent disabled:opacity-50"><Send size={14} /> Post</button>
           </div>
         </div>
-        <ul className="mt-5 space-y-3">
-          {updates.map((u) => (
-            <li key={u.id} className="rounded-lg border border-hairline p-3">
-              <p className="text-sm text-fg">{u.body}</p>
-              <p className="mt-1 text-[11px] text-fg-subtle">{new Date(u.created_at).toLocaleString("en-US", { month: "short", day: "numeric", hour: "numeric", minute: "2-digit" })}{u.service_id ? ` · ${services.find((s) => s.id === u.service_id)?.name ?? "service"}` : ""}</p>
-            </li>
-          ))}
-          {updates.length === 0 && <li className="text-sm text-fg-subtle">No updates yet.</li>}
-        </ul>
+        {updates.length === 0 ? <p className="mt-5 text-sm text-fg-subtle">No updates yet.</p> : (
+          <div className="mt-5 space-y-2">
+            {groupByDay(updates, (u) => u.created_at).map(([day, items], gi) => (
+              <details key={day} open={gi === 0} className="group rounded-lg border border-hairline">
+                <summary className="flex cursor-pointer list-none items-center justify-between px-3 py-2 text-xs font-medium text-fg-muted [&::-webkit-details-marker]:hidden">
+                  <span className="flex items-center gap-1.5"><ChevronRight size={13} className="transition-transform group-open:rotate-90" /> {day}</span>
+                  <span className="text-fg-subtle">{items.length} update{items.length === 1 ? "" : "s"}</span>
+                </summary>
+                <div className="space-y-2 px-3 pb-3">
+                  {items.map((u) => (
+                    <div key={u.id} className="rounded-lg border border-hairline bg-base p-3">
+                      <p className="text-sm text-fg">{u.body}</p>
+                      <p className="mt-1 text-[11px] text-fg-subtle">{new Date(u.created_at).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })}{u.service_id ? ` · ${services.find((s) => s.id === u.service_id)?.name ?? "service"}` : " · general"}</p>
+                    </div>
+                  ))}
+                </div>
+              </details>
+            ))}
+          </div>
+        )}
       </section>
 
       {/* Documents (per client) */}
@@ -344,19 +383,36 @@ export default function ClientDetailPage() {
           <input type="file" onChange={(e) => setDocFile(e.target.files?.[0] || null)} className="text-sm text-fg-muted file:mr-3 file:rounded-lg file:border file:border-hairline-strong file:bg-elevated file:px-3 file:py-1.5 file:text-sm file:text-fg" />
           <button onClick={uploadDoc} disabled={!docFile || docBusy} className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-4 py-2 text-sm font-medium text-on-accent disabled:opacity-50"><Upload size={14} /> {docBusy ? "Uploading…" : "Upload"}</button>
         </div>
-        <p className="mt-2 text-xs text-fg-subtle">Uploads here are attached to this client. The full library lives under Documents.</p>
-        <ul className="mt-4 space-y-2">
-          {docs.map((d) => (
-            <li key={d.id} className="flex items-center justify-between rounded-lg border border-hairline p-3">
-              <div className="min-w-0">
-                <div className="text-sm font-medium text-fg">{d.title} <span className="font-mono text-[11px] text-fg-subtle">v{d.version}</span></div>
-                <div className="text-xs text-fg-subtle">{d.kind}{d.released ? " · released" : " · internal"}</div>
-              </div>
-              <button onClick={() => downloadDoc(d)} className="text-fg-subtle transition-colors hover:text-fg" title="Download"><Download size={15} /></button>
-            </li>
-          ))}
-          {docs.length === 0 && <li className="text-sm text-fg-subtle">No documents for this client yet.</li>}
-        </ul>
+        <p className="mt-2 text-xs text-fg-subtle">Uploads here are attached to this client. Use the lock toggle to control whether the client can download each file.</p>
+        {docs.length === 0 ? <p className="mt-4 text-sm text-fg-subtle">No documents for this client yet.</p> : (
+          <div className="mt-4 space-y-2">
+            {groupByDay(docs, (d) => d.created_at || "").map(([day, items], gi) => (
+              <details key={day} open={gi === 0} className="group rounded-lg border border-hairline">
+                <summary className="flex cursor-pointer list-none items-center justify-between px-3 py-2 text-xs font-medium text-fg-muted [&::-webkit-details-marker]:hidden">
+                  <span className="flex items-center gap-1.5"><ChevronRight size={13} className="transition-transform group-open:rotate-90" /> {day}</span>
+                  <span className="text-fg-subtle">{items.length} file{items.length === 1 ? "" : "s"}</span>
+                </summary>
+                <div className="space-y-2 px-3 pb-3">
+                  {items.map((d) => (
+                    <div key={d.id} className="flex items-center justify-between gap-3 rounded-lg border border-hairline bg-base p-3">
+                      <div className="min-w-0">
+                        <div className="text-sm font-medium text-fg">{d.title} <span className="font-mono text-[11px] text-fg-subtle">v{d.version}</span></div>
+                        <div className="text-xs text-fg-subtle">{d.kind}</div>
+                      </div>
+                      <div className="flex shrink-0 items-center gap-2">
+                        <button onClick={() => toggleRelease(d)} className={`inline-flex items-center gap-1 rounded-full px-2 py-1 text-[11px] transition-colors ${d.released ? "bg-[color:var(--success-soft)] text-[color:var(--success)]" : "bg-surface-subtle text-fg-muted hover:text-fg"}`} title={d.released ? "Unlocked — client can download. Click to lock." : "Locked — client can't download. Click to unlock."}>
+                          {d.released ? <Eye size={12} /> : <EyeOff size={12} />} {d.released ? "Unlocked" : "Locked"}
+                        </button>
+                        <button onClick={() => downloadDoc(d)} className="text-fg-subtle transition-colors hover:text-fg" title="Download"><Download size={15} /></button>
+                        <button onClick={() => deleteDoc(d)} className="text-fg-subtle transition-colors hover:text-danger" title="Delete"><Trash2 size={15} /></button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </details>
+            ))}
+          </div>
+        )}
       </section>
     </div>
   );

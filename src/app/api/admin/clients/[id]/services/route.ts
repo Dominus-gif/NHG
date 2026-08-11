@@ -16,10 +16,20 @@ export async function POST(req: Request, { params }: Ctx) {
   const gate = await requireAdmin(req);
   if (!gate.ok) return NextResponse.json({ error: gate.error }, { status: gate.status });
   const svc = getAdminClient()!;
+
+  // A given service can only be assigned to a client once.
+  const { data: dupe } = await svc
+    .from("portal_services")
+    .select("id")
+    .eq("client_id", id)
+    .eq("name", body.name.trim())
+    .maybeSingle();
+  if (dupe) return NextResponse.json({ error: "That service is already assigned to this client." }, { status: 409 });
+
   const { data, error } = await svc
     .from("portal_services")
     .insert({ client_id: id, name: body.name.trim(), description: body.description ?? null, status: body.status || "Active" })
-    .select("id, name, description, status")
+    .select("id, name, description, status, progress")
     .maybeSingle();
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
   await logAudit(svc, gate.admin.id, "service.assigned", "client", id, `Assigned service ${body.name.trim()}`);

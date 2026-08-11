@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { ChevronRight } from "lucide-react";
 import { getSupabaseBrowser } from "@/lib/supabaseBrowser";
 import {
   formatMoney,
@@ -53,6 +54,24 @@ function LockGlyph() {
       <path d="M8 11V7a4 4 0 0 1 8 0v4" />
     </svg>
   );
+}
+
+function dayLabel(iso: string): string {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "Undated";
+  const now = new Date();
+  const yest = new Date(now.getFullYear(), now.getMonth(), now.getDate() - 1);
+  if (d.toDateString() === now.toDateString()) return "Today";
+  if (d.toDateString() === yest.toDateString()) return "Yesterday";
+  return d.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" });
+}
+function groupByDay<T>(items: T[], iso: (t: T) => string): [string, T[]][] {
+  const map = new Map<string, T[]>();
+  for (const it of items) {
+    const k = dayLabel(iso(it));
+    (map.get(k) ?? map.set(k, []).get(k)!).push(it);
+  }
+  return [...map.entries()];
 }
 
 export default function PortalDashboard() {
@@ -130,6 +149,15 @@ export default function PortalDashboard() {
     const sb = getSupabaseBrowser();
     if (sb) await sb.auth.signOut();
     router.replace("/portal");
+  };
+
+  const downloadDoc = async (d: DocItem) => {
+    // Legacy external links open directly; uploaded files get a signed URL.
+    if (d.url && /^https?:\/\//.test(d.url)) { window.open(d.url, "_blank"); return; }
+    const res = await fetch(`/api/portal/document/${d.id}`, { headers: { Authorization: `Bearer ${token ?? ""}` } });
+    const j = await res.json().catch(() => ({}));
+    if (res.ok && j.url) window.open(j.url, "_blank");
+    else alert(j.error || "This document isn't available to download.");
   };
 
   const sendMessage = async () => {
@@ -290,6 +318,33 @@ export default function PortalDashboard() {
                       <div className="mt-1.5 h-1.5 overflow-hidden rounded-full bg-surface-subtle"><div className="h-full rounded-full bg-white transition-all" style={{ width: `${s.progress}%` }} /></div>
                     </div>
                   )}
+                  {(() => {
+                    const su = updates.filter((u) => u.service_id === s.id);
+                    if (su.length === 0) return null;
+                    return (
+                      <details className="group mt-3 border-t border-hairline pt-3">
+                        <summary className="flex cursor-pointer list-none items-center justify-between text-xs font-medium text-fg-muted [&::-webkit-details-marker]:hidden">
+                          <span className="flex items-center gap-1.5"><ChevronRight size={12} className="transition-transform group-open:rotate-90" /> Updates</span>
+                          <span className="text-fg-subtle">{su.length}</span>
+                        </summary>
+                        <div className="mt-2.5 space-y-3">
+                          {groupByDay(su, (u) => u.created_at).map(([day, items]) => (
+                            <div key={day}>
+                              <p className="text-[10px] font-semibold uppercase tracking-wider text-fg-subtle">{day}</p>
+                              <ul className="mt-1.5 space-y-2">
+                                {items.map((u) => (
+                                  <li key={u.id} className="border-l-2 border-hairline pl-2.5">
+                                    <p className="text-sm leading-relaxed text-fg">{u.body}</p>
+                                    <p className="text-[11px] text-fg-subtle">{new Date(u.created_at).toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" })}</p>
+                                  </li>
+                                ))}
+                              </ul>
+                            </div>
+                          ))}
+                        </div>
+                      </details>
+                    );
+                  })()}
                 </div>
               ))}
               {services.length === 0 && <p className="text-sm text-fg-muted">No services yet.</p>}
@@ -327,13 +382,13 @@ export default function PortalDashboard() {
               {docs.map((d) => {
                 const unlocked = Boolean(d.released) || paidUp;
                 return unlocked ? (
-                  <a key={d.id} href={d.url} target="_blank" rel="noopener noreferrer" className="group flex items-center justify-between gap-3 py-3 first:pt-0 last:pb-0">
+                  <button key={d.id} onClick={() => downloadDoc(d)} className="group flex w-full items-center justify-between gap-3 py-3 text-left first:pt-0 last:pb-0">
                     <div>
                       <p className="text-sm font-medium text-fg group-hover:text-accent">{d.title}</p>
                       <p className="text-xs text-fg-subtle">{d.service}</p>
                     </div>
                     <span className="rounded-md border border-hairline px-2 py-0.5 text-[11px] uppercase tracking-wide text-fg-subtle">{d.kind}</span>
-                  </a>
+                  </button>
                 ) : (
                   <div key={d.id} className="flex items-center justify-between gap-3 py-3 first:pt-0 last:pb-0">
                     <div>
@@ -350,21 +405,18 @@ export default function PortalDashboard() {
             </div>
           </Card>
 
-          <Card title="Updates from your team">
-            {updates.length === 0 ? <p className="text-sm text-fg-muted">No updates yet.</p> : (
+          {updates.some((u) => !u.service_id) && (
+            <Card title="General updates">
               <ul className="space-y-4">
-                {updates.slice(0, 6).map((u) => (
+                {updates.filter((u) => !u.service_id).slice(0, 8).map((u) => (
                   <li key={u.id} className="border-l-2 border-hairline pl-3">
                     <p className="text-sm leading-relaxed text-fg">{u.body}</p>
-                    <p className="mt-1 text-xs text-fg-subtle">
-                      {new Date(u.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
-                      {u.service_id ? ` · ${services.find((s) => s.id === u.service_id)?.name ?? ""}` : ""}
-                    </p>
+                    <p className="mt-1 text-xs text-fg-subtle">{new Date(u.created_at).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</p>
                   </li>
                 ))}
               </ul>
-            )}
-          </Card>
+            </Card>
+          )}
         </div>
       </div>
 
