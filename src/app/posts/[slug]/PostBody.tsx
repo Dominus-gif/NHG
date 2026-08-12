@@ -83,7 +83,7 @@ function parseInline(text: string, keyBase = "i"): ReactNode[] {
 
 /* ------------------------------ block parsing ---------------------------- */
 
-function Block({ raw }: { raw: string }) {
+function Block({ raw, lead }: { raw: string; lead?: boolean }) {
   const block = raw.trim();
   if (!block) return null;
 
@@ -170,18 +170,31 @@ function Block({ raw }: { raw: string }) {
     );
   }
 
-  // Default: paragraph
-  return <p className="mb-6 text-lg leading-relaxed text-fg-muted">{parseInline(block)}</p>;
+  // Default: paragraph. The opening paragraph reads as a larger, brighter lead.
+  if (lead) {
+    return <p className="mb-7 text-xl leading-relaxed text-fg">{parseInline(block)}</p>;
+  }
+  return <p className="mb-6 text-[1.0625rem] leading-[1.75] text-fg-muted">{parseInline(block)}</p>;
 }
 
+const BLOCK_MARKER = /^(#{2,3}\s|[-*]\s|\d+\.\s|>\s|```|---)/;
+
 export default function PostBody({ body }: { body: string[] }) {
+  // The first plain-paragraph block is styled as a lead-in for readability.
+  let leadUsed = false;
   return (
     <>
-      {body.map((raw, i) => (
-        <Reveal key={i} delay={Math.min(i * 0.03, 0.2)}>
-          <Block raw={raw} />
-        </Reveal>
-      ))}
+      {body.map((raw, i) => {
+        const t = raw.trim();
+        const isPara = Boolean(t) && !BLOCK_MARKER.test(t);
+        const lead = !leadUsed && isPara;
+        if (lead) leadUsed = true;
+        return (
+          <Reveal key={i} delay={Math.min(i * 0.03, 0.2)}>
+            <Block raw={raw} lead={lead} />
+          </Reveal>
+        );
+      })}
     </>
   );
 }
