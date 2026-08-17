@@ -1,0 +1,8 @@
+<svg version="1.2" baseProfile="tiny-ps" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <title>Nord Harton</title>
+  <rect x="0" y="0" width="512" height="512" fill="#0E0E0E"/>
+  <polygon points="118,150 174,150 174,362 118,362" fill="#FFFFFF"/>
+  <polygon points="270,150 326,150 326,362 270,362" fill="#FFFFFF"/>
+  <polygon points="118,150 174,150 326,362 270,362" fill="#FFFFFF"/>
+  <rect x="356" y="336" width="42" height="42" rx="8" fill="#F0121F"/>
+</svg>
