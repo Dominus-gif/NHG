@@ -22,6 +22,16 @@ export const siteKeywords = [
   "software consultancy",
 ];
 
+/** Official brand profiles for the Organization `sameAs` (entity graph).
+ *  IMPORTANT: every URL here must resolve to a REAL Nord Harton profile — a
+ *  wrong or empty link hurts your entity graph more than an empty list. Remove
+ *  any that don't exist, and add others (Crunchbase, Instagram, etc.). */
+export const brandProfiles: string[] = [
+  "https://www.linkedin.com/company/nordharton",
+  "https://x.com/nordharton",
+  "https://github.com/nordharton",
+];
+
 /** Absolute URL for a site-relative path. */
 export function absoluteUrl(path = "/"): string {
   return `${siteUrl}${path.startsWith("/") ? path : `/${path}`}`;

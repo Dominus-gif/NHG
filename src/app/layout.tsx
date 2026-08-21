@@ -20,7 +20,7 @@ const inter = Inter({
 import SmoothScroll from "@/components/providers/SmoothScroll";
 import ContactModalProvider from "@/components/providers/ContactModalProvider";
 import SiteChrome from "@/components/layout/SiteChrome";
-import { siteUrl, siteName, siteTagline, siteDescription, siteKeywords, absoluteUrl } from "@/lib/seo";
+import { siteUrl, siteName, siteTagline, siteDescription, siteKeywords, absoluteUrl, brandProfiles } from "@/lib/seo";
 
 export const viewport: Viewport = {
   width: "device-width",
@@ -42,7 +42,10 @@ export const metadata: Metadata = {
   creator: siteName,
   publisher: siteName,
   category: "technology",
-  alternates: { canonical: "/" },
+  alternates: {
+    canonical: "/",
+    types: { "application/rss+xml": `${siteUrl}/feed.xml` },
+  },
   openGraph: {
     type: "website",
     url: siteUrl,
@@ -91,9 +94,9 @@ const jsonLd = {
       url: siteUrl,
       logo: {
         "@type": "ImageObject",
-        url: absoluteUrl("/icon"),
-        width: 64,
-        height: 64,
+        url: absoluteUrl("/logo.png"),
+        width: 3487,
+        height: 465,
       },
       description: siteDescription,
       slogan: siteTagline,
@@ -103,7 +106,7 @@ const jsonLd = {
         { "@type": "ContactPoint", contactType: "sales", email: "projects@nordharton.com", availableLanguage: "English" },
         { "@type": "ContactPoint", contactType: "technical support", email: "support@nordharton.com", availableLanguage: "English" },
       ],
-      sameAs: [] as string[],
+      sameAs: brandProfiles,
     },
     {
       "@type": "WebSite",

@@ -4,6 +4,8 @@ import { notFound } from "next/navigation";
 import { Reveal } from "@/components/ui/Reveal";
 import { posts, getPost } from "@/content/posts";
 import { siteUrl, absoluteUrl, toISODate } from "@/lib/seo";
+import { authorSlug } from "@/lib/authors";
+import { relatedPosts } from "@/lib/postDomains";
 import PostBody from "./PostBody";
 
 export function generateStaticParams() {
@@ -45,6 +47,8 @@ export default async function PostPage({
   if (!post) notFound();
 
   const published = toISODate(post.date);
+  const authorUrl = `${siteUrl}/authors/${authorSlug(post.author)}`;
+  const related = relatedPosts(post, posts, 4);
   const jsonLd = {
     "@context": "https://schema.org",
     "@graph": [
@@ -55,7 +59,7 @@ export default async function PostPage({
         description: post.excerpt,
         datePublished: published,
         dateModified: published,
-        author: { "@type": "Person", name: post.author },
+        author: { "@type": "Person", name: post.author, url: authorUrl },
         publisher: { "@id": `${siteUrl}/#organization` },
         mainEntityOfPage: { "@type": "WebPage", "@id": `${siteUrl}/posts/${slug}` },
         image: absoluteUrl("/opengraph-image"),
@@ -100,12 +104,12 @@ export default async function PostPage({
               {post.title}
             </h1>
             <p className="mt-6 text-lg leading-relaxed text-fg-muted">{post.excerpt}</p>
-            <div className="mt-8 flex items-center gap-3 border-t border-hairline pt-6">
+            <Link href={`/authors/${authorSlug(post.author)}`} className="group mt-8 flex w-fit items-center gap-3 border-t border-hairline pt-6">
               <span className="flex h-10 w-10 items-center justify-center rounded-full text-sm font-semibold text-fg" style={{ background: "var(--surface-subtle)" }}>
                 {post.author.split(" ").map((n) => n[0]).join("")}
               </span>
-              <span className="text-sm text-fg">{post.author}</span>
-            </div>
+              <span className="text-sm text-fg transition-colors group-hover:text-accent">{post.author}</span>
+            </Link>
           </Reveal>
         </div>
       </article>
@@ -115,6 +119,28 @@ export default async function PostPage({
           <PostBody body={post.body} />
         </div>
       </section>
+
+      {related.length > 0 && (
+        <section className="border-t border-hairline py-14 lg:py-16">
+          <div className="mx-auto max-w-5xl px-6 lg:px-8">
+            <h2 className="text-sm font-semibold uppercase tracking-wider text-fg-subtle">Related posts</h2>
+            <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+              {related.map((r) => (
+                <Link
+                  key={r.slug}
+                  href={`/posts/${r.slug}`}
+                  className="group flex h-full flex-col rounded-2xl border border-hairline bg-elevated/60 p-5 transition-all duration-300 hover:-translate-y-1 hover:border-accent/40"
+                >
+                  <span className="font-mono text-[10px] uppercase tracking-wider text-accent">{r.tag}</span>
+                  <h3 className="mt-3 text-base font-semibold leading-snug text-fg transition-colors group-hover:text-accent">{r.title}</h3>
+                  <p className="mt-2 flex-1 text-sm leading-relaxed text-fg-muted line-clamp-3">{r.excerpt}</p>
+                  <span className="mt-4 text-xs text-fg-subtle">{r.readTime}</span>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
     </>
   );
 }

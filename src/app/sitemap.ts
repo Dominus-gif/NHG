@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { siteUrl } from "@/lib/seo";
 import { posts } from "@/content/posts";
 import { jobs } from "@/content/jobs";
+import { allAuthors } from "@/lib/authors";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
@@ -42,5 +43,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     priority: 0.5,
   }));
 
-  return [...staticEntries, ...postEntries, ...jobEntries];
+  const authorEntries: MetadataRoute.Sitemap = allAuthors().map((a) => ({
+    url: `${siteUrl}/authors/${a.slug}`,
+    lastModified: now,
+    changeFrequency: "weekly",
+    priority: 0.4,
+  }));
+
+  return [...staticEntries, ...postEntries, ...jobEntries, ...authorEntries];
 }

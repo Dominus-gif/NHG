@@ -5,74 +5,9 @@ import Link from "next/link";
 import { Check, ChevronDown } from "lucide-react";
 import { Stagger, StaggerItem } from "@/components/ui/Reveal";
 import type { Post } from "@/content/posts";
-
-/* Map the granular per-post tags into a small set of broad, scannable domains.
-   Deriving the dropdown from these keeps a clean "Filter by Domain" menu even as
-   the underlying tags stay specific. New/unmapped tags fall back by keyword. */
-const TAG_TO_DOMAIN: Record<string, string> = {
-  "Strategy & Architecture": "Strategy & Culture",
-  "Architecture & Modernization": "Architecture & Cloud",
-  "UX Design & Strategy": "UX & Design",
-  "Data Architecture & Governance": "Data & AI",
-  "AI & Workflow Strategy": "Data & AI",
-  "Design Systems & Governance": "UX & Design",
-  "Edge Computing & Cloud Architecture": "Architecture & Cloud",
-  "UX Design & Inclusion": "UX & Design",
-  "Serverless & Cloud Architecture": "Architecture & Cloud",
-  "UX Motion & Design Principles": "UX & Design",
-  "Language & Architecture": "Architecture & Cloud",
-  "Remote Work & Culture": "People & Culture",
-  "UI/UX Design & Tokens": "UX & Design",
-  "Artificial Intelligence & Enterprise Security": "Security",
-  "Security & Cloud Architecture": "Security",
-  "Architecture & Scalability": "Architecture & Cloud",
-  // Newer articles
-  "Blockchain & Distributed Systems": "Architecture & Cloud",
-  "Data Analytics & Trends": "Data & AI",
-  "Cloud & Customer Experience": "Architecture & Cloud",
-  "DevOps & Delivery": "Architecture & Cloud",
-  "Machine Learning & Security": "Security",
-  "Emerging Technology": "Strategy & Culture",
-  "Business Intelligence & Strategy": "Data & AI",
-  "3D Printing & Manufacturing": "Strategy & Culture",
-  "Technology Selection": "Strategy & Culture",
-  "Social Analytics & Marketing": "Data & AI",
-  "Cybersecurity & Risk": "Security",
-  "E-commerce & Retail": "Strategy & Culture",
-  "Cloud Strategy": "Architecture & Cloud",
-  "AI & Business Intelligence": "Data & AI",
-  // Workplace & people articles
-  "People & Culture": "People & Culture",
-  "Leadership & Culture": "People & Culture",
-  "Workforce & Engagement": "People & Culture",
-  "Workplace Communication": "People & Culture",
-  "Management & Operations": "People & Culture",
-  "Workplace Trends": "People & Culture",
-  "Performance & Feedback": "People & Culture",
-  "Wellbeing & Culture": "People & Culture",
-  "AI Governance & Ethics": "Data & AI",
-};
-
-const DOMAIN_ORDER = [
-  "Architecture & Cloud",
-  "UX & Design",
-  "Data & AI",
-  "Security",
-  "Strategy & Culture",
-  "People & Culture",
-];
+import { DOMAIN_ORDER, domainForTag } from "@/lib/postDomains";
 
 const ALL = "All domains";
-
-function domainForTag(tag: string): string {
-  if (TAG_TO_DOMAIN[tag]) return TAG_TO_DOMAIN[tag];
-  const t = tag.toLowerCase();
-  if (t.includes("security")) return "Security";
-  if (/(ux|ui|design|token|motion)/.test(t)) return "UX & Design";
-  if (/(\bai\b|intelligence|data)/.test(t)) return "Data & AI";
-  if (/(cloud|architect|serverless|edge|scal|modern|infrastructure|language)/.test(t)) return "Architecture & Cloud";
-  return "Strategy & Culture";
-}
 
 /* Themed, accessible dropdown — a native <select>'s open menu is OS-chrome that
    can't be styled, so we render our own listbox that matches the dark theme. */
