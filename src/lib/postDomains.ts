@@ -43,6 +43,23 @@ export const TAG_TO_DOMAIN: Record<string, string> = {
   "Performance & Feedback": "People & Culture",
   "Wellbeing & Culture": "People & Culture",
   "AI Governance & Ethics": "Data & AI",
+  // 2026 AI, hybrid-work, culture & leadership series
+  "AI Tools & Productivity": "Data & AI",
+  "AI Policy & Governance": "Data & AI",
+  "AI & Workplace Productivity": "Data & AI",
+  "Learning & Development": "People & Culture",
+  "Collaboration & Tools": "People & Culture",
+  "Zero-Trust & Security": "Security",
+  "Hybrid & Remote Work": "People & Culture",
+  "Hybrid Work Models": "People & Culture",
+  "Return to Office": "People & Culture",
+  "Async Communication": "People & Culture",
+  "Distributed Teams": "People & Culture",
+  "Team Building & Culture": "People & Culture",
+  "Psychological Safety": "People & Culture",
+  "Engagement & Retention": "People & Culture",
+  "Corporate Culture": "People & Culture",
+  "Future of Work": "People & Culture",
 };
 
 export const DOMAIN_ORDER = [
