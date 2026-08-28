@@ -60,6 +60,9 @@ export const TAG_TO_DOMAIN: Record<string, string> = {
   "Engagement & Retention": "People & Culture",
   "Corporate Culture": "People & Culture",
   "Future of Work": "People & Culture",
+  "Meetings & Focus": "People & Culture",
+  "Productivity & Focus": "People & Culture",
+  "Change Management": "Strategy & Culture",
 };
 
 export const DOMAIN_ORDER = [
