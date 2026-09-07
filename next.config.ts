@@ -1,4 +1,5 @@
 import type { NextConfig } from "next";
+import { initOpenNextCloudflareForDev } from "@opennextjs/cloudflare";
 
 const nextConfig: NextConfig = {
   async redirects() {
@@ -18,3 +19,7 @@ const nextConfig: NextConfig = {
 };
 
 export default nextConfig;
+
+// Enables Cloudflare bindings (env vars, KV, R2, etc.) during `next dev`.
+// No-op for the Vercel/`next build` path.
+initOpenNextCloudflareForDev();

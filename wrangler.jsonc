@@ -1,0 +1,25 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "nordharton",
+  "main": ".open-next/worker.js",
+  // Account: Console.app.dev@gmail.com's Account (per `wrangler whoami`).
+  // Kept explicit so deploys don't silently target the wrong account.
+  "account_id": "0bfae68935c94fcd8246686f7ced3018",
+  "compatibility_date": "2025-08-21",
+  "compatibility_flags": ["nodejs_compat"],
+  "assets": {
+    "binding": "ASSETS",
+    "directory": ".open-next/assets"
+  },
+  "observability": {
+    "enabled": true
+  },
+  // Non-secret, build-time-safe values. Real secrets (SUPABASE_SERVICE_ROLE_KEY,
+  // DODO_PAYMENTS_API_KEY, TELEGRAM_BOT_TOKEN, TELEGRAM_WEBHOOK_SECRET) must be
+  // set with `wrangler secret put <NAME>` — never commit them here.
+  "vars": {
+    "NEXT_PUBLIC_SITE_URL": "https://nordharton.com"
+  }
+  // The custom domain (nordharton.com / www) is attached AFTER the first
+  // deploy, once the zone is on Cloudflare. See the migration steps.
+}
