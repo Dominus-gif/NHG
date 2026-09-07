@@ -19,7 +19,12 @@
   // set with `wrangler secret put <NAME>` — never commit them here.
   "vars": {
     "NEXT_PUBLIC_SITE_URL": "https://nordharton.com"
-  }
-  // The custom domain (nordharton.com / www) is attached AFTER the first
-  // deploy, once the zone is on Cloudflare. See the migration steps.
+  },
+  // Attaches the live domain to this Worker on deploy. custom_domain auto-creates
+  // the proxied DNS records + edge cert. Requires the zone to be active on this
+  // account. www -> apex 301 is handled in next.config.ts redirects().
+  "routes": [
+    { "pattern": "nordharton.com", "custom_domain": true },
+    { "pattern": "www.nordharton.com", "custom_domain": true }
+  ]
 }
